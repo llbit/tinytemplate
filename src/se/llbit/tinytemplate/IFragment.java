@@ -20,7 +20,7 @@ import java.io.PrintStream;
 
 /**
  * Template fragment.
- * @author Jesper Öqvist <jesper.oqvist@cs.lth.se>
+ * @author Jesper Öqvist <jesper@llbit.se>
  */
 public interface IFragment {
 

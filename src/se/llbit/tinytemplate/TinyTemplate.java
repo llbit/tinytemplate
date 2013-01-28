@@ -25,7 +25,7 @@ import java.util.Map;
 
 /**
  * Tiny template engine.
- * @author Jesper Öqvist <jesper.oqvist@cs.lth.se>
+ * @author Jesper Öqvist <jesper@llbit.se>
  */
 public class TinyTemplate {
 	

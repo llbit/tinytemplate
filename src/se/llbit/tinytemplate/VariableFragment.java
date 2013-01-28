@@ -19,7 +19,7 @@ package se.llbit.tinytemplate;
 import java.io.PrintStream;
 
 /**
- * @author Jesper Öqvist <jesper.oqvist@cs.lth.se>
+ * @author Jesper Öqvist <jesper@llbit.se>
  */
 public class VariableFragment implements IFragment {
 	

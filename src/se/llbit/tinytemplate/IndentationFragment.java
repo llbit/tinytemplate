@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Jesper Öqvist <jesper.oqvist@cs.lth.se>
+ * @author Jesper Öqvist <jesper@llbit.se>
  */
 public class IndentationFragment implements IFragment {
 	
