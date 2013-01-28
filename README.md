@@ -3,6 +3,7 @@ tinytemplate
 
 A tiny template engine.
 
+* Multiple templates per file
 * Templates only contain text and variable references
 * Variables are reset after each expansion (if `PersistentVariables` is not set to `true`)
 
