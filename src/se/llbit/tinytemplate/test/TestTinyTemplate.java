@@ -54,6 +54,17 @@ public class TestTinyTemplate {
 	}
 	
 	/**
+	 * Very many special characters can be used in template names
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testSimple_4() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("$(%)!}@{ [[=)]]");
+		
+		assertEquals("=)", tt.expand("$(%)!}@{"));
+	}
+	
+	/**
 	 * Missing template name
 	 * @throws SyntaxError 
 	 */
@@ -139,6 +150,19 @@ public class TestTinyTemplate {
 		TinyTemplate tt = new TinyTemplate("test = [[ $$ not a variable ]]");
 		
 		assertEquals(" $ not a variable ", tt.expand("test"));
+	}
+	
+	/**
+	 * Special characters can be used in variable names if the name is
+	 * parenthesized.
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testVariable_4() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("foo = [[$([what].wat)]]");
+		
+		tt.bind("[what].wat", "batman");
+		assertEquals("batman", tt.expand("foo"));
 	}
 	
 	/**
