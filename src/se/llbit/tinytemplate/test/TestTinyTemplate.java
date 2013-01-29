@@ -213,4 +213,15 @@ public class TestTinyTemplate {
 		assertEquals("hash signs inside a template body are not comments",
 				"# not a comment", tt.expand("foo"));
 	}
+	
+	@Test
+	public void testPersistentVariables_1() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"foo [[ $boo ]]\n" +
+				"bar [[ XY$boo.Z ]]");
+		
+		tt.bind("boo", "123");
+		assertEquals(" 123 ", tt.expand("foo"));
+		assertEquals(" XY123.Z ", tt.expand("bar"));
+	}
 }
