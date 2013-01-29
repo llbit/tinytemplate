@@ -214,6 +214,16 @@ public class TemplateParser {
 				if (attr.isEmpty()) {
 					throw new SyntaxError(line, "empty attribute name");
 				}
+				for (int i = 0; i < attr.length(); ++i) {
+					char ch = attr.charAt(i);
+					if ((i == 0 && !Character.isJavaIdentifierStart(ch)) ||
+							!Character.isJavaIdentifierPart(ch)) {
+						
+						throw new SyntaxError(line, "the attribute " + attr +
+								" is not a valid Java identifier");
+					}
+					
+				}
 				template.addAttributeRef(attr);
 			} else if (isNewline()) {
 				template.addNewline();
