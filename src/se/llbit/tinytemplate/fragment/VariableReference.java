@@ -14,27 +14,33 @@
  * You should have received a copy of the GNU General Public License
  * along with tinytemplate.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.llbit.tinytemplate;
+package se.llbit.tinytemplate.fragment;
 
 import java.io.PrintStream;
+
+import se.llbit.tinytemplate.TinyTemplate;
 
 /**
  * @author Jesper Öqvist <jesper@llbit.se>
  */
-public class StringFragment implements IFragment {
+public class VariableReference implements IFragment {
 	
-	private final String string;
+	private final String variable;
 	
 	/**
-	 * @param theString
+	 * @param variableName
 	 */
-	public StringFragment(String theString) {
-		string = theString;
+	public VariableReference(String variableName) {
+		variable = variableName;
 	}
 
 	@Override
 	public void expand(TinyTemplate template, PrintStream out) {
-		out.print(string);
+		out.print(template.evalVariable(variable));
 	}
 
+	@Override
+	public String toString() {
+		return "$(" + variable + ")";
+	}
 }

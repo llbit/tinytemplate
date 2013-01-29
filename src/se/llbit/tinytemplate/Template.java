@@ -21,6 +21,12 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import se.llbit.tinytemplate.fragment.AttributeReference;
+import se.llbit.tinytemplate.fragment.IFragment;
+import se.llbit.tinytemplate.fragment.NewlineFragment;
+import se.llbit.tinytemplate.fragment.StringFragment;
+import se.llbit.tinytemplate.fragment.VariableReference;
+
 /**
  * Template
  * @author Jesper Öqvist <jesper@llbit.se>
@@ -45,6 +51,37 @@ public class Template {
 	 * @param in
 	 */
 	public static void load(InputStream in) {
+	}
+
+	/**
+	 * Adds a newline to the template
+	 */
+	public void addNewline() {
+		fragments.add(NewlineFragment.INSTANCE);
+	}
+
+	/**
+	 * Adds a variable reference to the template
+	 * @param variable Variable name
+	 */
+	public void addVariableRef(String variable) {
+		fragments.add(new VariableReference(variable));
+	}
+
+	/**
+	 * Adds an attribute reference to the template
+	 * @param attribute Attribute name
+	 */
+	public void addAttributeRef(String attribute) {
+		fragments.add(new AttributeReference(attribute));
+	}
+
+	/**
+	 * Adds a string to the template
+	 * @param str String literal
+	 */
+	public void addString(String str) {
+		fragments.add(new StringFragment(str));
 	}
 
 }

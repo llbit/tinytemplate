@@ -19,6 +19,9 @@ package se.llbit.tinytemplate;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.llbit.tinytemplate.fragment.IFragment;
+import se.llbit.tinytemplate.fragment.StringFragment;
+
 /**
  * Indentation fragment factory
  * @author Jesper Öqvist <jesper@llbit.se>

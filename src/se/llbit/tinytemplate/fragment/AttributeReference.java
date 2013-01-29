@@ -14,27 +14,34 @@
  * You should have received a copy of the GNU General Public License
  * along with tinytemplate.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.llbit.tinytemplate;
+package se.llbit.tinytemplate.fragment;
 
 import java.io.PrintStream;
 
+import se.llbit.tinytemplate.TinyTemplate;
+
 /**
+ * Reflectively expands an attribute in the template context
  * @author Jesper Öqvist <jesper@llbit.se>
  */
-public class VariableFragment implements IFragment {
+public class AttributeReference implements IFragment {
 	
-	private final String variable;
+	private final String attribute;
 	
 	/**
-	 * @param variableName
+	 * @param attributeName
 	 */
-	public VariableFragment(String variableName) {
-		variable = variableName;
+	public AttributeReference(String attributeName) {
+		attribute = attributeName;
 	}
 
 	@Override
 	public void expand(TinyTemplate template, PrintStream out) {
-		out.print(template.variable(variable));
+		out.print(template.evalAttribute(attribute));
 	}
 
+	@Override
+	public String toString() {
+		return "#(" + attribute + ")";
+	}
 }
