@@ -103,6 +103,10 @@ public class TemplateParser {
 				// skip the =
 				in.pop();
 			} else if (isTemplateStart()) {
+				if (names.isEmpty()) {
+					throw new SyntaxError(line, "missing template name");
+				}
+				
 				Template template = nextTemplate();
 				for (String name: names) {
 					templates.addTemplate(name, template);
@@ -231,6 +235,12 @@ public class TemplateParser {
 		StringBuffer buf = new StringBuffer(512);
 		while ( !(isEOF() || isVariable() || isAttribute() || isNewline() ||
 				isTemplateEnd()) ) {
+			
+			if (in.peek(0) == '#' || in.peek(0) == '$') {
+				// it's cool - the # or $ was escaped!
+				// isAttribute() or isVariable() would have been true if not
+				in.pop();
+			}
 			
 			buf.append((char) in.pop());
 		}

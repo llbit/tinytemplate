@@ -15,31 +15,106 @@ public class TestTinyTemplate {
 	
 	@Test
 	public void testUndefinedTemplate() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate();
-		tt.loadTemplates("");
+		TinyTemplate tt = new TinyTemplate("");
 		
 		assertEquals("", tt.expand("test"));
-		assertFalse("expand should return false if the template was not expanded",
+		assertFalse("expand returns false if the template was not expanded",
 				tt.expand("test", new PrintStream(new ByteArrayOutputStream())));
 	}
 	
 	@Test
-	public void testSimple1() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate();
-		tt.loadTemplates("test [[hello]]");
+	public void testSimple_1() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("test [[hello]]");
 		
 		assertEquals("hello", tt.expand("test"));
-		assertTrue("expand should return true if the template was expanded",
+		assertTrue("expand returns true if the template was expanded",
 				tt.expand("test", new PrintStream(new ByteArrayOutputStream())));
 	}
 	
 	@Test
-	public void testSimple2() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate();
-		tt.loadTemplates("test = [[$hello]]");
+	public void testSimple_2() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("foo [[]]");
+		
+		assertEquals("", tt.expand("foo"));
+		assertTrue("expand returns true if the template was expanded",
+				tt.expand("foo", new PrintStream(new ByteArrayOutputStream())));
+	}
+	
+	/**
+	 * Missing template name
+	 * @throws SyntaxError 
+	 */
+	@Test(expected=SyntaxError.class)
+	public void testSyntaxError_1() throws SyntaxError {
+		new TinyTemplate("[[]]");
+	}
+	
+	/**
+	 * Missing template name
+	 * @throws SyntaxError 
+	 */
+	@Test(expected=SyntaxError.class)
+	public void testSyntaxError_2() throws SyntaxError {
+		new TinyTemplate(" = [[]]");
+	}
+	
+	/**
+	 * Missing end of template body
+	 * @throws SyntaxError 
+	 */
+	@Test(expected=SyntaxError.class)
+	public void testSyntaxError_3() throws SyntaxError {
+		new TinyTemplate("x = [[  ");
+	}
+	
+	/**
+	 * Missing end of template body
+	 * @throws SyntaxError 
+	 */
+	@Test(expected=SyntaxError.class)
+	public void testSyntaxError_4() throws SyntaxError {
+		new TinyTemplate("x = [[  ]");
+	}
+	
+	/**
+	 * Missing start of template body
+	 * @throws SyntaxError 
+	 */
+	@Test(expected=SyntaxError.class)
+	public void testSyntaxError_5() throws SyntaxError {
+		new TinyTemplate("x = ]]");
+	}
+	
+	/**
+	 * Missing start of template body
+	 * @throws SyntaxError 
+	 */
+	@Test(expected=SyntaxError.class)
+	public void testSyntaxError_6() throws SyntaxError {
+		new TinyTemplate("x = [  ]]");
+	}
+	
+	/**
+	 * Tests a template variable
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testVariable_1() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("test = [[$hello]]");
 		
 		tt.bind("hello", "hej");
 		assertEquals("hej", tt.expand("test"));
+	}
+	
+	/**
+	 * Tests an unbound variable
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testVariable_2() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("test = [[x $hello y]]");
+		
+		assertEquals("x <unbound variable hello> y", tt.expand("test"));
 	}
 	
 	/**
@@ -47,9 +122,8 @@ public class TestTinyTemplate {
 	 * @throws SyntaxError
 	 */
 	@Test
-	public void testMultiAssign1() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate();
-		tt.loadTemplates("test == == [[$hello]]");
+	public void testMultiAssign_1() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("test == == [[$hello]]");
 		
 		tt.bind("hello", "hej");
 		assertEquals("hej", tt.expand("test"));
@@ -60,9 +134,24 @@ public class TestTinyTemplate {
 	 * @throws SyntaxError
 	 */
 	@Test
-	public void testMultiAssign2() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate();
-		tt.loadTemplates("test == foo = = = bar [[$hello]]");
+	public void testSynonyms_1() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"test == foo = = = bar [[$hello]]");
+		
+		tt.bind("hello", "hej");
+		assertEquals("hej", tt.expand("test"));
+		assertEquals("hej", tt.expand("foo"));
+		assertEquals("hej", tt.expand("bar"));
+	}
+	
+	/**
+	 * Multiple template names are allowed for each template
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testSynonyms_2() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"test foo bar [[$hello]]");
 		
 		tt.bind("hello", "hej");
 		assertEquals("hej", tt.expand("test"));
@@ -71,13 +160,31 @@ public class TestTinyTemplate {
 	}
 	
 	@Test
-	public void testComment() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate();
-		tt.loadTemplates(
+	public void testComment_1() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
 				"# line comment\n" +
 				"test = [[$hello]]");
 		
 		tt.bind("hello", "hej");
 		assertEquals("hej", tt.expand("test"));
+	}
+	
+	@Test
+	public void testComment_2() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"foo=[[x]]# comment\n" +
+				"# test = [[y]]");
+		
+		assertEquals("", tt.expand("test"));
+		assertEquals("x", tt.expand("foo"));
+	}
+	
+	@Test
+	public void testComment_3() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"foo=[[## not a comment]]");
+		
+		assertEquals("hash signs inside a template body are not comments",
+				"# not a comment", tt.expand("foo"));
 	}
 }

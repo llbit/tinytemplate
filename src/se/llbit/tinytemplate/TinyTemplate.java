@@ -43,6 +43,24 @@ public class TinyTemplate {
 	private Map<String, Template> templates = new HashMap<String, Template>();
 	
 	/**
+	 * Load templates from input stream
+	 * @param in
+	 * @throws SyntaxError 
+	 */
+	public TinyTemplate(InputStream in) throws SyntaxError {
+		loadTemplates(in);
+	}
+	
+	/**
+	 * Load a templates from string
+	 * @param string
+	 * @throws SyntaxError 
+	 */
+	public TinyTemplate(String string) throws SyntaxError {
+		loadTemplates(string);
+	}
+
+	/**
 	 * Expand a template
 	 * @param templateName
 	 * @return The template expansion
