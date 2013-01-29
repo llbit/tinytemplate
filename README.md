@@ -4,8 +4,9 @@ tinytemplate
 A tiny template engine.
 
 * Multiple templates per file
-* Templates only contain text and variable references
-* Variables are reset after each expansion (if `PersistentVariables` is not set to `true`)
+* Line comments using `#` outside of template bodies
+* Templates only contain text and variable (`$`) or attribute references (`#`)
+* Indentation is preserved
 
 Copyright & License
 -------------------
