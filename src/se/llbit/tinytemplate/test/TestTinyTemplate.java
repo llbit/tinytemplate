@@ -131,6 +131,17 @@ public class TestTinyTemplate {
 	}
 	
 	/**
+	 * Double dollar signs escape to a single dollar sign
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testVariable_3() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("test = [[ $$ not a variable ]]");
+		
+		assertEquals(" $ not a variable ", tt.expand("test"));
+	}
+	
+	/**
 	 * Multiple assign are allowed between template name and template body
 	 * @throws SyntaxError
 	 */
