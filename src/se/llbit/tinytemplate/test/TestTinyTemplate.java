@@ -147,7 +147,9 @@ public class TestTinyTemplate {
 	 */
 	@Test
 	public void testMultiAssign_1() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate("test == == [[$hello]]");
+		TinyTemplate tt = new TinyTemplate(
+				"test == \n" +
+				"== ==== = ===== [[$hello]]");
 		
 		tt.bind("hello", "hej");
 		assertEquals("hej", tt.expand("test"));
