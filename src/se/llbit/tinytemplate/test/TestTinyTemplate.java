@@ -224,4 +224,17 @@ public class TestTinyTemplate {
 		assertEquals(" 123 ", tt.expand("foo"));
 		assertEquals(" XY123.Z ", tt.expand("bar"));
 	}
+	
+	@Test
+	public void testPersistentVariables_2() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"foo [[ $boo ]]\n" +
+				"bar [[ XY$boo.Z ]]");
+		
+		tt.setPersistentVariables(false);
+		
+		tt.bind("boo", "123");
+		assertEquals(" 123 ", tt.expand("foo"));
+		assertEquals(" XY<unbound variable boo>.Z ", tt.expand("bar"));
+	}
 }
