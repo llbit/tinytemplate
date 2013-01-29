@@ -25,7 +25,7 @@ import se.llbit.io.LookaheadReader;
 
 /**
  * Parses template files
- * @author Jesper Öqvist <jesper.oqvist@cs.lth.se>
+ * @author Jesper Öqvist <jesper@llbit.se>
  */
 public class TemplateParser {
 
