@@ -119,6 +119,24 @@ public class TestTinyTemplate {
 	}
 	
 	/**
+	 * Double brackets not allowed inside double brackets
+	 * @throws SyntaxError
+	 */
+	@Test(expected=SyntaxError.class)
+	public void testSyntaxError_7() throws SyntaxError {
+		new TinyTemplate("x = [[ [[ ]]");
+	}
+	
+	/**
+	 * Double brackets not allowed inside double brackets
+	 * @throws SyntaxError
+	 */
+	@Test(expected=SyntaxError.class)
+	public void testSyntaxError_8() throws SyntaxError {
+		new TinyTemplate("x = [[ ]] ]]");
+	}
+	
+	/**
 	 * Tests a template variable
 	 * @throws SyntaxError
 	 */
