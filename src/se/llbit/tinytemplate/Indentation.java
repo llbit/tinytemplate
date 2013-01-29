@@ -16,41 +16,39 @@
  */
 package se.llbit.tinytemplate;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Indentation fragment factory
  * @author Jesper Öqvist <jesper@llbit.se>
  */
-public class IndentationFragment implements IFragment {
-	
-	private final int level;
-	
+public class Indentation {
 	private static final String indentation = "  ";
-	private static final List<String> ind = new ArrayList<String>(10);
+	private static final List<String> ind = new ArrayList<String>(32);
+	private static final List<IFragment> fragments = new ArrayList<IFragment>(32);
 	
 	static {
-		ind.add(indentation);
-	}
-	
-	/**
-	 * @param indentationLevel
-	 */
-	public IndentationFragment(int indentationLevel) {
-		level = indentationLevel;
+		resetIndentation();
 	}
 
-	@Override
-	public void expand(TinyTemplate template, PrintStream out) {
-		ind(level);
+	private static void resetIndentation() {
+		ind.clear();
+		ind.add("");
+		fragments.add(new StringFragment(""));
 	}
-	
-	private static String ind(int lvl) {
-		while (lvl < (ind.size()-1)) {
-			ind.add(ind.get(ind.size()-1) + indentation);
+		
+	/**
+	 * @param level The level of indentation
+	 * @return StringFragment corresponding to the given indentation level
+	 */
+	public IFragment getIndentation(int level) {
+		while (ind.size() < (level+1)) {
+			String str = ind.get(ind.size()-1) + indentation;
+			ind.add(str);
+			fragments.add(new StringFragment(str));
 		}
-		return ind.get(lvl-1);
+		return fragments.get(level);
 	}
 
 }
