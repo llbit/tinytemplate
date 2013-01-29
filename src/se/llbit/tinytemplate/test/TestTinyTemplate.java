@@ -119,7 +119,7 @@ public class TestTinyTemplate {
 	}
 	
 	/**
-	 * Double brackets not allowed inside double brackets
+	 * Double brackets not allowed inside template body
 	 * @throws SyntaxError
 	 */
 	@Test(expected=SyntaxError.class)
@@ -128,7 +128,7 @@ public class TestTinyTemplate {
 	}
 	
 	/**
-	 * Double brackets not allowed inside double brackets
+	 * Double brackets not allowed inside template body
 	 * @throws SyntaxError
 	 */
 	@Test(expected=SyntaxError.class)
