@@ -65,6 +65,22 @@ public class TestTinyTemplate {
 	}
 	
 	/**
+	 * Newlines in template body
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testSimple_5() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"x= [[\n" +
+				"z\r" +
+				"\r\n" +
+				"]]");
+		
+		String nl = System.getProperty("line.separator");
+		assertEquals(nl + "z" + nl + nl, tt.expand("x"));
+	}
+	
+	/**
 	 * Missing template name
 	 * @throws SyntaxError 
 	 */
