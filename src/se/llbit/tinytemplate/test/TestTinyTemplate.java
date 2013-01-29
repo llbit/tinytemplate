@@ -41,6 +41,19 @@ public class TestTinyTemplate {
 	}
 	
 	/**
+	 * Multiple templates in one "file"
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testSimple_3() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"foo [[ baa ]] bar [[ faa ]]");
+		
+		assertEquals(" baa ", tt.expand("foo"));
+		assertEquals(" faa ", tt.expand("bar"));
+	}
+	
+	/**
 	 * Missing template name
 	 * @throws SyntaxError 
 	 */
