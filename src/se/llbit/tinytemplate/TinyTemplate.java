@@ -22,6 +22,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,6 +44,8 @@ public class TinyTemplate {
 	
 	private Map<String, Template> templates = new HashMap<String, Template>();
 	
+	private Object context = this;
+	
 	/**
 	 * Load templates from input stream
 	 * @param in
@@ -58,6 +62,14 @@ public class TinyTemplate {
 	 */
 	public TinyTemplate(String string) throws SyntaxError {
 		loadTemplates(string);
+	}
+	
+	/**
+	 * Set the context object for attribute evaluation
+	 * @param obj
+	 */
+	public void setContext(Object obj) {
+		context = obj;
 	}
 
 	/**
@@ -165,7 +177,19 @@ public class TinyTemplate {
 	 * @return The string value returned from the attribute
 	 */
 	public String evalAttribute(String attribute) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			Method method = context.getClass().getMethod(attribute, new Class[] {});
+			return "" + method.invoke(context, new Object[] {});
+		} catch (SecurityException e) {
+			return "<failed to eval " + attribute + "; reason: security exception>";
+		} catch (NoSuchMethodException e) {
+			return "<failed to eval " + attribute + "; reason: no such method>";
+		} catch (IllegalArgumentException e) {
+			return "<failed to eval " + attribute + "; reason: illegal argument exception>";
+		} catch (IllegalAccessException e) {
+			return "<failed to eval " + attribute + "; reason: illegal access exception>";
+		} catch (InvocationTargetException e) {
+			return "<failed to eval " + attribute + "; reason: invocation target exception>";
+		}
 	}
 }

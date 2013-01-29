@@ -200,6 +200,30 @@ public class TestTinyTemplate {
 	}
 	
 	/**
+	 * Attribute evaluation calls the attribute method on the context object
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testAttribute_1() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("foo = [[#toString]]");
+		
+		tt.setContext("the string");
+		assertEquals("the string", tt.expand("foo"));
+	}
+	
+	/**
+	 * Attempting to evaluate an attribute on an object with no such method
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testAttribute_2() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("foo = [[#imaginaryMethod]]");
+		
+		tt.setContext("the string");
+		assertEquals("<failed to eval imaginaryMethod; reason: no such method>", tt.expand("foo"));
+	}
+	
+	/**
 	 * Multiple assign are allowed between template name and template body
 	 * @throws SyntaxError
 	 */
