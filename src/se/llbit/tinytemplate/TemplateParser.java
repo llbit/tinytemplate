@@ -107,7 +107,7 @@ public class TemplateParser {
 					throw new SyntaxError(line, "missing template name");
 				}
 				
-				Template template = nextTemplate();
+				Template template = parseTemplate();
 				for (String name: names) {
 					templates.addTemplate(name, template);
 				}
@@ -189,7 +189,7 @@ public class TemplateParser {
 		return name.toString();
 	}
 
-	private Template nextTemplate() throws IOException, SyntaxError {
+	private Template parseTemplate() throws IOException, SyntaxError {
 		
 		// skip [[
 		in.pop();
@@ -241,10 +241,13 @@ public class TemplateParser {
 		return template;
 	}
 
-	private String nextString() throws IOException {
+	private String nextString() throws IOException, SyntaxError {
 		StringBuffer buf = new StringBuffer(512);
 		while ( !(isEOF() || isVariable() || isAttribute() || isNewline() ||
 				isTemplateEnd()) ) {
+			
+			if (in.peek(0) == '[' && in.peek(1) == '[')
+				throw new SyntaxError(line, "double brackets are not allowed inside templates");
 			
 			if (in.peek(0) == '#' || in.peek(0) == '$') {
 				// it's cool - the # or $ was escaped!
