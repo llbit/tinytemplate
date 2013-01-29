@@ -16,6 +16,7 @@
  */
 package se.llbit.tinytemplate;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -54,6 +55,8 @@ public class TinyTemplate {
 	 * @param out
 	 */
 	public void expand(String templateName, OutputStream out) {
+		PrintStream ps = new PrintStream(new BufferedOutputStream(out));
+		expand(templateName, ps);
 	}
 	
 	/**
