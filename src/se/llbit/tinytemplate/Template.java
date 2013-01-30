@@ -35,6 +35,8 @@ public class Template {
 	
 	private Collection<IFragment> fragments = new ArrayList<IFragment>();
 
+	private Indentation indentation = new Indentation("  ");
+
 	/**
 	 * Expand the template to a PrintStream
 	 * @param template 
@@ -84,4 +86,11 @@ public class Template {
 		fragments.add(new StringFragment(str));
 	}
 
+	/**
+	 * Adds an indentation fragment
+	 * @param level Indentation level
+	 */
+	public void addIndentation(int level) {
+		fragments.add(Indentation.getFragment(level));
+	}
 }

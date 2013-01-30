@@ -16,6 +16,7 @@
  */
 package se.llbit.tinytemplate;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,31 +28,51 @@ import se.llbit.tinytemplate.fragment.StringFragment;
  * @author Jesper Öqvist <jesper@llbit.se>
  */
 public class Indentation {
-	private static final String indentation = "  ";
-	private static final List<String> ind = new ArrayList<String>(32);
-	private static final List<IFragment> fragments = new ArrayList<IFragment>(32);
-	
-	static {
-		resetIndentation();
+
+	public static class IndentationFragment implements IFragment {
+		private final int level;
+
+		protected IndentationFragment(int indentLevel) {
+			level = indentLevel;
+		}
+
+		@Override
+		public void expand(TinyTemplate template, PrintStream out) {
+			out.print(template.evalIndentation(level));
+		}
 	}
 
-	private static void resetIndentation() {
-		ind.clear();
+	private final String indentation;
+	private final List<String> ind = new ArrayList<String>(32);
+
+	private static final List<IFragment> fragments =
+		new ArrayList<IFragment>(32);
+	
+	public Indentation(String indent) {
+		indentation = indent;
 		ind.add("");
-		fragments.add(new StringFragment(""));
 	}
 		
 	/**
 	 * @param level The level of indentation
-	 * @return StringFragment corresponding to the given indentation level
+	 * @return An indentation fragment for the given indentation level
 	 */
-	public IFragment getIndentation(int level) {
-		while (ind.size() < (level+1)) {
-			String str = ind.get(ind.size()-1) + indentation;
-			ind.add(str);
-			fragments.add(new StringFragment(str));
+	public static IFragment getFragment(int level) {
+		while (fragments.size() < (level+1)) {
+			fragments.add(new IndentationFragment(fragments.size()));
 		}
 		return fragments.get(level);
+	}
+
+	/**
+ 	 * @param level The level of indentation
+ 	 * @return The indentation string for the given indentation level
+ 	 */
+	public String getIndentation(int level) {
+		while (ind.size() < (level+1)) {
+			ind.add(ind.get(ind.size()-1) + indentation);
+		}
+		return ind.get(level);
 	}
 
 }

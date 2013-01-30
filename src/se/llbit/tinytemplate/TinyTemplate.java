@@ -34,6 +34,11 @@ import se.llbit.tinytemplate.TemplateParser.SyntaxError;
  * @author Jesper Öqvist <jesper@llbit.se>
  */
 public class TinyTemplate {
+
+	/**
+ 	 * Output indentation scheme
+ 	 */
+	private Indentation indentation = new Indentation("  ");
 	
 	/**
 	 * If <code>true</code> variables are not flushed after each expansion
@@ -191,5 +196,22 @@ public class TinyTemplate {
 		} catch (InvocationTargetException e) {
 			return "<failed to eval " + attribute + "; reason: invocation target exception>";
 		}
+	}
+
+	/**
+ 	 * @param levels Number of indentation levels
+ 	 * @return The cumulative indentation corresponding to the given
+ 	 * indentation level
+ 	 */
+	public String evalIndentation(int levels) {
+		return indentation.getIndentation(levels);
+	}
+
+	/**
+ 	 * Set new indentation scheme
+ 	 * @param indent A single indentation
+ 	 */
+	public void setIndentation(String indent) {
+		indentation = new Indentation(indent);
 	}
 }

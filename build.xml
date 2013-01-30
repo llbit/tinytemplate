@@ -1,0 +1,18 @@
+<project name="tinytemplate" default="build">
+
+    <target name="build">
+        <mkdir dir="bin"/>
+        <javac srcdir="src" destdir="bin" classpath="lib/junit.jar" />
+    </target>
+
+    <target name="clean">
+        <delete dir="bin" />
+    </target>
+
+	<target name="test" depends="build">
+        <java classname="org.junit.runner.JUnitCore"
+              classpath="bin:lib/junit.jar" >
+            <arg value="se.llbit.tinytemplate.test.TestTinyTemplate" />
+        </java>
+    </target>
+</project>

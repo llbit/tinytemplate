@@ -131,6 +131,11 @@ public class TemplateParser {
 		}
 	}
 
+	private void skipIndentation() throws IOException {
+		in.pop();
+		in.pop();
+	}
+
 	private boolean isTemplateStart() throws IOException, SyntaxError {
 		if (in.peek(0) == '[') {
 			if (in.peek(1) == '[') {
@@ -142,6 +147,10 @@ public class TemplateParser {
 			throw new SyntaxError(line, "misplaced ']'");
 		}
 		return false;
+	}
+
+	private boolean isIndentation() throws IOException {
+		return in.peek(0) == ' ' && in.peek(1) == ' ';
 	}
 
 	private boolean isTemplateEnd() throws IOException {
@@ -196,6 +205,8 @@ public class TemplateParser {
 		in.pop();
 		
 		Template template = new Template();
+
+		boolean newLine = true;
 		
 		while (true) {
 			
@@ -203,6 +214,17 @@ public class TemplateParser {
 				throw new SyntaxError(line, "unexpected end of file while parsing template body");
 			}
 			
+			if (newLine) {
+				int levels = 0;
+				while (newLine && isIndentation()) {
+					skipIndentation();
+					levels += 1;
+				}
+				template.addIndentation(levels);
+				newLine = false;
+				continue;
+			}
+
 			if (isVariable()) {
 				String var = nextReference();
 				if (var.isEmpty()) {
@@ -227,6 +249,7 @@ public class TemplateParser {
 				template.addAttributeRef(attr);
 			} else if (isNewline()) {
 				template.addNewline();
+				newLine = true;
 				skipNewline();
 			} else if (isTemplateEnd()) {
 				// skip ]]

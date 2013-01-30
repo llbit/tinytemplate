@@ -153,6 +153,24 @@ public class TestTinyTemplate {
 	}
 	
 	/**
+	 * Missing template body
+	 * @throws SyntaxError
+	 */
+	@Test(expected=SyntaxError.class)
+	public void testSyntaxError_9() throws SyntaxError {
+		new TinyTemplate("x = ");
+	}
+	
+	/**
+	 * Missing template body
+	 * @throws SyntaxError
+	 */
+	@Test(expected=SyntaxError.class)
+	public void testSyntaxError_10() throws SyntaxError {
+		new TinyTemplate("x");
+	}
+	
+	/**
 	 * Tests a template variable
 	 * @throws SyntaxError
 	 */
@@ -318,5 +336,24 @@ public class TestTinyTemplate {
 		tt.bind("boo", "123");
 		assertEquals(" 123 ", tt.expand("foo"));
 		assertEquals(" XY<unbound variable boo>.Z ", tt.expand("bar"));
+	}
+
+	@Test
+	public void testIndentation_1() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"foo = \n" +
+				"[[void m() {\n" +
+				"  \n" +
+				"    2  \n" +
+				"        ]]");
+
+		tt.setIndentation("\t");
+
+		String nl = System.getProperty("line.separator");
+		assertEquals(
+				"void m() {" + nl +
+				"\t" + nl +
+				"\t\t2  " + nl +
+				"\t\t\t\t", tt.expand("foo"));
 	}
 }
