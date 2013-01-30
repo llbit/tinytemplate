@@ -230,6 +230,14 @@ public class TemplateParser {
 				if (var.isEmpty()) {
 					throw new SyntaxError(line, "empty variable name");
 				}
+				for (int i = 0; i < var.length(); ++i) {
+					char ch = var.charAt(i);
+					if (!Character.isJavaIdentifierPart(ch) && ch != '.') {
+						throw new SyntaxError(line,
+							"illegal characters in variable name " + var);
+					}
+					
+				}
 				template.addVariableRef(var);
 			} else if (isAttribute()) {
 				String attr = nextReference();

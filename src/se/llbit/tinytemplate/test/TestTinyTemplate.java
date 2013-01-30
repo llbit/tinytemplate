@@ -205,15 +205,15 @@ public class TestTinyTemplate {
 	}
 	
 	/**
-	 * Special characters can be used in variable names if the name is
+	 * Java identifier characters and periods can be used in variable names
 	 * parenthesized.
 	 * @throws SyntaxError
 	 */
 	@Test
 	public void testVariable_4() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate("foo = [[$([what].wat)]]");
+		TinyTemplate tt = new TinyTemplate("foo = [[$(_.00wat1..)]]");
 		
-		tt.bind("[what].wat", "batman");
+		tt.bind("_.00wat1..", "batman");
 		assertEquals("batman", tt.expand("foo"));
 	}
 	
