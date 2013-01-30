@@ -220,7 +220,9 @@ public class TemplateParser {
 					skipIndentation();
 					levels += 1;
 				}
-				template.addIndentation(levels);
+				if (levels > 0) {
+					template.addIndentation(levels);
+				}
 				newLine = false;
 				continue;
 			}

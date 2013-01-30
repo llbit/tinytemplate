@@ -19,28 +19,40 @@ package se.llbit.tinytemplate.fragment;
 import java.io.PrintStream;
 
 import se.llbit.tinytemplate.TinyTemplate;
+import se.llbit.tinytemplate.Indentation.IndentationFragment;
 
 /**
  * @author Jesper Öqvist <jesper@llbit.se>
  */
-public class VariableReference extends ReferenceFragment {
+public abstract class ReferenceFragment implements IFragment {
 	
-	private final String variable;
+	private IndentationFragment indentation = null;
 	
+	protected void expandWithIndentation(String expansion,
+			TinyTemplate template, PrintStream out) {
+		
+		if (indentation == null) {
+			out.print(expansion);
+		} else {
+			String[] lines = expansion.split("\n|\r\n?");
+			for (int i = 0; i < lines.length; ++i) {
+				if (i != 0) {
+					indentation.expand(template, out);
+				}
+				if ((i+1) < lines.length) {
+					out.println(lines[i]);
+				} else {
+					out.print(lines[i]);
+				}
+			}
+		}
+	}
+
 	/**
-	 * @param variableName
+	 * Set the indentation for this reference expansion fragment
+	 * @param indent
 	 */
-	public VariableReference(String variableName) {
-		variable = variableName;
-	}
-
-	@Override
-	public void expand(TinyTemplate template, PrintStream out) {
-		expandWithIndentation(template.evalVariable(variable), template, out);
-	}
-
-	@Override
-	public String toString() {
-		return "$(" + variable + ")";
+	public void setIndentation(IndentationFragment indent) {
+		indentation = indent;
 	}
 }

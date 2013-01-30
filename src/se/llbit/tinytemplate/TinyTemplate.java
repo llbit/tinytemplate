@@ -26,6 +26,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 import se.llbit.tinytemplate.TemplateParser.SyntaxError;
 
@@ -49,7 +50,7 @@ public class TinyTemplate {
 	
 	private Map<String, Template> templates = new HashMap<String, Template>();
 	
-	private Object context = this;
+	private Stack<Object> context = new Stack<Object>();
 	
 	/**
 	 * Load templates from input stream
@@ -70,11 +71,21 @@ public class TinyTemplate {
 	}
 	
 	/**
-	 * Set the context object for attribute evaluation
+	 * Push a context object on the context stack.
+	 * Call this when entering a context.
+	 * 
 	 * @param obj
 	 */
-	public void setContext(Object obj) {
-		context = obj;
+	public void pushContext(Object obj) {
+		context.push(obj);
+	}
+	
+	/**
+	 * Remove the top object from the context stack.
+	 * Call this when leaving a context.
+	 */
+	public void popContext() {
+		context.pop();
 	}
 
 	/**
@@ -183,8 +194,12 @@ public class TinyTemplate {
 	 */
 	public String evalAttribute(String attribute) {
 		try {
-			Method method = context.getClass().getMethod(attribute, new Class[] {});
-			return "" + method.invoke(context, new Object[] {});
+			if (context.isEmpty()) {
+				return "<failed to eval " + attribute + "; reason: no context>";
+			}
+			Object contextObj = context.peek();
+			Method method = contextObj.getClass().getMethod(attribute, new Class[] {});
+			return "" + method.invoke(contextObj, new Object[] {});
 		} catch (SecurityException e) {
 			return "<failed to eval " + attribute + "; reason: security exception>";
 		} catch (NoSuchMethodException e) {

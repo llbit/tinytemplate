@@ -21,14 +21,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.llbit.tinytemplate.fragment.IFragment;
-import se.llbit.tinytemplate.fragment.StringFragment;
 
 /**
- * Indentation fragment factory
+ * Indentation fragment factory and indentation scheme
  * @author Jesper Öqvist <jesper@llbit.se>
  */
 public class Indentation {
 
+	/**
+	 * Indentation fragment
+	 */
 	public static class IndentationFragment implements IFragment {
 		private final int level;
 
@@ -48,6 +50,10 @@ public class Indentation {
 	private static final List<IFragment> fragments =
 		new ArrayList<IFragment>(32);
 	
+	/**
+	 * Create a new indentation scheme
+	 * @param indent One level of indentation
+	 */
 	public Indentation(String indent) {
 		indentation = indent;
 		ind.add("");

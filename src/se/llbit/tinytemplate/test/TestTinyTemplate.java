@@ -218,6 +218,51 @@ public class TestTinyTemplate {
 	}
 	
 	/**
+	 * Line endings in variable expansions are preserved as-is if the
+	 * expansion is not indented
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testVariable_5() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("foo = [[$block]]");
+
+		tt.bind("block",
+				"{\n" +
+				"  hello\r" +
+				"  you\r\n" +
+				"}");
+				
+		assertEquals(
+				"{\n" +
+				"  hello\r" +
+				"  you\r\n" +
+				"}", tt.expand("foo"));
+	}
+	
+	/**
+	 * Line endings in variable expansions are replaced by the current
+	 * system's default line ending when the expansion is indented
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testVariable_6() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("foo = [[  x$block]]");
+
+		tt.bind("block",
+				"{\n" +
+				"  hello\r" +
+				"  you\r\n" +
+				"}");
+				
+		String nl = System.getProperty("line.separator");
+		assertEquals(
+				"  x{" + nl +
+				"    hello" + nl +
+				"    you" + nl +
+				"  }", tt.expand("foo"));
+	}
+	
+	/**
 	 * Attribute evaluation calls the attribute method on the context object
 	 * @throws SyntaxError
 	 */
@@ -225,7 +270,7 @@ public class TestTinyTemplate {
 	public void testAttribute_1() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("foo = [[#toString]]");
 		
-		tt.setContext("the string");
+		tt.pushContext("the string");
 		assertEquals("the string", tt.expand("foo"));
 	}
 	
@@ -237,8 +282,19 @@ public class TestTinyTemplate {
 	public void testAttribute_2() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("foo = [[#imaginaryMethod]]");
 		
-		tt.setContext("the string");
+		tt.pushContext("the string");
 		assertEquals("<failed to eval imaginaryMethod; reason: no such method>", tt.expand("foo"));
+	}
+	
+	/**
+	 * Attempting to evaluate attribute without context
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testAttribute_3() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("foo = [[#imaginaryMethod]]");
+		
+		assertEquals("<failed to eval imaginaryMethod; reason: no context>", tt.expand("foo"));
 	}
 	
 	/**
@@ -356,4 +412,31 @@ public class TestTinyTemplate {
 				"\t\t2  " + nl +
 				"\t\t\t\t", tt.expand("foo"));
 	}
+	
+	/**
+	 * Expansions can be correctly indented, but the indentation inside the
+	 * expansion is not touched.
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testIndentationExpansion_1() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"foo = \n" +
+				"[[    $block]]");
+
+		tt.bind("block",
+				"{\n" +
+				"  hello\n" +
+				"  you\n" +
+				"}");
+		tt.setIndentation("    ");
+				
+		String nl = System.getProperty("line.separator");
+		assertEquals(
+				"        {" + nl +
+				"          hello" + nl +
+				"          you" + nl +
+				"        }", tt.expand("foo"));
+	}
+	
 }

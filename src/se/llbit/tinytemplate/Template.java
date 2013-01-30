@@ -19,11 +19,13 @@ package se.llbit.tinytemplate;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
+import se.llbit.tinytemplate.Indentation.IndentationFragment;
 import se.llbit.tinytemplate.fragment.AttributeReference;
 import se.llbit.tinytemplate.fragment.IFragment;
 import se.llbit.tinytemplate.fragment.NewlineFragment;
+import se.llbit.tinytemplate.fragment.ReferenceFragment;
 import se.llbit.tinytemplate.fragment.StringFragment;
 import se.llbit.tinytemplate.fragment.VariableReference;
 
@@ -33,9 +35,7 @@ import se.llbit.tinytemplate.fragment.VariableReference;
  */
 public class Template {
 	
-	private Collection<IFragment> fragments = new ArrayList<IFragment>();
-
-	private Indentation indentation = new Indentation("  ");
+	private List<IFragment> fragments = new ArrayList<IFragment>();
 
 	/**
 	 * Expand the template to a PrintStream
@@ -67,7 +67,9 @@ public class Template {
 	 * @param variable Variable name
 	 */
 	public void addVariableRef(String variable) {
-		fragments.add(new VariableReference(variable));
+		VariableReference ref = new VariableReference(variable);
+		addIndentation(ref);
+		fragments.add(ref);
 	}
 
 	/**
@@ -75,7 +77,23 @@ public class Template {
 	 * @param attribute Attribute name
 	 */
 	public void addAttributeRef(String attribute) {
-		fragments.add(new AttributeReference(attribute));
+		AttributeReference ref = new AttributeReference(attribute);
+		addIndentation(ref);
+		fragments.add(ref);
+	}
+
+	private void addIndentation(ReferenceFragment ref) {
+		// find previous indentation
+		int ind;
+		for (ind = fragments.size()-1; ind >= 0; ind -= 1) {
+			if (fragments.get(ind) instanceof IndentationFragment) {
+				break;
+			}
+		}
+		if (ind >= 0) {
+			ref.setIndentation((IndentationFragment) fragments.get(ind));
+		}
+		
 	}
 
 	/**

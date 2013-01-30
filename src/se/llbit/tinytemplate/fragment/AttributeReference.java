@@ -24,7 +24,7 @@ import se.llbit.tinytemplate.TinyTemplate;
  * Reflectively expands an attribute in the template context
  * @author Jesper Öqvist <jesper@llbit.se>
  */
-public class AttributeReference implements IFragment {
+public class AttributeReference extends ReferenceFragment {
 	
 	private final String attribute;
 	
@@ -37,7 +37,7 @@ public class AttributeReference implements IFragment {
 
 	@Override
 	public void expand(TinyTemplate template, PrintStream out) {
-		out.print(template.evalAttribute(attribute));
+		expandWithIndentation(template.evalAttribute(attribute), template, out);
 	}
 
 	@Override
