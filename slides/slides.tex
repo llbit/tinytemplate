@@ -1,0 +1,166 @@
+% vim: set et ts=4 sw=4:
+\documentclass[a4paper,12pt,presentation]{beamer}
+
+\mode<presentation>{
+    \usetheme{llbit}
+    \setbeamercovered{transparent}
+}
+
+\usepackage{fancyvrb}
+
+% input
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+% typefaces
+\usepackage[T1]{fontenc}
+\usepackage[scaled]{helvet}
+\usepackage[scaled]{beramono}
+
+\title[tinytemplate]{A tiny template engine}
+\author{Jesper Öqvist}
+\institute{Department of Computer Science\\
+Lund University}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+%\begin{frame}{Outline}
+%    \tableofcontents
+%\end{frame}
+
+\begin{frame}
+    \frametitle{Why Tiny Templates?}
+    \begin{itemize}
+
+        \item A template system should be as simple as possible
+
+        \item Control statements make templates harder to read, edit, and test
+
+        \item If the template syntax is kept simple, the template
+            system will be easy to use
+
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{What we Need}
+    \begin{itemize}
+
+        \item Simple templates
+
+            \pause
+
+            \begin{itemize}
+                \item Only allow variable (and attribute) expansion in templates
+            \end{itemize}
+
+        \pause
+
+        \item Intelligent indentation
+
+            \pause
+            \begin{itemize}
+                \item Customizable output indentation
+                \item Variable expansions are indented per line
+            \end{itemize}
+
+        \pause
+
+        \item Multiple templates per template file (convenient)
+
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Variable Expansion}
+
+    \begin{itemize}
+        \item Variable references have two forms:
+            \begin{itemize}
+                \item \verb'$varname'
+                \item \verb'$(varname)'
+            \end{itemize}
+        \item Variable names can include periods, but remember to use
+            parenthesis: \verb'$(var.name)'
+        \item Parenthesis are also needed when the reference
+            is in the middle of a word: \verb'$(var)_name'
+    \end{itemize}
+    
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Context}
+
+    \begin{itemize}
+        \item All template expansions happen with a given \emph{context}
+        \item The context is an ordinary Java \verb'Object'
+        \item Use \verb'pushContext' and \verb'popContext' in the template
+            expanding Java code
+    \end{itemize}
+    
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Attribute Expansion}
+
+    \begin{itemize}
+        \item A hash sign is used to reference an attribute:
+            \begin{itemize}
+                \item \verb'#name'
+                \item \verb'#(name)'
+            \end{itemize}
+        \item Attributes are Java methods invoked on the context object
+        \item The attribute method must take no arguments and have non-void
+            return type
+        \item The expansion of an attribute is equal to the return value
+            of the attribute method converted to a string
+    \end{itemize}
+    
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Template Declarations}
+
+    \begin{itemize}
+        \item A template file includes a number of template declarations
+        \item Each template is declared with one or more names
+        \item Template bodies are enclosed in \verb'[[' and \verb']]'
+        \item The \verb'=' is optional
+    \end{itemize}
+
+    Examples:
+    \begin{verbatim}
+        template1 = [[ ]]
+
+        template2 = [[xy]]
+
+        X = Y = [[$x]]
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{JastAdd Integration}
+
+    \begin{verbatim}
+        // Test.jrag
+        syn String A.name() = "myName";
+
+        // Test.java
+        tt.pushContext(new A());
+        tt.expand("my.template", out);
+        tt.popContext();
+
+        // Test.tt
+        my.template = [[public String #name;]]
+
+        // out
+        public String myName;
+    \end{verbatim}
+\end{frame}
+
+\end{document}
+

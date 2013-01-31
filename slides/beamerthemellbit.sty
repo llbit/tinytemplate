@@ -1,0 +1,16 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerthemellbit}[2013/01/30 simple beamer style]
+
+\mode<presentation>
+
+\defbeamertemplate*{footline}{mc theme}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[center]{palette primary}%
+    \usebeamerfont{author in head/foot}
+    \insertshorttitle \hspace{1mm} -- \hspace{1mm}
+    \insertframenumber{}
+  \end{beamercolorbox}%
+  }%
+}
