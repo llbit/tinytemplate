@@ -290,6 +290,42 @@ public class TestTinyTemplate {
 	}
 	
 	/**
+	 * Tests variable shadowing in subcontext
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testVariable_7() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("a[[$x]]");
+		
+		tt.bind("x", "123");
+		tt.pushContext(new Object());
+		tt.bind("x", "UIO");
+		assertEquals("UIO", tt.expand("a"));
+		tt.popContext();
+		assertEquals("123", tt.expand("a"));
+	}
+	
+	/**
+	 * Tests variable unbinding due to context poping
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testVariable_8() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("a[[$x]]");
+		
+		tt.pushContext(new Object());
+		tt.bind("x", "UIO");
+		tt.popContext();
+		assertEquals("<unbound variable x>", tt.expand("a"));
+	}
+	
+	@Test(expected=RuntimeException.class)
+	public void testContextStackError_1() {
+		TinyTemplate tt = new TinyTemplate();
+		tt.popContext();
+	}
+	
+	/**
 	 * Attribute evaluation calls the attribute method on the context object
 	 * @throws SyntaxError
 	 */
