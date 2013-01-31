@@ -3,10 +3,12 @@ tinytemplate
 
 A tiny template engine.
 
+Features:
+
 * Multiple templates per file
 * Line comments using `#` outside of template bodies
 * Templates only contain text and variable (`$`) or attribute references (`#`)
-* Indentation is preserved
+* Indentation is applied to variable and attribute expansions
 
 Copyright & License
 -------------------
