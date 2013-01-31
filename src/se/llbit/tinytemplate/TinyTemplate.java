@@ -27,6 +27,8 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
+import java.util.List;
+import java.util.ArrayList;
 
 import se.llbit.tinytemplate.TemplateParser.SyntaxError;
 
@@ -41,16 +43,25 @@ public class TinyTemplate {
  	 */
 	private Indentation indentation = new Indentation("  ");
 	
-	/**
-	 * If <code>true</code> variables are not flushed after each expansion
-	 */
-	private boolean persistentVariables = true;
-	
-	private Map<String, String> variables = new HashMap<String, String>();
-	
 	private Map<String, Template> templates = new HashMap<String, Template>();
 	
 	private Stack<Object> context = new Stack<Object>();
+
+	/**
+ 	 * Variable stack
+ 	 */
+	private List<Map<String, String>> variables =
+		new ArrayList<Map<String, String>>();
+	
+	{
+		variables.add(new HashMap<String, String>());
+	}
+
+	/**
+ 	 * Start with empty template set
+ 	 */
+	public TinyTemplate() {
+	}
 	
 	/**
 	 * Load templates from input stream
@@ -78,6 +89,7 @@ public class TinyTemplate {
 	 */
 	public void pushContext(Object obj) {
 		context.push(obj);
+		variables.add(new HashMap<String, String>());
 	}
 	
 	/**
@@ -85,7 +97,12 @@ public class TinyTemplate {
 	 * Call this when leaving a context.
 	 */
 	public void popContext() {
-		context.pop();
+		if (!context.isEmpty()) {
+			context.pop();
+			variables.remove(variables.size()-1);
+		} else {
+			throw new RuntimeException("Can not pop empty context stack!");
+		}
 	}
 
 	/**
@@ -122,38 +139,51 @@ public class TinyTemplate {
 			return false;
 		} else {
 			temp.expand(this, out);
-			if (!persistentVariables) {
-				variables.clear();
-			}
 			return true;
 		}
+	}
+
+	/**
+ 	 * Unbinds all currently bound variables.
+ 	 */
+	public void flushVariables() {
+		variables.clear();
 	}
 	
 	/**
 	 * Bind a string value to a variable
-	 * @param var
-	 * @param value
+	 * @param varName Variable to bind
+	 * @param value Value to bind
 	 */
-	public void bind(String var, String value) {
-		variables.put(var, value);
+	public void bind(String varName, String value) {
+		variables.get(variables.size()-1).put(varName, value);
 	}
 
 	/**
-	 * Set the PersistentVariables option.
-	 * @param b New value for the option
+	 * Bind a template expansion to a variable.
+	 * Synonymous to <code>bind(varName, expand(templateName))</code>.
+	 * @param varName Variable to bind
+	 * @param templateName The template to expand
 	 */
-	public void setPersistentVariables(boolean b) {
-		persistentVariables = b;
+	public void bindExpansion(String varName, String templateName) {
+		bind(varName, expand(templateName));
 	}
 
 	/**
-	 * @param variable
-	 * @return The variable value, or the string "&lt;unbound variable NAME&gt;"
+ 	 * Lookup variable on the variable stack and return the variable expansion
+ 	 * if it was found.
+	 * @param varName
+	 * @return The variable value, or the string "&lt;unbound variable varName&gt;"
 	 * if the variable was not bound
 	 */
-	public String evalVariable(String variable) {
-		String var = variables.get(variable);
-		return var != null ? var : ("<unbound variable " + variable + ">");
+	public String evalVariable(String varName) {
+		for (int i = variables.size()-1; i >= 0; i -= 1) {
+			String var = variables.get(i).get(varName);
+			if (var != null) {
+				return var;
+			}
+		}
+		return "<unbound variable " + varName + ">";
 	}
 	
 	
