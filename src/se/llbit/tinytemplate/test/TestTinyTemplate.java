@@ -81,6 +81,33 @@ public class TestTinyTemplate {
 	}
 	
 	/**
+	 * Newlines in template body
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testSimple_6() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"foo =\n" +
+				"[[void a() {\n" +
+				"  baa;\n" +
+				"}\n" +
+				"\n" +
+				"void b() {\n" +
+				"  boo(hoo);\n" +
+				"}]]");
+		
+		String nl = System.getProperty("line.separator");
+		assertEquals(
+				"void a() {" + nl +
+				"  baa;" + nl +
+				"}" + nl +
+				nl +
+				"void b() {" + nl +
+				"  boo(hoo);" + nl +
+				"}", tt.expand("foo"));
+	}
+	
+	/**
 	 * Missing template name
 	 * @throws SyntaxError 
 	 */
