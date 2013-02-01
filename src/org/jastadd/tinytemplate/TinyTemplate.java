@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with tinytemplate.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.llbit.tinytemplate;
+package org.jastadd.tinytemplate;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -30,7 +30,8 @@ import java.util.Stack;
 import java.util.List;
 import java.util.ArrayList;
 
-import se.llbit.tinytemplate.TemplateParser.SyntaxError;
+import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
+
 
 /**
  * Tiny template engine.

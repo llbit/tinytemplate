@@ -14,13 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with tinytemplate.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.llbit.tinytemplate;
+package org.jastadd.tinytemplate;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.llbit.tinytemplate.fragment.IFragment;
+import org.jastadd.tinytemplate.fragment.IFragment;
+
 
 /**
  * Indentation fragment factory and indentation scheme

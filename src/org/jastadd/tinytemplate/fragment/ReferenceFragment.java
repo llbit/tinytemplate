@@ -14,12 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with tinytemplate.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.llbit.tinytemplate.fragment;
+package org.jastadd.tinytemplate.fragment;
 
 import java.io.PrintStream;
 
-import se.llbit.tinytemplate.TinyTemplate;
-import se.llbit.tinytemplate.Indentation.IndentationFragment;
+import org.jastadd.tinytemplate.TinyTemplate;
+import org.jastadd.tinytemplate.Indentation.IndentationFragment;
+
 
 /**
  * @author Jesper Öqvist <jesper@llbit.se>

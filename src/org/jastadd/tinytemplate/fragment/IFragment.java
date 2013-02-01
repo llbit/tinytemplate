@@ -14,33 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with tinytemplate.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.llbit.tinytemplate.fragment;
+package org.jastadd.tinytemplate.fragment;
 
 import java.io.PrintStream;
 
-import se.llbit.tinytemplate.TinyTemplate;
+import org.jastadd.tinytemplate.TinyTemplate;
+
 
 /**
+ * Template fragment.
  * @author Jesper Öqvist <jesper@llbit.se>
  */
-public class VariableReference extends ReferenceFragment {
-	
-	private final String variable;
-	
+public interface IFragment {
+
 	/**
-	 * @param variableName
+	 * Expand the fragment to a PrintStream
+	 * @param template
+	 * @param out
 	 */
-	public VariableReference(String variableName) {
-		variable = variableName;
-	}
+	void expand(TinyTemplate template, PrintStream out);
 
-	@Override
-	public void expand(TinyTemplate template, PrintStream out) {
-		expandWithIndentation(template.evalVariable(variable), template, out);
-	}
-
-	@Override
-	public String toString() {
-		return "$(" + variable + ")";
-	}
 }

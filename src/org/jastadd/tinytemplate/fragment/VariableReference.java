@@ -14,34 +14,34 @@
  * You should have received a copy of the GNU General Public License
  * along with tinytemplate.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.llbit.tinytemplate.fragment;
+package org.jastadd.tinytemplate.fragment;
 
 import java.io.PrintStream;
 
-import se.llbit.tinytemplate.TinyTemplate;
+import org.jastadd.tinytemplate.TinyTemplate;
+
 
 /**
- * Reflectively expands an attribute in the template context
  * @author Jesper Öqvist <jesper@llbit.se>
  */
-public class AttributeReference extends ReferenceFragment {
+public class VariableReference extends ReferenceFragment {
 	
-	private final String attribute;
+	private final String variable;
 	
 	/**
-	 * @param attributeName
+	 * @param variableName
 	 */
-	public AttributeReference(String attributeName) {
-		attribute = attributeName;
+	public VariableReference(String variableName) {
+		variable = variableName;
 	}
 
 	@Override
 	public void expand(TinyTemplate template, PrintStream out) {
-		expandWithIndentation(template.evalAttribute(attribute), template, out);
+		expandWithIndentation(template.evalVariable(variable), template, out);
 	}
 
 	@Override
 	public String toString() {
-		return "#(" + attribute + ")";
+		return "$(" + variable + ")";
 	}
 }

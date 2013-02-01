@@ -1,14 +1,14 @@
-package se.llbit.tinytemplate.test;
+package org.jastadd.tinytemplate.test;
 
 import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+import org.jastadd.tinytemplate.TinyTemplate;
+import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
 import org.junit.Test;
 
-import se.llbit.tinytemplate.TemplateParser.SyntaxError;
-import se.llbit.tinytemplate.TinyTemplate;
 
 @SuppressWarnings("javadoc")
 public class TestTinyTemplate {

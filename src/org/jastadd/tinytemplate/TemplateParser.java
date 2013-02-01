@@ -14,14 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with tinytemplate.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.llbit.tinytemplate;
+package org.jastadd.tinytemplate;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import se.llbit.io.LookaheadReader;
+import org.jastadd.io.LookaheadReader;
+
 
 /**
  * Parses template files

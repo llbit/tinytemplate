@@ -14,20 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with tinytemplate.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.llbit.tinytemplate;
+package org.jastadd.tinytemplate;
 
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.llbit.tinytemplate.Indentation.IndentationFragment;
-import se.llbit.tinytemplate.fragment.AttributeReference;
-import se.llbit.tinytemplate.fragment.IFragment;
-import se.llbit.tinytemplate.fragment.NewlineFragment;
-import se.llbit.tinytemplate.fragment.ReferenceFragment;
-import se.llbit.tinytemplate.fragment.StringFragment;
-import se.llbit.tinytemplate.fragment.VariableReference;
+import org.jastadd.tinytemplate.Indentation.IndentationFragment;
+import org.jastadd.tinytemplate.fragment.AttributeReference;
+import org.jastadd.tinytemplate.fragment.IFragment;
+import org.jastadd.tinytemplate.fragment.NewlineFragment;
+import org.jastadd.tinytemplate.fragment.ReferenceFragment;
+import org.jastadd.tinytemplate.fragment.StringFragment;
+import org.jastadd.tinytemplate.fragment.VariableReference;
+
 
 /**
  * Template

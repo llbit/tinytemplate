@@ -14,33 +14,36 @@
  * You should have received a copy of the GNU General Public License
  * along with tinytemplate.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.llbit.tinytemplate.fragment;
+package org.jastadd.tinytemplate.fragment;
 
 import java.io.PrintStream;
 
-import se.llbit.tinytemplate.TinyTemplate;
+import org.jastadd.tinytemplate.TinyTemplate;
+
 
 /**
+ * Represents the system-dependent newline character sequence.
+ * 
+ * This is a singleton class.
+ * 
  * @author Jesper Öqvist <jesper@llbit.se>
  */
-public class StringFragment implements IFragment {
-	
-	private final String string;
+public class NewlineFragment implements IFragment {
 	
 	/**
-	 * @param theString
+	 * Singleton instance
 	 */
-	public StringFragment(String theString) {
-		string = theString;
-	}
+	public static IFragment INSTANCE = new NewlineFragment();
+	
+	private NewlineFragment() {}
 
 	@Override
 	public void expand(TinyTemplate template, PrintStream out) {
-		out.print(string);
+		out.println();
 	}
-
+	
 	@Override
 	public String toString() {
-		return string;
+		return "\n";
 	}
 }
