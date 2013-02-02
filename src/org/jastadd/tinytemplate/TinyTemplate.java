@@ -193,7 +193,9 @@ public class TinyTemplate {
 				return var;
 			}
 		}
-		return "<unbound variable " + varName + ">";
+		String msg = "unbound variable " + varName;
+		expansionWarning(msg);
+		return "<" + msg + ">";
 	}
 	
 	
@@ -235,22 +237,42 @@ public class TinyTemplate {
 	public String evalAttribute(String attribute) {
 		try {
 			if (context.isEmpty()) {
-				return "<failed to eval " + attribute + "; reason: no context>";
+				String msg = "failed to eval " + attribute + "; reason: no context";
+				expansionWarning(msg);
+				return "<" + msg + ">";
 			}
 			Object contextObj = context.peek();
 			Method method = contextObj.getClass().getMethod(attribute, new Class[] {});
 			return "" + method.invoke(contextObj, new Object[] {});
 		} catch (SecurityException e) {
-			return "<failed to eval " + attribute + "; reason: security exception>";
+			String msg = "failed to eval " + attribute + "; reason: security exception";
+			expansionWarning(msg);
+			return "<" + msg + ">";
 		} catch (NoSuchMethodException e) {
-			return "<failed to eval " + attribute + "; reason: no such method>";
+			String msg = "failed to eval " + attribute + "; reason: no such method";
+			expansionWarning(msg);
+			return "<" + msg + ">";
 		} catch (IllegalArgumentException e) {
-			return "<failed to eval " + attribute + "; reason: illegal argument exception>";
+			String msg = "failed to eval " + attribute + "; reason: illegal argument exception";
+			expansionWarning(msg);
+			return "<" + msg + ">";
 		} catch (IllegalAccessException e) {
-			return "<failed to eval " + attribute + "; reason: illegal access exception>";
+			String msg = "failed to eval " + attribute + "; reason: illegal access exception";
+			expansionWarning(msg);
+			return "<" + msg + ">";
 		} catch (InvocationTargetException e) {
-			return "<failed to eval " + attribute + "; reason: invocation target exception>";
+			String msg = "failed to eval " + attribute + "; reason: invocation target exception";
+			expansionWarning(msg);
+			return "<" + msg + ">";
 		}
+	}
+
+	/**
+	 * Prints a template expansion warning to stderr
+	 * @param msg
+	 */
+	private static void expansionWarning(String msg) {
+		System.err.println("Template expansion warning: " + msg);
 	}
 
 	/**
