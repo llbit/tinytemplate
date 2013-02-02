@@ -30,5 +30,5 @@ Examples
     # Variables are referenced using a $
     msg.hello.1 [[Hello $name!]]
     
-    # Parenthesis must be used if the variable name contains special characters (e.g. period)
+    # Parenthesis must be used if the variable name contains a period
     msg.hello.2 = [[Hello $(your.name)!]]
