@@ -13,7 +13,8 @@ Features:
 Copyright & License
 -------------------
 
-tinytemplate is copyright (c) 2013 Jesper Öqvist, <jesper@cs.lth.se>
+tinytemplate is copyright (c) 2013 Jesper Öqvist, <jesper@cs.lth.se>.
+All rights reserved.
 
 tinytemplate is provided under the terms of the modified BSD license, which
 you can find in the file named LICENSE.txt included in this software.
