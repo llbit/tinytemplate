@@ -25,70 +25,32 @@
  */
 package org.jastadd.tinytemplate;
 
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.jastadd.tinytemplate.fragment.IFragment;
-
-
 /**
- * Indentation fragment factory and indentation scheme
- * @author Jesper Öqvist <jesper@llbit.se>
+ * Template context is needed to expand a template. The template context
+ * is responsible for evaluating variables and attributes.
+ * @author Jesper Öqvist <jesper.oqvist@cs.lth.se>
  */
-public class Indentation {
-
+public interface ITemplateContext {
 	/**
-	 * Indentation fragment
+ 	 * Lookup variable on the variable stack and return the variable expansion
+ 	 * if it was found.
+	 * @param varName
+	 * @return The variable value, or the string "&lt;unbound variable varName&gt;"
+	 * if the variable was not bound
 	 */
-	public static class IndentationFragment implements IFragment {
-		private final int level;
-
-		protected IndentationFragment(int indentLevel) {
-			level = indentLevel;
-		}
-
-		@Override
-		public void expand(ITemplateContext context, PrintStream out) {
-			out.print(context.evalIndentation(level));
-		}
-	}
-
-	private final String indentation;
-	private final List<String> ind = new ArrayList<String>(32);
-
-	private static final List<IFragment> fragments =
-		new ArrayList<IFragment>(32);
+	String evalVariable(String varName);
 	
 	/**
-	 * Create a new indentation scheme
-	 * @param indent One level of indentation
+	 * Evaluate an attribute
+	 * @param attribute
+	 * @return The string value returned from the attribute
 	 */
-	public Indentation(String indent) {
-		indentation = indent;
-		ind.add("");
-	}
-		
-	/**
-	 * @param level The level of indentation
-	 * @return An indentation fragment for the given indentation level
-	 */
-	public static IFragment getFragment(int level) {
-		while (fragments.size() < (level+1)) {
-			fragments.add(new IndentationFragment(fragments.size()));
-		}
-		return fragments.get(level);
-	}
+	String evalAttribute(String attribute);
 
 	/**
- 	 * @param level The level of indentation
- 	 * @return The indentation string for the given indentation level
+ 	 * @param levels Number of indentation levels
+ 	 * @return The cumulative indentation corresponding to the given
+ 	 * indentation level
  	 */
-	public String getIndentation(int level) {
-		while (ind.size() < (level+1)) {
-			ind.add(ind.get(ind.size()-1) + indentation);
-		}
-		return ind.get(level);
-	}
-
+	String evalIndentation(int levels);
 }

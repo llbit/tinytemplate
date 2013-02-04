@@ -27,8 +27,7 @@ package org.jastadd.tinytemplate.fragment;
 
 import java.io.PrintStream;
 
-import org.jastadd.tinytemplate.TinyTemplate;
-
+import org.jastadd.tinytemplate.ITemplateContext;
 
 /**
  * Reflectively expands an attribute in the template context
@@ -46,8 +45,8 @@ public class AttributeReference extends ReferenceFragment {
 	}
 
 	@Override
-	public void expand(TinyTemplate template, PrintStream out) {
-		expandWithIndentation(template.evalAttribute(attribute), template, out);
+	public void expand(ITemplateContext context, PrintStream out) {
+		expandWithIndentation(context.evalAttribute(attribute), context, out);
 	}
 
 	@Override

@@ -27,8 +27,7 @@ package org.jastadd.tinytemplate.fragment;
 
 import java.io.PrintStream;
 
-import org.jastadd.tinytemplate.TinyTemplate;
-
+import org.jastadd.tinytemplate.ITemplateContext;
 
 /**
  * @author Jesper Öqvist <jesper@llbit.se>
@@ -45,7 +44,7 @@ public class StringFragment implements IFragment {
 	}
 
 	@Override
-	public void expand(TinyTemplate template, PrintStream out) {
+	public void expand(ITemplateContext context, PrintStream out) {
 		out.print(string);
 	}
 

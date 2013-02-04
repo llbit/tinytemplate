@@ -27,9 +27,8 @@ package org.jastadd.tinytemplate.fragment;
 
 import java.io.PrintStream;
 
-import org.jastadd.tinytemplate.TinyTemplate;
+import org.jastadd.tinytemplate.ITemplateContext;
 import org.jastadd.tinytemplate.Indentation.IndentationFragment;
-
 
 /**
  * @author Jesper Öqvist <jesper@llbit.se>
@@ -39,7 +38,7 @@ public abstract class ReferenceFragment implements IFragment {
 	private IndentationFragment indentation = null;
 	
 	protected void expandWithIndentation(String expansion,
-			TinyTemplate template, PrintStream out) {
+			ITemplateContext context, PrintStream out) {
 		
 		if (indentation == null) {
 			out.print(expansion);
@@ -47,7 +46,7 @@ public abstract class ReferenceFragment implements IFragment {
 			String[] lines = expansion.split("\n|\r\n?");
 			for (int i = 0; i < lines.length; ++i) {
 				if (i != 0) {
-					indentation.expand(template, out);
+					indentation.expand(context, out);
 				}
 				if ((i+1) < lines.length) {
 					out.println(lines[i]);

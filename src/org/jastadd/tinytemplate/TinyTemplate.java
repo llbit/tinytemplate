@@ -46,7 +46,7 @@ import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
  * Tiny template engine.
  * @author Jesper Öqvist <jesper@llbit.se>
  */
-public class TinyTemplate {
+public class TinyTemplate implements ITemplateContext {
 
 	/**
  	 * Output indentation scheme
@@ -179,13 +179,7 @@ public class TinyTemplate {
 		bind(varName, expand(templateName));
 	}
 
-	/**
- 	 * Lookup variable on the variable stack and return the variable expansion
- 	 * if it was found.
-	 * @param varName
-	 * @return The variable value, or the string "&lt;unbound variable varName&gt;"
-	 * if the variable was not bound
-	 */
+	@Override
 	public String evalVariable(String varName) {
 		for (int i = variables.size()-1; i >= 0; i -= 1) {
 			String var = variables.get(i).get(varName);
@@ -229,11 +223,7 @@ public class TinyTemplate {
 		templates.put(templateName, template);
 	}
 
-	/**
-	 * Evaluate an attribute
-	 * @param attribute
-	 * @return The string value returned from the attribute
-	 */
+	@Override
 	public String evalAttribute(String attribute) {
 		try {
 			if (context.isEmpty()) {
@@ -275,11 +265,7 @@ public class TinyTemplate {
 		System.err.println("Template expansion warning: " + msg);
 	}
 
-	/**
- 	 * @param levels Number of indentation levels
- 	 * @return The cumulative indentation corresponding to the given
- 	 * indentation level
- 	 */
+	@Override
 	public String evalIndentation(int levels) {
 		return indentation.getIndentation(levels);
 	}
