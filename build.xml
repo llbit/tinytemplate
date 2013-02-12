@@ -2,7 +2,10 @@
 
     <target name="build">
         <mkdir dir="bin"/>
-        <javac srcdir="src" destdir="bin" classpath="lib/junit.jar" />
+        <javac destdir="bin" classpath="lib/junit.jar">
+        	<src path="src/java"/>
+        	<src path="src/test"/>
+    	</javac>
     </target>
 
     <target name="clean">
@@ -12,7 +15,7 @@
 	<target name="test" depends="build">
         <java classname="org.junit.runner.JUnitCore"
               classpath="bin:lib/junit.jar" >
-            <arg value="se.llbit.tinytemplate.test.TestTinyTemplate" />
+            <arg value="org.jastadd.tinytemplate.test.TestTinyTemplate" />
         </java>
     </target>
 </project>
