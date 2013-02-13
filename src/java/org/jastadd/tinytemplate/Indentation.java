@@ -1,4 +1,4 @@
-/* Copyright (c) 2010-2013, Jesper Öqvist <jesper@cs.lth.se>
+/* Copyright (c) 2013, Jesper Öqvist <jesper@cs.lth.se>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -49,7 +49,7 @@ public class Indentation {
 		}
 
 		@Override
-		public void expand(ITemplateContext context, PrintStream out) {
+		public void expand(TemplateContext context, PrintStream out) {
 			out.print(context.evalIndentation(level));
 		}
 	}

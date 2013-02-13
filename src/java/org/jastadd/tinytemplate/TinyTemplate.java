@@ -1,4 +1,4 @@
-/* Copyright (c) 2010-2013, Jesper Öqvist <jesper@cs.lth.se>
+/* Copyright (c) 2013, Jesper Öqvist <jesper@cs.lth.se>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,19 +25,13 @@
  */
 package org.jastadd.tinytemplate;
 
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Stack;
-import java.util.List;
-import java.util.ArrayList;
 
 import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
 
@@ -46,27 +40,18 @@ import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
  * Tiny template engine.
  * @author Jesper Öqvist <jesper@llbit.se>
  */
-public class TinyTemplate implements ITemplateContext {
+public class TinyTemplate extends TemplateContext {
 
 	/**
  	 * Output indentation scheme
  	 */
 	private Indentation indentation = new Indentation("  ");
 	
+	/**
+	 * Template map
+	 */
 	private Map<String, Template> templates = new HashMap<String, Template>();
 	
-	private Stack<Object> context = new Stack<Object>();
-
-	/**
- 	 * Variable stack
- 	 */
-	private List<Map<String, String>> variables =
-		new ArrayList<Map<String, String>>();
-	
-	{
-		variables.add(new HashMap<String, String>());
-	}
-
 	/**
  	 * Start with empty template set
  	 */
@@ -91,105 +76,30 @@ public class TinyTemplate implements ITemplateContext {
 		loadTemplates(string);
 	}
 	
-	/**
-	 * Push a context object on the context stack.
-	 * Call this when entering a context.
-	 * 
-	 * @param obj
-	 */
-	public void pushContext(Object obj) {
-		context.push(obj);
-		variables.add(new HashMap<String, String>());
-	}
-	
-	/**
-	 * Remove the top object from the context stack.
-	 * Call this when leaving a context.
-	 */
-	public void popContext() {
-		if (!context.isEmpty()) {
-			context.pop();
-			variables.remove(variables.size()-1);
-		} else {
-			throw new RuntimeException("Can not pop empty context stack!");
-		}
-	}
-
-	/**
-	 * Expand a template
-	 * @param templateName
-	 * @return The template expansion
-	 */
-	public String expand(String templateName) {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		expand(templateName, new PrintStream(out));
-		return out.toString();
-	}
-	
-	/**
-	 * Expand a template
-	 * @param templateName
-	 * @param out
-	 */
-	public void expand(String templateName, OutputStream out) {
-		PrintStream ps = new PrintStream(new BufferedOutputStream(out));
-		expand(templateName, ps);
-	}
-	
-	/**
-	 * Expand a template
-	 * @param templateName
-	 * @param out
-	 * @return <code>true</code> if the template was expanded,
-	 * <code>false</code> if no such template exists
-	 */
-	public boolean expand(String templateName, PrintStream out) {
+	@Override
+	public boolean expand(TemplateContext tc, String templateName, PrintStream out) {
 		Template temp = templates.get(templateName);
 		if (temp == null) {
 			return false;
 		} else {
-			temp.expand(this, out);
+			temp.expand(tc, out);
 			return true;
 		}
 	}
 
-	/**
- 	 * Unbinds all currently bound variables.
- 	 */
+	@Override
 	public void flushVariables() {
-		variables.clear();
 	}
 	
-	/**
-	 * Bind a string value to a variable
-	 * @param varName Variable to bind
-	 * @param value Value to bind
-	 */
+	@Override
 	public void bind(String varName, String value) {
-		variables.get(variables.size()-1).put(varName, value);
-	}
-
-	/**
-	 * Bind a template expansion to a variable.
-	 * Synonymous to <code>bind(varName, expand(templateName))</code>.
-	 * @param varName Variable to bind
-	 * @param templateName The template to expand
-	 */
-	public void bindExpansion(String varName, String templateName) {
-		bind(varName, expand(templateName));
+		throw new UnsupportedOperationException("Can not bind variable on root template context");
 	}
 
 	@Override
 	public String evalVariable(String varName) {
-		for (int i = variables.size()-1; i >= 0; i -= 1) {
-			String var = variables.get(i).get(varName);
-			if (var != null) {
-				return var;
-			}
-		}
 		String msg = "unbound variable " + varName;
-		expansionWarning(msg);
-		return "<" + msg + ">";
+		return expansionWarning(msg);
 	}
 	
 	
@@ -225,44 +135,49 @@ public class TinyTemplate implements ITemplateContext {
 
 	@Override
 	public String evalAttribute(String attribute) {
+		return evalAttribute(attribute, null);
+	}
+	
+	/**
+	 * Eval attribute on context object
+	 * @param attribute
+	 * @param context
+	 * @return The value of the attribute on context object
+	 */
+	public static String evalAttribute(String attribute, Object context) {
 		try {
-			if (context.isEmpty()) {
+			if (context == null) {
 				String msg = "failed to eval " + attribute + "; reason: no context";
-				expansionWarning(msg);
-				return "<" + msg + ">";
+				return expansionWarning(msg);
 			}
-			Object contextObj = context.peek();
-			Method method = contextObj.getClass().getMethod(attribute, new Class[] {});
-			return "" + method.invoke(contextObj, new Object[] {});
+			Method method = context.getClass().getMethod(attribute, new Class[] {});
+			return "" + method.invoke(context, new Object[] {});
 		} catch (SecurityException e) {
 			String msg = "failed to eval " + attribute + "; reason: security exception";
-			expansionWarning(msg);
-			return "<" + msg + ">";
+			return expansionWarning(msg);
 		} catch (NoSuchMethodException e) {
 			String msg = "failed to eval " + attribute + "; reason: no such method";
-			expansionWarning(msg);
-			return "<" + msg + ">";
+			return expansionWarning(msg);
 		} catch (IllegalArgumentException e) {
 			String msg = "failed to eval " + attribute + "; reason: illegal argument exception";
-			expansionWarning(msg);
-			return "<" + msg + ">";
+			return expansionWarning(msg);
 		} catch (IllegalAccessException e) {
 			String msg = "failed to eval " + attribute + "; reason: illegal access exception";
-			expansionWarning(msg);
-			return "<" + msg + ">";
+			return expansionWarning(msg);
 		} catch (InvocationTargetException e) {
 			String msg = "failed to eval " + attribute + "; reason: invocation target exception";
-			expansionWarning(msg);
-			return "<" + msg + ">";
+			return expansionWarning(msg);
 		}
 	}
 
 	/**
 	 * Prints a template expansion warning to stderr
 	 * @param msg
+	 * @return Expansion-replacing error message
 	 */
-	private static void expansionWarning(String msg) {
+	private static String expansionWarning(String msg) {
 		System.err.println("Template expansion warning: " + msg);
+		return "<" + msg + ">";
 	}
 
 	@Override

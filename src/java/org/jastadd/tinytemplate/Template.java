@@ -1,4 +1,4 @@
-/* Copyright (c) 2010-2013, Jesper Öqvist <jesper@cs.lth.se>
+/* Copyright (c) 2013, Jesper Öqvist <jesper@cs.lth.se>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -52,7 +52,7 @@ public class Template {
 	 * @param template 
 	 * @param out
 	 */
-	public void expand(TinyTemplate template, PrintStream out) {
+	public void expand(TemplateContext template, PrintStream out) {
 		for (IFragment fragment : fragments) {
 			fragment.expand(template, out);
 		}

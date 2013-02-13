@@ -1,4 +1,4 @@
-/* Copyright (c) 2010-2013, Jesper Öqvist <jesper@cs.lth.se>
+/* Copyright (c) 2013, Jesper Öqvist <jesper@cs.lth.se>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,32 +25,66 @@
  */
 package org.jastadd.tinytemplate;
 
+import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * Template context is needed to expand a template. The template context
- * is responsible for evaluating variables and attributes.
+ * A simple template context
+ * 
  * @author Jesper Öqvist <jesper.oqvist@cs.lth.se>
  */
-public interface ITemplateContext {
-	/**
- 	 * Lookup variable on the variable stack and return the variable expansion
- 	 * if it was found.
-	 * @param varName
-	 * @return The variable value, or the string "&lt;unbound variable varName&gt;"
-	 * if the variable was not bound
-	 */
-	String evalVariable(String varName);
+public class SimpleContext extends TemplateContext {
 	
-	/**
-	 * Evaluate an attribute
-	 * @param attribute
-	 * @return The string value returned from the attribute
-	 */
-	String evalAttribute(String attribute);
+	private final TemplateContext parentContext;
+	
+	private final Map<String, String> variables = new HashMap<String, String>();
+
+	private final Object contextObject;
 
 	/**
- 	 * @param levels Number of indentation levels
- 	 * @return The cumulative indentation corresponding to the given
- 	 * indentation level
- 	 */
-	String evalIndentation(int levels);
+	 * Create a new simple context
+	 * @param parent The parent context
+	 * @param context The context object
+	 */
+	public SimpleContext(TemplateContext parent, Object context) {
+		parentContext = parent;
+		contextObject = context;
+	}
+
+	@Override
+	public String evalVariable(String varName) {
+		String var = variables.get(varName);
+		if (var != null) {
+			return var;
+		} else {
+			return parentContext.evalVariable(varName);
+		}
+	}
+
+	@Override
+	public String evalAttribute(String attribute) {
+		return TinyTemplate.evalAttribute(attribute, contextObject);
+	}
+
+	@Override
+	public String evalIndentation(int levels) {
+		return parentContext.evalIndentation(levels);
+	}
+
+	@Override
+	public boolean expand(TemplateContext tc, String templateName, PrintStream out) {
+		return parentContext.expand(tc, templateName, out);
+	}
+
+	@Override
+	public void flushVariables() {
+		variables.clear();
+	}
+	
+	@Override
+	public void bind(String varName, String value) {
+		variables.put(varName, value);
+	}
+
 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2010-2013, Jesper Öqvist <jesper@cs.lth.se>
+/* Copyright (c) 2013, Jesper Öqvist <jesper@cs.lth.se>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,7 +27,7 @@ package org.jastadd.tinytemplate.fragment;
 
 import java.io.PrintStream;
 
-import org.jastadd.tinytemplate.ITemplateContext;
+import org.jastadd.tinytemplate.TemplateContext;
 
 /**
  * Template fragment.
@@ -40,6 +40,6 @@ public interface IFragment {
 	 * @param context
 	 * @param out
 	 */
-	void expand(ITemplateContext context, PrintStream out);
+	void expand(TemplateContext context, PrintStream out);
 
 }

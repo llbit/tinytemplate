@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+import org.jastadd.tinytemplate.SimpleContext;
 import org.jastadd.tinytemplate.TinyTemplate;
 import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
 import org.junit.Test;
@@ -204,9 +205,10 @@ public class TestTinyTemplate {
 	@Test
 	public void testVariable_1() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("test = [[$hello]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
 		
-		tt.bind("hello", "hej");
-		assertEquals("hej", tt.expand("test"));
+		tc.bind("hello", "hej");
+		assertEquals("hej", tc.expand("test"));
 	}
 	
 	/**
@@ -239,9 +241,10 @@ public class TestTinyTemplate {
 	@Test
 	public void testVariable_4() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("foo = [[$(_.00wat1..)]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
 		
-		tt.bind("_.00wat1..", "batman");
-		assertEquals("batman", tt.expand("foo"));
+		tc.bind("_.00wat1..", "batman");
+		assertEquals("batman", tc.expand("foo"));
 	}
 	
 	/**
@@ -252,8 +255,9 @@ public class TestTinyTemplate {
 	@Test
 	public void testVariable_5() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("foo = [[$block]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
 
-		tt.bind("block",
+		tc.bind("block",
 				"{\n" +
 				"  hello\r" +
 				"  you\r\n" +
@@ -263,7 +267,7 @@ public class TestTinyTemplate {
 				"{\n" +
 				"  hello\r" +
 				"  you\r\n" +
-				"}", tt.expand("foo"));
+				"}", tc.expand("foo"));
 	}
 	
 	/**
@@ -274,8 +278,9 @@ public class TestTinyTemplate {
 	@Test
 	public void testVariable_6() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("foo = [[  x$block]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
 
-		tt.bind("block",
+		tc.bind("block",
 				"{\n" +
 				"  hello\r" +
 				"  you\r\n" +
@@ -286,7 +291,7 @@ public class TestTinyTemplate {
 				"  x{" + nl +
 				"    hello" + nl +
 				"    you" + nl +
-				"  }", tt.expand("foo"));
+				"  }", tc.expand("foo"));
 	}
 	
 	/**
@@ -296,33 +301,14 @@ public class TestTinyTemplate {
 	@Test
 	public void testVariable_7() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("a[[$x]]");
+		SimpleContext c0 = new SimpleContext(tt, new Object());
+		SimpleContext c1 = new SimpleContext(c0, new Object());
 		
-		tt.bind("x", "123");
-		tt.pushContext(new Object());
-		tt.bind("x", "UIO");
-		assertEquals("UIO", tt.expand("a"));
-		tt.popContext();
-		assertEquals("123", tt.expand("a"));
-	}
-	
-	/**
-	 * Tests variable unbinding due to context poping
-	 * @throws SyntaxError
-	 */
-	@Test
-	public void testVariable_8() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate("a[[$x]]");
+		c0.bind("x", "123");
+		c1.bind("x", "UIO");
 		
-		tt.pushContext(new Object());
-		tt.bind("x", "UIO");
-		tt.popContext();
-		assertEquals("<unbound variable x>", tt.expand("a"));
-	}
-	
-	@Test(expected=RuntimeException.class)
-	public void testContextStackError_1() {
-		TinyTemplate tt = new TinyTemplate();
-		tt.popContext();
+		assertEquals("UIO", c1.expand("a"));
+		assertEquals("123", c0.expand("a"));
 	}
 	
 	/**
@@ -332,9 +318,9 @@ public class TestTinyTemplate {
 	@Test
 	public void testAttribute_1() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("foo = [[#toString]]");
+		SimpleContext tc = new SimpleContext(tt, "the string");
 		
-		tt.pushContext("the string");
-		assertEquals("the string", tt.expand("foo"));
+		assertEquals("the string", tc.expand("foo"));
 	}
 	
 	/**
@@ -344,9 +330,9 @@ public class TestTinyTemplate {
 	@Test
 	public void testAttribute_2() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("foo = [[#imaginaryMethod]]");
+		SimpleContext tc = new SimpleContext(tt, "the string");
 		
-		tt.pushContext("the string");
-		assertEquals("<failed to eval imaginaryMethod; reason: no such method>", tt.expand("foo"));
+		assertEquals("<failed to eval imaginaryMethod; reason: no such method>", tc.expand("foo"));
 	}
 	
 	/**
@@ -369,9 +355,10 @@ public class TestTinyTemplate {
 		TinyTemplate tt = new TinyTemplate(
 				"test == \n" +
 				"== ==== = ===== [[$hello]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
 		
-		tt.bind("hello", "hej");
-		assertEquals("hej", tt.expand("test"));
+		tc.bind("hello", "hej");
+		assertEquals("hej", tc.expand("test"));
 	}
 	
 	/**
@@ -382,11 +369,12 @@ public class TestTinyTemplate {
 	public void testSynonyms_1() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate(
 				"test == foo = = = bar [[$hello]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
 		
-		tt.bind("hello", "hej");
-		assertEquals("hej", tt.expand("test"));
-		assertEquals("hej", tt.expand("foo"));
-		assertEquals("hej", tt.expand("bar"));
+		tc.bind("hello", "hej");
+		assertEquals("hej", tc.expand("test"));
+		assertEquals("hej", tc.expand("foo"));
+		assertEquals("hej", tc.expand("bar"));
 	}
 	
 	/**
@@ -397,11 +385,12 @@ public class TestTinyTemplate {
 	public void testSynonyms_2() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate(
 				"test foo bar [[$hello]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
 		
-		tt.bind("hello", "hej");
-		assertEquals("hej", tt.expand("test"));
-		assertEquals("hej", tt.expand("foo"));
-		assertEquals("hej", tt.expand("bar"));
+		tc.bind("hello", "hej");
+		assertEquals("hej", tc.expand("test"));
+		assertEquals("hej", tc.expand("foo"));
+		assertEquals("hej", tc.expand("bar"));
 	}
 	
 	@Test
@@ -409,9 +398,10 @@ public class TestTinyTemplate {
 		TinyTemplate tt = new TinyTemplate(
 				"# line comment\n" +
 				"test = [[$hello]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
 		
-		tt.bind("hello", "hej");
-		assertEquals("hej", tt.expand("test"));
+		tc.bind("hello", "hej");
+		assertEquals("hej", tc.expand("test"));
 	}
 	
 	@Test
@@ -462,12 +452,14 @@ public class TestTinyTemplate {
 		TinyTemplate tt = new TinyTemplate(
 				"foo = \n" +
 				"[[    $block]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
 
-		tt.bind("block",
+		tc.bind("block",
 				"{\n" +
 				"  hello\n" +
 				"  you\n" +
 				"}");
+		
 		tt.setIndentation("    ");
 				
 		String nl = System.getProperty("line.separator");
@@ -475,7 +467,7 @@ public class TestTinyTemplate {
 				"        {" + nl +
 				"          hello" + nl +
 				"          you" + nl +
-				"        }", tt.expand("foo"));
+				"        }", tc.expand("foo"));
 	}
 	
 }

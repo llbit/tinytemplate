@@ -1,4 +1,4 @@
-/* Copyright (c) 2010-2013, Jesper Öqvist <jesper@cs.lth.se>
+/* Copyright (c) 2013, Jesper Öqvist <jesper@cs.lth.se>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,7 +27,7 @@ package org.jastadd.tinytemplate.fragment;
 
 import java.io.PrintStream;
 
-import org.jastadd.tinytemplate.ITemplateContext;
+import org.jastadd.tinytemplate.TemplateContext;
 import org.jastadd.tinytemplate.Indentation.IndentationFragment;
 
 /**
@@ -38,7 +38,7 @@ public abstract class ReferenceFragment implements IFragment {
 	private IndentationFragment indentation = null;
 	
 	protected void expandWithIndentation(String expansion,
-			ITemplateContext context, PrintStream out) {
+			TemplateContext context, PrintStream out) {
 		
 		if (indentation == null) {
 			out.print(expansion);
