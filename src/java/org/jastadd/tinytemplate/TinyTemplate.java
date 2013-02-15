@@ -81,6 +81,7 @@ public class TinyTemplate extends TemplateContext {
 	public boolean expand(TemplateContext tc, String templateName, PrintStream out) {
 		Template temp = templates.get(templateName);
 		if (temp == null) {
+			expansionWarning("unknown template: " + templateName);
 			return false;
 		} else {
 			temp.expand(tc, out);
@@ -92,6 +93,7 @@ public class TinyTemplate extends TemplateContext {
 	public boolean expand(TemplateContext tc, String templateName, PrintWriter out) {
 		Template temp = templates.get(templateName);
 		if (temp == null) {
+			expansionWarning("unknown template: " + templateName);
 			return false;
 		} else {
 			temp.expand(tc, out);
