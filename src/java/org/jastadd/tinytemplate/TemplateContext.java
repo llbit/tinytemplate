@@ -94,6 +94,17 @@ public abstract class TemplateContext {
 	
 	/**
 	 * Expand a template
+	 * @param templateName
+	 * @param out
+	 * @return <code>true</code> if the template was expanded,
+	 * <code>false</code> if no such template exists
+	 */
+	final public boolean expand(String templateName, PrintWriter out) {
+		return expand(this, templateName, out);
+	}
+	
+	/**
+	 * Expand a template
 	 * @param tc Context to expand the template in
 	 * @param templateName
 	 * @param out
