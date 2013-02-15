@@ -29,6 +29,7 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 
 /**
  * Template context is needed to expand a template. The template context
@@ -100,6 +101,16 @@ public abstract class TemplateContext {
 	 * <code>false</code> if no such template exists
 	 */
 	abstract public boolean expand(TemplateContext tc, String templateName, PrintStream out);
+
+	/**
+	 * Expand a template
+	 * @param tc Context to expand the template in
+	 * @param templateName
+	 * @param out
+	 * @return <code>true</code> if the template was expanded,
+	 * <code>false</code> if no such template exists
+	 */
+	abstract public boolean expand(TemplateContext tc, String templateName, PrintWriter out);
 
 	/**
 	 * Bind a string value to a variable

@@ -26,6 +26,7 @@
 package org.jastadd.tinytemplate;
 
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +51,11 @@ public class Indentation {
 
 		@Override
 		public void expand(TemplateContext context, PrintStream out) {
+			out.print(context.evalIndentation(level));
+		}
+
+		@Override
+		public void expand(TemplateContext context, PrintWriter out) {
 			out.print(context.evalIndentation(level));
 		}
 	}

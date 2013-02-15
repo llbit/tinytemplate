@@ -26,6 +26,7 @@
 package org.jastadd.tinytemplate.fragment;
 
 import java.io.PrintStream;
+import java.io.PrintWriter;
 
 import org.jastadd.tinytemplate.TemplateContext;
 
@@ -41,5 +42,12 @@ public interface IFragment {
 	 * @param out
 	 */
 	void expand(TemplateContext context, PrintStream out);
+
+	/**
+	 * Expand the fragment to a PrintWriter
+	 * @param context
+	 * @param out
+	 */
+	void expand(TemplateContext context, PrintWriter out);
 
 }

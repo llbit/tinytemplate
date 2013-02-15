@@ -26,6 +26,7 @@
 package org.jastadd.tinytemplate;
 
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -74,6 +75,11 @@ public class SimpleContext extends TemplateContext {
 
 	@Override
 	public boolean expand(TemplateContext tc, String templateName, PrintStream out) {
+		return parentContext.expand(tc, templateName, out);
+	}
+
+	@Override
+	public boolean expand(TemplateContext tc, String templateName, PrintWriter out) {
 		return parentContext.expand(tc, templateName, out);
 	}
 

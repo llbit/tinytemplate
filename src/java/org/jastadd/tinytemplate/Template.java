@@ -27,6 +27,7 @@ package org.jastadd.tinytemplate;
 
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +54,17 @@ public class Template {
 	 * @param out
 	 */
 	public void expand(TemplateContext template, PrintStream out) {
+		for (IFragment fragment : fragments) {
+			fragment.expand(template, out);
+		}
+	}
+
+	/**
+	 * Expand the template to a PrintWriter
+	 * @param template 
+	 * @param out
+	 */
+	public void expand(TemplateContext template, PrintWriter out) {
 		for (IFragment fragment : fragments) {
 			fragment.expand(template, out);
 		}

@@ -28,6 +28,7 @@ package org.jastadd.tinytemplate;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -78,6 +79,17 @@ public class TinyTemplate extends TemplateContext {
 	
 	@Override
 	public boolean expand(TemplateContext tc, String templateName, PrintStream out) {
+		Template temp = templates.get(templateName);
+		if (temp == null) {
+			return false;
+		} else {
+			temp.expand(tc, out);
+			return true;
+		}
+	}
+
+	@Override
+	public boolean expand(TemplateContext tc, String templateName, PrintWriter out) {
 		Template temp = templates.get(templateName);
 		if (temp == null) {
 			return false;

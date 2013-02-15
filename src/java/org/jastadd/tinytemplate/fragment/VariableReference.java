@@ -26,6 +26,7 @@
 package org.jastadd.tinytemplate.fragment;
 
 import java.io.PrintStream;
+import java.io.PrintWriter;
 
 import org.jastadd.tinytemplate.TemplateContext;
 
@@ -45,6 +46,11 @@ public class VariableReference extends ReferenceFragment {
 
 	@Override
 	public void expand(TemplateContext context, PrintStream out) {
+		expandWithIndentation(context.evalVariable(variable), context, out);
+	}
+
+	@Override
+	public void expand(TemplateContext context, PrintWriter out) {
 		expandWithIndentation(context.evalVariable(variable), context, out);
 	}
 
