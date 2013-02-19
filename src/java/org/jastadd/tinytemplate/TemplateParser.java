@@ -43,7 +43,7 @@ public class TemplateParser {
 	 * Thrown when there is a syntax error a parsed template file
 	 */
 	@SuppressWarnings("serial")
-	public class SyntaxError extends Exception {
+	public static class SyntaxError extends Exception {
 		/**
 		 * @param line Line where the error occurred
 		 * @param msg Error message
