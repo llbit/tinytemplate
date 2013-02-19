@@ -53,6 +53,8 @@ public class TinyTemplate extends TemplateContext {
 	 */
 	private Map<String, Template> templates = new HashMap<String, Template>();
 	
+	static private boolean throwExceptions = false;
+	
 	/**
  	 * Start with empty template set
  	 */
@@ -75,6 +77,15 @@ public class TinyTemplate extends TemplateContext {
 	 */
 	public TinyTemplate(String string) throws SyntaxError {
 		loadTemplates(string);
+	}
+	
+	/**
+	 * Toggle whether exceptions shall be thrown whenever a template expansion
+	 * fails.
+	 * @param b
+	 */
+	public static void throwExceptions(boolean b) {
+		throwExceptions = b;
 	}
 	
 	@Override
@@ -190,6 +201,9 @@ public class TinyTemplate extends TemplateContext {
 	 * @return Expansion-replacing error message
 	 */
 	private static String expansionWarning(String msg) {
+		if (throwExceptions) {
+			throw new RuntimeException(msg);
+		}
 		System.err.println("Template expansion warning: " + msg);
 		return "<" + msg + ">";
 	}
