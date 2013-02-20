@@ -55,6 +55,11 @@ public class StringFragment implements IFragment {
 	}
 
 	@Override
+	public void expand(TemplateContext context, StringBuffer buf) {
+		buf.append(string);
+	}
+
+	@Override
 	public String toString() {
 		return string;
 	}

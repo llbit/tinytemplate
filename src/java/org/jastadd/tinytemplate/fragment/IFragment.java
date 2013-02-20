@@ -50,4 +50,11 @@ public interface IFragment {
 	 */
 	void expand(TemplateContext context, PrintWriter out);
 
+	/**
+	 * Expand the fragment to a StringBuffer
+	 * @param context
+	 * @param buf
+	 */
+	void expand(TemplateContext context, StringBuffer buf);
+
 }

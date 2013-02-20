@@ -39,6 +39,8 @@ import org.jastadd.tinytemplate.TemplateContext;
  */
 public class NewlineFragment implements IFragment {
 	
+	private static final String SYS_NL = System.getProperty("line.separator");
+	
 	/**
 	 * Singleton instance
 	 */
@@ -57,7 +59,12 @@ public class NewlineFragment implements IFragment {
 	}
 	
 	@Override
+	public void expand(TemplateContext context, StringBuffer buf) {
+		buf.append(SYS_NL);
+	}
+	
+	@Override
 	public String toString() {
-		return "\n";
+		return SYS_NL;
 	}
 }

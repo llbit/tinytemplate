@@ -105,6 +105,17 @@ public abstract class TemplateContext {
 	
 	/**
 	 * Expand a template
+	 * @param templateName
+	 * @param buf
+	 * @return <code>true</code> if the template was expanded,
+	 * <code>false</code> if no such template exists
+	 */
+	final public boolean expand(String templateName, StringBuffer buf) {
+		return expand(this, templateName, buf);
+	}
+	
+	/**
+	 * Expand a template
 	 * @param tc Context to expand the template in
 	 * @param templateName
 	 * @param out
@@ -122,6 +133,16 @@ public abstract class TemplateContext {
 	 * <code>false</code> if no such template exists
 	 */
 	abstract public boolean expand(TemplateContext tc, String templateName, PrintWriter out);
+
+	/**
+	 * Expand a template
+	 * @param tc Context to expand the template in
+	 * @param templateName
+	 * @param buf
+	 * @return <code>true</code> if the template was expanded,
+	 * <code>false</code> if no such template exists
+	 */
+	abstract public boolean expand(TemplateContext tc, String templateName, StringBuffer buf);
 
 	/**
 	 * Bind a string value to a variable

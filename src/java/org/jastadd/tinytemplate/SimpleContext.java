@@ -84,6 +84,11 @@ public class SimpleContext extends TemplateContext {
 	}
 
 	@Override
+	public boolean expand(TemplateContext tc, String templateName, StringBuffer buf) {
+		return parentContext.expand(tc, templateName, buf);
+	}
+
+	@Override
 	public void flushVariables() {
 		variables.clear();
 	}

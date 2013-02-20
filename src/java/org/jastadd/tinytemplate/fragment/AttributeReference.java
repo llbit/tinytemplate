@@ -56,6 +56,11 @@ public class AttributeReference extends ReferenceFragment {
 	}
 
 	@Override
+	public void expand(TemplateContext context, StringBuffer buf) {
+		expandWithIndentation(context.evalAttribute(attribute), context, buf);
+	}
+
+	@Override
 	public String toString() {
 		return "#(" + attribute + ")";
 	}

@@ -37,6 +37,7 @@ import org.jastadd.tinytemplate.Indentation.IndentationFragment;
 public abstract class ReferenceFragment implements IFragment {
 	
 	private IndentationFragment indentation = null;
+	private static final String SYS_NL = System.getProperty("line.separator");
 	
 	protected void expandWithIndentation(String expansion,
 			TemplateContext context, PrintStream out) {
@@ -58,6 +59,7 @@ public abstract class ReferenceFragment implements IFragment {
 		}
 	}
 
+	// TODO remove duplicated code
 	protected void expandWithIndentation(String expansion,
 			TemplateContext context, PrintWriter out) {
 		
@@ -73,6 +75,28 @@ public abstract class ReferenceFragment implements IFragment {
 					out.println(lines[i]);
 				} else {
 					out.print(lines[i]);
+				}
+			}
+		}
+	}
+
+	// TODO remove duplicated code
+	protected void expandWithIndentation(String expansion,
+			TemplateContext context, StringBuffer buf) {
+		
+		if (indentation == null) {
+			buf.append(expansion);
+		} else {
+			String[] lines = expansion.split("\n|\r\n?");
+			for (int i = 0; i < lines.length; ++i) {
+				if (i != 0) {
+					indentation.expand(context, buf);
+				}
+				if ((i+1) < lines.length) {
+					buf.append(lines[i]);
+					buf.append(SYS_NL);
+				} else {
+					buf.append(lines[i]);
 				}
 			}
 		}

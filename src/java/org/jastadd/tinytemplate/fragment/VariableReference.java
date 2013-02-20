@@ -55,6 +55,11 @@ public class VariableReference extends ReferenceFragment {
 	}
 
 	@Override
+	public void expand(TemplateContext context, StringBuffer buf) {
+		expandWithIndentation(context.evalVariable(variable), context, buf);
+	}
+
+	@Override
 	public String toString() {
 		return "$(" + variable + ")";
 	}

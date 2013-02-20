@@ -1,3 +1,7 @@
+2013-02-20  Jesper Öqvist <jesper.oqvist@cs.lth.se>
+
+    * Templates can now expand to a StringBuffer
+
 2013-02-02 Jesper Öqvist <jesper@cs.lth.se>
 
     * Template expansion warnings are printed to stderr

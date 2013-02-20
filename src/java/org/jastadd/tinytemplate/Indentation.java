@@ -58,6 +58,11 @@ public class Indentation {
 		public void expand(TemplateContext context, PrintWriter out) {
 			out.print(context.evalIndentation(level));
 		}
+
+		@Override
+		public void expand(TemplateContext context, StringBuffer buf) {
+			buf.append(context.evalIndentation(level));
+		}
 	}
 
 	private final String indentation;

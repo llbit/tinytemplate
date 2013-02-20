@@ -71,6 +71,17 @@ public class Template {
 	}
 
 	/**
+	 * Expand the template to a StringBuffer
+	 * @param template 
+	 * @param buf
+	 */
+	public void expand(TemplateContext template, StringBuffer buf) {
+		for (IFragment fragment : fragments) {
+			fragment.expand(template, buf);
+		}
+	}
+
+	/**
 	 * Load templates from file
 	 * @param in
 	 */
