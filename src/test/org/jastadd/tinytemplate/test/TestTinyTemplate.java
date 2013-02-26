@@ -14,6 +14,10 @@ import org.junit.Test;
 @SuppressWarnings("javadoc")
 public class TestTinyTemplate {
 	
+	public TestTinyTemplate() {
+		TinyTemplate.printWarnings(false);
+	}
+	
 	@Test
 	public void testUndefinedTemplate() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("");

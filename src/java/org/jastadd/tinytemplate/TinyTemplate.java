@@ -78,6 +78,8 @@ public class TinyTemplate extends TemplateContext {
 	
 	static private boolean throwExceptions = false;
 	
+	static private boolean printWarnings = true;
+	
 	/**
  	 * Start with empty template set
  	 */
@@ -109,6 +111,14 @@ public class TinyTemplate extends TemplateContext {
 	 */
 	public static void throwExceptions(boolean b) {
 		throwExceptions = b;
+	}
+	
+	/**
+	 * Toggle whether warnings shall be printed to stderr.
+	 * @param b
+	 */
+	public static void printWarnings(boolean b) {
+		printWarnings = b;
 	}
 	
 	@Override
@@ -239,7 +249,9 @@ public class TinyTemplate extends TemplateContext {
 		if (throwExceptions) {
 			throw new TemplateExpansionError(msg);
 		}
-		System.err.println("Template expansion warning: " + msg);
+		if (printWarnings) {
+			System.err.println("Template expansion warning: " + msg);
+		}
 		return "<" + msg + ">";
 	}
 
