@@ -502,4 +502,32 @@ public class TestTinyTemplate {
 				"        }", tc.expand("foo"));
 	}
 	
+	/**
+	 * Tests line splicing
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testLineSplicing_1() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"foo[[    \\\n" +
+				"$boo\\\n" +
+				"\n" +
+				"]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
+
+		tc.bind("boo",
+				"{\n" +
+				"  hello\\\n" +
+				"  you\n" +
+				"}");
+		
+		tt.setIndentation(" ");
+				
+		String nl = System.getProperty("line.separator");
+		assertEquals(
+				"  {" + nl +
+				"    hello\\" + nl +
+				"    you" + nl +
+				"  }" + nl, tc.expand("foo"));
+	}
 }

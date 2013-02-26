@@ -102,7 +102,7 @@ public class TemplateParser {
 			} else if (isWhitespace()) {
 				skipWhitespace();
 			} else if (isNewline()) {
-				skipNewline();
+				skipLineEnd();
 			} else if (isLinecomment()) {
 				skipLinecomment();
 			} else if (isAssign()) {
@@ -180,14 +180,25 @@ public class TemplateParser {
 	}
 
 	private boolean isNewline() throws IOException {
-		return in.peek(0) == '\n' || in.peek(0) == '\r';
+		return isNewline(in.peek(0));
+	}
+
+	private boolean isNewline(int ch) throws IOException {
+		return ch == '\n' || ch == '\r';
+	}
+
+	private boolean isLineEnd() throws IOException {
+		return isNewline() || (in.peek(0) == '\\' && isNewline(in.peek(1)));
 	}
 
 	private boolean isEOF() throws IOException {
 		return in.peek(0) == -1;
 	}
 
-	private void skipNewline() throws IOException {
+	private void skipLineEnd() throws IOException {
+		if (in.peek(0) == '\\') {
+			in.pop();
+		}
 		if (in.peek(0) == '\r') {
 			if (in.peek(1) == '\n') {
 				in.pop();
@@ -267,10 +278,12 @@ public class TemplateParser {
 					
 				}
 				template.addAttributeRef(attr);
-			} else if (isNewline()) {
-				template.addNewline();
-				newLine = true;
-				skipNewline();
+			} else if (isLineEnd()) {
+				if (isNewline()) {
+					template.addNewline();
+					newLine = true;
+				}
+				skipLineEnd();
 			} else if (isTemplateEnd()) {
 				// skip ]]
 				in.pop();
@@ -286,7 +299,7 @@ public class TemplateParser {
 
 	private String nextString() throws IOException, SyntaxError {
 		StringBuffer buf = new StringBuffer(512);
-		while ( !(isEOF() || isVariable() || isAttribute() || isNewline() ||
+		while ( !(isEOF() || isVariable() || isAttribute() || isLineEnd() ||
 				isTemplateEnd()) ) {
 			
 			if (in.peek(0) == '[' && in.peek(1) == '[')
@@ -331,7 +344,7 @@ public class TemplateParser {
 	}
 
 	private boolean isReferenceEnd() throws IOException {
-		return isEOF() || isNewline() || isWhitespace() ||
+		return isEOF() || isLineEnd() || isWhitespace() ||
 				in.peek(0) == '[' || in.peek(0) == ']' ||
 				in.peek(0) == '$' || in.peek(0) == '#';
 	}
