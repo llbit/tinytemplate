@@ -559,6 +559,20 @@ public class TestTinyTemplate {
 	}
 	
 	/**
+	 * Test the if-then-else conditional with negated condition
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testConditional_5() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("foo = [[$(if(!cond))boo!$(else)mjau$endif]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
+
+		tc.bind("cond", "");
+		
+		assertEquals("boo!", tc.expand("foo"));
+	}
+	
+	/**
 	 * Tests line splicing
 	 * @throws SyntaxError
 	 */
