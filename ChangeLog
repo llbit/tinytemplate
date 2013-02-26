@@ -4,6 +4,7 @@
     up to the next whitespace, newline, '[', ']', '$' or '#'
     * Printing of warnings to stderr can be disabled
     * Added conditional statements (if-then, if-then-else)
+    * Added line splicing (\) in template body
 
 2013-02-20  Jesper Öqvist <jesper.oqvist@cs.lth.se>
 

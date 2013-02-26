@@ -109,7 +109,7 @@ public class TemplateParser {
 			} else if (isWhitespace()) {
 				skipWhitespace();
 			} else if (isNewline()) {
-				skipNewline();
+				skipLineEnd();
 			} else if (isLinecomment()) {
 				skipLinecomment();
 			} else if (isAssign()) {
@@ -187,14 +187,25 @@ public class TemplateParser {
 	}
 
 	private boolean isNewline() throws IOException {
-		return in.peek(0) == '\n' || in.peek(0) == '\r';
+		return isNewline(in.peek(0));
+	}
+
+	private boolean isNewline(int ch) throws IOException {
+		return ch == '\n' || ch == '\r';
+	}
+
+	private boolean isLineEnd() throws IOException {
+		return isNewline() || (in.peek(0) == '\\' && isNewline(in.peek(1)));
 	}
 
 	private boolean isEOF() throws IOException {
 		return in.peek(0) == -1;
 	}
 
-	private void skipNewline() throws IOException {
+	private void skipLineEnd() throws IOException {
+		if (in.peek(0) == '\\') {
+			in.pop();
+		}
 		if (in.peek(0) == '\r') {
 			if (in.peek(1) == '\n') {
 				in.pop();
@@ -246,67 +257,73 @@ public class TemplateParser {
 	
 	private IFragment nextFragment(Template template, boolean newLine) throws IOException, SyntaxError {
 		
-		if (isEOF()) {
-			throw new SyntaxError(line, "unexpected end of file while parsing template body");
-		}
-		
-		if (newLine) {
-			int levels = 0;
-			while (isIndentation()) {
-				skipIndentation();
-				levels += 1;
+		while (true) {
+			if (isEOF()) {
+				throw new SyntaxError(line, "unexpected end of file while parsing template body");
 			}
-			if (levels > 0) {
-				return Indentation.getFragment(levels);
+			
+			if (newLine) {
+				int levels = 0;
+				while (isIndentation()) {
+					skipIndentation();
+					levels += 1;
+				}
+				if (levels > 0) {
+					return Indentation.getFragment(levels);
+				}
 			}
-		}
-
-		if (isVariable()) {
-			String var = nextReference();
-			if (var.isEmpty()) {
-				throw new SyntaxError(line, "empty variable name");
-			}
-			if (isIfStmt(var)) {
-				return parseIfStmt(var);
-			} else {
-				for (int i = 0; i < var.length(); ++i) {
-					char ch = var.charAt(i);
-					if (!Character.isJavaIdentifierPart(ch) && ch != '.') {
-						throw new SyntaxError(line,
-							"illegal characters in variable name " + var);
+	
+			if (isVariable()) {
+				String var = nextReference();
+				if (var.isEmpty()) {
+					throw new SyntaxError(line, "empty variable name");
+				}
+				if (isIfStmt(var)) {
+					return parseIfStmt(var);
+				} else {
+					for (int i = 0; i < var.length(); ++i) {
+						char ch = var.charAt(i);
+						if (!Character.isJavaIdentifierPart(ch) && ch != '.') {
+							throw new SyntaxError(line,
+								"illegal characters in variable name " + var);
+						}
+						
+					}
+					VariableReference ref = new VariableReference(var);
+					template.addIndentation(ref);
+					return ref;
+				}
+			} else if (isAttribute()) {
+				String attr = nextReference();
+				if (attr.isEmpty()) {
+					throw new SyntaxError(line, "empty attribute name");
+				}
+				for (int i = 0; i < attr.length(); ++i) {
+					char ch = attr.charAt(i);
+					if ((i == 0 && !Character.isJavaIdentifierStart(ch)) ||
+							!Character.isJavaIdentifierPart(ch)) {
+						
+						throw new SyntaxError(line, "the attribute " + attr +
+								" is not a valid Java identifier");
 					}
 					
 				}
-				VariableReference ref = new VariableReference(var);
+				AttributeReference ref = new AttributeReference(attr);
 				template.addIndentation(ref);
 				return ref;
-			}
-		} else if (isAttribute()) {
-			String attr = nextReference();
-			if (attr.isEmpty()) {
-				throw new SyntaxError(line, "empty attribute name");
-			}
-			for (int i = 0; i < attr.length(); ++i) {
-				char ch = attr.charAt(i);
-				if ((i == 0 && !Character.isJavaIdentifierStart(ch)) ||
-						!Character.isJavaIdentifierPart(ch)) {
-					
-					throw new SyntaxError(line, "the attribute " + attr +
-							" is not a valid Java identifier");
+			} else if (isLineEnd()) {
+				if (isNewline()) {
+					skipLineEnd();
+					return NewlineFragment.INSTANCE;
+				} else {
+					skipLineEnd();
+					continue;
 				}
-				
+			} else if (isTemplateEnd()) {
+				return EmptyFragment.INSTANCE;
+			} else {
+				return new StringFragment(nextString());
 			}
-			AttributeReference ref = new AttributeReference(attr);
-			template.addIndentation(ref);
-			return ref;
-		} else if (isNewline()) {
-			newLine = true;
-			skipNewline();
-			return NewlineFragment.INSTANCE;
-		} else if (isTemplateEnd()) {
-			return EmptyFragment.INSTANCE;
-		} else {
-			return new StringFragment(nextString());
 		}
 	}
 
@@ -332,7 +349,7 @@ public class TemplateParser {
 					part.addFragment(nextFragment);
 				}
 			} else {
-				break;
+				throw new SyntaxError(line, "missing $endif");
 			}
 		}
 		
@@ -345,7 +362,7 @@ public class TemplateParser {
 
 	private String nextString() throws IOException, SyntaxError {
 		StringBuffer buf = new StringBuffer(512);
-		while ( !(isEOF() || isVariable() || isAttribute() || isNewline() ||
+		while ( !(isEOF() || isVariable() || isAttribute() || isLineEnd() ||
 				isTemplateEnd()) ) {
 			
 			if (in.peek(0) == '[' && in.peek(1) == '[')
@@ -390,7 +407,7 @@ public class TemplateParser {
 	}
 
 	private boolean isReferenceEnd() throws IOException {
-		return isEOF() || isNewline() || isWhitespace() ||
+		return isEOF() || isLineEnd() || isWhitespace() ||
 				in.peek(0) == '[' || in.peek(0) == ']' ||
 				in.peek(0) == '$' || in.peek(0) == '#';
 	}
