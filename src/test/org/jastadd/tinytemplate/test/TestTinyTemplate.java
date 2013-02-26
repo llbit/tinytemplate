@@ -234,13 +234,12 @@ public class TestTinyTemplate {
 	}
 	
 	/**
-	 * Java identifier characters and periods can be used in variable names
-	 * parenthesized.
+	 * Variable names end at whitespace, newline, [, ], $ or #
 	 * @throws SyntaxError
 	 */
 	@Test
 	public void testVariable_4() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate("foo = [[$(_.00wat1..)]]");
+		TinyTemplate tt = new TinyTemplate("foo = [[$_.00wat1..]]");
 		SimpleContext tc = new SimpleContext(tt, new Object());
 		
 		tc.bind("_.00wat1..", "batman");
@@ -309,6 +308,35 @@ public class TestTinyTemplate {
 		
 		assertEquals("UIO", c1.expand("a"));
 		assertEquals("123", c0.expand("a"));
+	}
+	
+	/**
+	 * Variable names end at whitespace, newline, [, ], $ or #
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testVariable_8() throws SyntaxError {
+		try {
+			new TinyTemplate("foo = [[$:;^(xyz) wat1..]]");
+			fail("Expected syntax error!");
+		} catch (SyntaxError e) {
+			assertEquals("Parse error at line 1: illegal characters in variable name :;^(xyz)", e.getMessage());
+		}
+	}
+	
+	/**
+	 * Variable names end at whitespace, newline, [, ], $ or #
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testVariable_9() throws SyntaxError {
+		try {
+			new TinyTemplate("foo = [[$%(!&*)=\n" +
+					"wat1..]]");
+			fail("Expected syntax error!");
+		} catch (SyntaxError e) {
+			assertEquals("Parse error at line 1: illegal characters in variable name %(!&*)=", e.getMessage());
+		}
 	}
 	
 	/**

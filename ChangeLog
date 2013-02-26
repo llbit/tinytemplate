@@ -1,3 +1,8 @@
+2013-02-26  Jesper Öqvist <jesper.oqvist@cs.lth.se>
+
+    * Made template reference parsing greedier - parse everything
+    up to the next whitespace, newline, '[', ']', '$' or '#'
+
 2013-02-20  Jesper Öqvist <jesper.oqvist@cs.lth.se>
 
     * Templates can now expand to a StringBuffer

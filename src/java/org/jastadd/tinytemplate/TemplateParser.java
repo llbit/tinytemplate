@@ -314,12 +314,26 @@ public class TemplateParser {
 		}
 	}
 
-	private String parseSimpleReference() throws IOException {
+	private String parseSimpleReference() throws IOException, SyntaxError {
 		StringBuffer buf = new StringBuffer(128);
-		while ( !isEOF() && Character.isJavaIdentifierPart(in.peek(0)) ) {
-			buf.append((char) in.pop());
+		while (!isReferenceEnd()) {
+			if (in.peek(0) == '(') {
+				buf.append('(');
+				buf.append(parseParens());
+				buf.append(')');
+			} else if (in.peek(0) == ')') {
+				throw new SyntaxError(line, "unmatched right parenthesis in reference");
+			} else {
+				buf.append((char) in.pop());
+			}
 		}
 		return buf.toString();
+	}
+
+	private boolean isReferenceEnd() throws IOException {
+		return isEOF() || isNewline() || isWhitespace() ||
+				in.peek(0) == '[' || in.peek(0) == ']' ||
+				in.peek(0) == '$' || in.peek(0) == '#';
 	}
 
 	private String parseParens() throws IOException, SyntaxError {
@@ -329,8 +343,8 @@ public class TemplateParser {
 		StringBuffer buf = new StringBuffer(128);
 		int depth = 1;
 		while (true) {
-			if (isEOF()) {
-				throw new SyntaxError(line, "EOF before end of parenthesized reference");
+			if (isReferenceEnd()) {
+				throw new SyntaxError(line, "could not find end of parenthesis");
 			}
 			
 			int c = in.pop();
