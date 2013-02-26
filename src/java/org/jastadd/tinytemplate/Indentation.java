@@ -30,6 +30,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jastadd.tinytemplate.fragment.AbstractFragment;
 import org.jastadd.tinytemplate.fragment.IFragment;
 
 
@@ -42,7 +43,7 @@ public class Indentation {
 	/**
 	 * Indentation fragment
 	 */
-	public static class IndentationFragment implements IFragment {
+	public static class IndentationFragment extends AbstractFragment {
 		private final int level;
 
 		protected IndentationFragment(int indentLevel) {

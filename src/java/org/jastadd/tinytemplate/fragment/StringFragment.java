@@ -33,7 +33,7 @@ import org.jastadd.tinytemplate.TemplateContext;
 /**
  * @author Jesper Öqvist <jesper@llbit.se>
  */
-public class StringFragment implements IFragment {
+public class StringFragment extends AbstractFragment {
 	
 	private final String string;
 	

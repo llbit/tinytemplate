@@ -34,7 +34,7 @@ import org.jastadd.tinytemplate.Indentation.IndentationFragment;
 /**
  * @author Jesper Öqvist <jesper@llbit.se>
  */
-public abstract class ReferenceFragment implements IFragment {
+public abstract class ReferenceFragment extends AbstractFragment {
 	
 	private IndentationFragment indentation = null;
 	private static final String SYS_NL = System.getProperty("line.separator");

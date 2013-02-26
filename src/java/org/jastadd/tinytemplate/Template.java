@@ -115,7 +115,11 @@ public class Template {
 		fragments.add(ref);
 	}
 
-	private void addIndentation(ReferenceFragment ref) {
+	/**
+	 * Add indentation to an indented fragment
+	 * @param ref
+	 */
+	public void addIndentation(ReferenceFragment ref) {
 		// find previous indentation
 		int ind;
 		for (ind = fragments.size()-1; ind >= 0; ind -= 1) {
@@ -127,6 +131,14 @@ public class Template {
 			ref.setIndentation((IndentationFragment) fragments.get(ind));
 		}
 		
+	}
+	
+	/**
+	 * Add a fragment
+	 * @param fragment
+	 */
+	public void addFragment(IFragment fragment) {
+		fragments.add(fragment);
 	}
 
 	/**

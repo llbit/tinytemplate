@@ -31,46 +31,32 @@ import java.io.PrintWriter;
 import org.jastadd.tinytemplate.TemplateContext;
 
 /**
- * Template fragment.
- * @author Jesper Öqvist <jesper@llbit.se>
+ * An empty fragment
+ * @author Jesper Öqvist <jesper.oqvist@cs.lth.se>
  */
-public interface IFragment {
-
+public class EmptyFragment extends AbstractFragment {
+	
 	/**
-	 * Expand the fragment to a PrintStream
-	 * @param context
-	 * @param out
+	 * Singleton instance
 	 */
-	void expand(TemplateContext context, PrintStream out);
+	public static final EmptyFragment INSTANCE = new EmptyFragment();
+	
+	private EmptyFragment() {}
 
-	/**
-	 * Expand the fragment to a PrintWriter
-	 * @param context
-	 * @param out
-	 */
-	void expand(TemplateContext context, PrintWriter out);
+	@Override
+	public void expand(TemplateContext context, PrintStream out) {
+	}
 
-	/**
-	 * Expand the fragment to a StringBuffer
-	 * @param context
-	 * @param buf
-	 */
-	void expand(TemplateContext context, StringBuffer buf);
+	@Override
+	public void expand(TemplateContext context, PrintWriter out) {
+	}
 
-	/**
-	 * @return <code>true</code> if this fragment is empty
-	 */
-	boolean isEmpty();
-
-	/**
-	 * @return <code>true</code> if this fragment is a newline fragment
-	 */
-	boolean isNewline();
-
-	/**
-	 * @param var Name
-	 * @return <code>true</code> if this fragment is a variable reference with the given name
-	 */
-	boolean isVar(String var);
-
+	@Override
+	public void expand(TemplateContext context, StringBuffer buf) {
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return true;
+	}
 }

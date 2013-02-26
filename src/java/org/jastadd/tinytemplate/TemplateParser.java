@@ -31,6 +31,13 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import org.jastadd.io.LookaheadReader;
+import org.jastadd.tinytemplate.fragment.AttributeReference;
+import org.jastadd.tinytemplate.fragment.EmptyFragment;
+import org.jastadd.tinytemplate.fragment.IFragment;
+import org.jastadd.tinytemplate.fragment.IfStmt;
+import org.jastadd.tinytemplate.fragment.NewlineFragment;
+import org.jastadd.tinytemplate.fragment.StringFragment;
+import org.jastadd.tinytemplate.fragment.VariableReference;
 
 
 /**
@@ -215,33 +222,53 @@ public class TemplateParser {
 		in.pop();
 		
 		Template template = new Template();
-
 		boolean newLine = true;
-		
 		while (true) {
-			
-			if (isEOF()) {
-				throw new SyntaxError(line, "unexpected end of file while parsing template body");
+			IFragment nextFragment = nextFragment(template, newLine);
+			if (!nextFragment.isEmpty()) {
+				if (nextFragment.isVar("else"))
+					throw new SyntaxError(line, "stray $else");
+				else if (nextFragment.isVar("endif"))
+					throw new SyntaxError(line, "stray $endif");
+				newLine = nextFragment.isNewline();
+				template.addFragment(nextFragment);
+			} else {
+				break;
 			}
-			
-			if (newLine) {
-				int levels = 0;
-				while (newLine && isIndentation()) {
-					skipIndentation();
-					levels += 1;
-				}
-				if (levels > 0) {
-					template.addIndentation(levels);
-				}
-				newLine = false;
-				continue;
+		}
+		
+		// skip ]]
+		in.pop();
+		in.pop();
+		
+		return template;
+	}
+	
+	private IFragment nextFragment(Template template, boolean newLine) throws IOException, SyntaxError {
+		
+		if (isEOF()) {
+			throw new SyntaxError(line, "unexpected end of file while parsing template body");
+		}
+		
+		if (newLine) {
+			int levels = 0;
+			while (isIndentation()) {
+				skipIndentation();
+				levels += 1;
 			}
+			if (levels > 0) {
+				return Indentation.getFragment(levels);
+			}
+		}
 
-			if (isVariable()) {
-				String var = nextReference();
-				if (var.isEmpty()) {
-					throw new SyntaxError(line, "empty variable name");
-				}
+		if (isVariable()) {
+			String var = nextReference();
+			if (var.isEmpty()) {
+				throw new SyntaxError(line, "empty variable name");
+			}
+			if (isIfStmt(var)) {
+				return parseIfStmt(var);
+			} else {
 				for (int i = 0; i < var.length(); ++i) {
 					char ch = var.charAt(i);
 					if (!Character.isJavaIdentifierPart(ch) && ch != '.') {
@@ -250,38 +277,70 @@ public class TemplateParser {
 					}
 					
 				}
-				template.addVariableRef(var);
-			} else if (isAttribute()) {
-				String attr = nextReference();
-				if (attr.isEmpty()) {
-					throw new SyntaxError(line, "empty attribute name");
-				}
-				for (int i = 0; i < attr.length(); ++i) {
-					char ch = attr.charAt(i);
-					if ((i == 0 && !Character.isJavaIdentifierStart(ch)) ||
-							!Character.isJavaIdentifierPart(ch)) {
-						
-						throw new SyntaxError(line, "the attribute " + attr +
-								" is not a valid Java identifier");
-					}
+				VariableReference ref = new VariableReference(var);
+				template.addIndentation(ref);
+				return ref;
+			}
+		} else if (isAttribute()) {
+			String attr = nextReference();
+			if (attr.isEmpty()) {
+				throw new SyntaxError(line, "empty attribute name");
+			}
+			for (int i = 0; i < attr.length(); ++i) {
+				char ch = attr.charAt(i);
+				if ((i == 0 && !Character.isJavaIdentifierStart(ch)) ||
+						!Character.isJavaIdentifierPart(ch)) {
 					
+					throw new SyntaxError(line, "the attribute " + attr +
+							" is not a valid Java identifier");
 				}
-				template.addAttributeRef(attr);
-			} else if (isNewline()) {
-				template.addNewline();
-				newLine = true;
-				skipNewline();
-			} else if (isTemplateEnd()) {
-				// skip ]]
-				in.pop();
-				in.pop();
-				break;
+				
+			}
+			AttributeReference ref = new AttributeReference(attr);
+			template.addIndentation(ref);
+			return ref;
+		} else if (isNewline()) {
+			newLine = true;
+			skipNewline();
+			return NewlineFragment.INSTANCE;
+		} else if (isTemplateEnd()) {
+			return EmptyFragment.INSTANCE;
+		} else {
+			return new StringFragment(nextString());
+		}
+	}
+
+	private IfStmt parseIfStmt(String stmtVar) throws IOException, SyntaxError {
+		String condition = stmtVar.substring(3, stmtVar.length()-1);
+		Template thenPart = new Template();
+		Template elsePart = null;
+		Template part = thenPart;
+		
+		boolean newLine = true;
+		while (true) {
+			IFragment nextFragment = nextFragment(part, newLine);
+			if (!nextFragment.isEmpty()) {
+				if (nextFragment.isVar("else")) {
+					if (elsePart != null)
+						throw new SyntaxError(line, "stray $else");
+					elsePart = new Template();
+					part = elsePart;
+				} else if (nextFragment.isVar("endif")) {
+					break;
+				} else {
+					newLine = nextFragment.isNewline();
+					part.addFragment(nextFragment);
+				}
 			} else {
-				template.addString(nextString());
+				break;
 			}
 		}
-	
-		return template;
+		
+		return new IfStmt(condition, thenPart, elsePart);
+	}
+
+	private boolean isIfStmt(String var) {
+		return var.startsWith("if(") && var.endsWith(")");
 	}
 
 	private String nextString() throws IOException, SyntaxError {

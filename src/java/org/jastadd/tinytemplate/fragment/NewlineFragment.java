@@ -37,7 +37,7 @@ import org.jastadd.tinytemplate.TemplateContext;
  * 
  * @author Jesper Öqvist <jesper@llbit.se>
  */
-public class NewlineFragment implements IFragment {
+public class NewlineFragment extends AbstractFragment {
 	
 	private static final String SYS_NL = System.getProperty("line.separator");
 	
@@ -66,5 +66,10 @@ public class NewlineFragment implements IFragment {
 	@Override
 	public String toString() {
 		return SYS_NL;
+	}
+	
+	@Override
+	public boolean isNewline() {
+		return true;
 	}
 }

@@ -25,52 +25,23 @@
  */
 package org.jastadd.tinytemplate.fragment;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
-
-import org.jastadd.tinytemplate.TemplateContext;
-
 /**
- * Template fragment.
- * @author Jesper Öqvist <jesper@llbit.se>
+ * Abstract fragment supertype
+ * @author Jesper Öqvist <jesper.oqvist@cs.lth.se>
  */
-public interface IFragment {
-
-	/**
-	 * Expand the fragment to a PrintStream
-	 * @param context
-	 * @param out
-	 */
-	void expand(TemplateContext context, PrintStream out);
-
-	/**
-	 * Expand the fragment to a PrintWriter
-	 * @param context
-	 * @param out
-	 */
-	void expand(TemplateContext context, PrintWriter out);
-
-	/**
-	 * Expand the fragment to a StringBuffer
-	 * @param context
-	 * @param buf
-	 */
-	void expand(TemplateContext context, StringBuffer buf);
-
-	/**
-	 * @return <code>true</code> if this fragment is empty
-	 */
-	boolean isEmpty();
-
-	/**
-	 * @return <code>true</code> if this fragment is a newline fragment
-	 */
-	boolean isNewline();
-
-	/**
-	 * @param var Name
-	 * @return <code>true</code> if this fragment is a variable reference with the given name
-	 */
-	boolean isVar(String var);
-
+abstract public class AbstractFragment implements IFragment {
+	@Override
+	public boolean isEmpty() {
+		return false;
+	}
+	
+	@Override
+	public boolean isNewline() {
+		return false;
+	}
+	
+	@Override
+	public boolean isVar(String var) {
+		return false;
+	}
 }

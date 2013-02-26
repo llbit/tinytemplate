@@ -502,4 +502,60 @@ public class TestTinyTemplate {
 				"        }", tc.expand("foo"));
 	}
 	
+	/**
+	 * Test the if-then conditional
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testConditional_1() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("foo = [[$(if(cond))boo!$endif]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
+
+		tc.bind("cond", "true");
+		
+		assertEquals("boo!", tc.expand("foo"));
+	}
+	
+	/**
+	 * Test the if-then conditional
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testConditional_2() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("foo = [[$(if(cond))boo!$endif]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
+
+		tc.bind("cond", "not true");
+		
+		assertEquals("", tc.expand("foo"));
+	}
+	
+	/**
+	 * Case sensitive "true"
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testConditional_3() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("foo = [[$(if(cond))boo!$endif]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
+
+		tc.bind("cond", "True");
+		
+		assertEquals("", tc.expand("foo"));
+	}
+	
+	/**
+	 * Test the if-then-else conditional
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testConditional_4() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("foo = [[$(if(cond))boo!$(else)mjau$endif]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
+
+		tc.bind("cond", "");
+		
+		assertEquals("mjau", tc.expand("foo"));
+	}
+	
 }

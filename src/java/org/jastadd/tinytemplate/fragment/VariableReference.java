@@ -63,4 +63,9 @@ public class VariableReference extends ReferenceFragment {
 	public String toString() {
 		return "$(" + variable + ")";
 	}
+	
+	@Override
+	public boolean isVar(String varName) {
+		return variable.equals(varName);
+	}
 }
