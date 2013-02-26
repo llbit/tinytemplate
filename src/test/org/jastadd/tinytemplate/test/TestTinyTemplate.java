@@ -238,15 +238,15 @@ public class TestTinyTemplate {
 	}
 	
 	/**
-	 * Variable names end at whitespace, newline, [, ], $ or #
+	 * Simple variable names can contain any valid Java identifier character
 	 * @throws SyntaxError
 	 */
 	@Test
 	public void testVariable_4() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate("foo = [[$_.00wat1..]]");
+		TinyTemplate tt = new TinyTemplate("foo = [[$8_wat]]");
 		SimpleContext tc = new SimpleContext(tt, new Object());
 		
-		tc.bind("_.00wat1..", "batman");
+		tc.bind("8_wat", "batman");
 		assertEquals("batman", tc.expand("foo"));
 	}
 	
@@ -315,13 +315,13 @@ public class TestTinyTemplate {
 	}
 	
 	/**
-	 * Variable names end at whitespace, newline, [, ], $ or #
+	 * Parenthesized variable names can contain many different special characters
 	 * @throws SyntaxError
 	 */
 	@Test
 	public void testVariable_8() throws SyntaxError {
 		try {
-			new TinyTemplate("foo = [[$:;^(xyz) wat1..]]");
+			new TinyTemplate("foo = [[$(:;^(xyz)) wat1..]]");
 			fail("Expected syntax error!");
 		} catch (SyntaxError e) {
 			assertEquals("Parse error at line 1: illegal characters in variable name :;^(xyz)", e.getMessage());
@@ -329,17 +329,31 @@ public class TestTinyTemplate {
 	}
 	
 	/**
-	 * Variable names end at whitespace, newline, [, ], $ or #
+	 * Parenthesized variable names can contain many different special characters
 	 * @throws SyntaxError
 	 */
 	@Test
 	public void testVariable_9() throws SyntaxError {
 		try {
-			new TinyTemplate("foo = [[$%(!&*)=\n" +
+			new TinyTemplate("foo = [[$abc(%(!&*))=\n" +
 					"wat1..]]");
 			fail("Expected syntax error!");
 		} catch (SyntaxError e) {
-			assertEquals("Parse error at line 1: illegal characters in variable name %(!&*)=", e.getMessage());
+			assertEquals("Parse error at line 1: illegal characters in variable name abc(%(!&*))", e.getMessage());
+		}
+	}
+	
+	/**
+	 * Parenthesis inside a variable name are parsed but not accepted
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testVariable_10() throws SyntaxError {
+		try {
+			new TinyTemplate("foo = [[$abc(xyz)]]");
+			fail("Expected syntax error!");
+		} catch (SyntaxError e) {
+			assertEquals("Parse error at line 1: illegal characters in variable name abc(xyz)", e.getMessage());
 		}
 	}
 	

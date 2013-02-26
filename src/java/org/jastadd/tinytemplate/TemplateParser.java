@@ -392,18 +392,20 @@ public class TemplateParser {
 
 	private String parseSimpleReference() throws IOException, SyntaxError {
 		StringBuffer buf = new StringBuffer(128);
-		while (!isReferenceEnd()) {
+		while (!isSimpleReferenceEnd()) {
 			if (in.peek(0) == '(') {
 				buf.append('(');
 				buf.append(parseParens());
 				buf.append(')');
-			} else if (in.peek(0) == ')') {
-				throw new SyntaxError(line, "unmatched right parenthesis in reference");
 			} else {
 				buf.append((char) in.pop());
 			}
 		}
 		return buf.toString();
+	}
+
+	private boolean isSimpleReferenceEnd() throws IOException {
+		return isEOF() || (!Character.isJavaIdentifierPart(in.peek(0)) && in.peek(0) != '(');
 	}
 
 	private boolean isReferenceEnd() throws IOException {
