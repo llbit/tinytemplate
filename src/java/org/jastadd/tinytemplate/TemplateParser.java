@@ -39,7 +39,6 @@ import org.jastadd.tinytemplate.fragment.NewlineFragment;
 import org.jastadd.tinytemplate.fragment.StringFragment;
 import org.jastadd.tinytemplate.fragment.VariableReference;
 
-
 /**
  * Parses template files
  * @author Jesper Öqvist <jesper@llbit.se>

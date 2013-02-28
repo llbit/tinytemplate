@@ -36,36 +36,12 @@ import java.util.Map;
 
 import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
 
-
 /**
  * Tiny template engine.
  * @author Jesper Öqvist <jesper@llbit.se>
  */
 public class TinyTemplate extends TemplateContext {
 	
-	/**
-	 * A template expansion error can occur:
-	 * 
-	 * <p><ul>
-	 * <li>when attempting to expand an unknown template
-	 * <li>when attempting to expand an unbound variable
-	 * <li>when any kind of error occurs during attribute expansion when
-	 * attempting to call the attribute
-	 * </ul>
-	 * 
-	 * @author Jesper Öqvist <jesper.oqvist@cs.lth.se>
-	 */
-	@SuppressWarnings("serial")
-	public static class TemplateExpansionError extends RuntimeException {
-		/**
-		 * Constructor
-		 * @param message The error message
-		 */
-		public TemplateExpansionError(String message) {
-			super("Template expansion error: " + message);
-		}
-	}
-
 	/**
  	 * Output indentation scheme
  	 */
@@ -262,7 +238,7 @@ public class TinyTemplate extends TemplateContext {
 	 */
 	private static String expansionWarning(String msg) {
 		if (throwExceptions) {
-			throw new TemplateExpansionError(msg);
+			throw new TemplateExpansionWarning(msg);
 		}
 		if (printWarnings) {
 			System.err.println("Template expansion warning: " + msg);

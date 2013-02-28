@@ -23,38 +23,27 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.jastadd.tinytemplate.test;
-
-import static org.junit.Assert.*;
-
-import org.jastadd.tinytemplate.TemplateExpansionWarning;
-import org.jastadd.tinytemplate.TinyTemplate;
-import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
-import org.junit.Test;
+package org.jastadd.tinytemplate;
 
 /**
- * Tests template expansion warnings
+ * A template expansion error can occur:
+ * 
+ * <p><ul>
+ * <li>when attempting to expand an unknown template
+ * <li>when attempting to expand an unbound variable
+ * <li>when any kind of error occurs during attribute expansion when
+ * attempting to call the attribute
+ * </ul>
+ * 
  * @author Jesper Öqvist <jesper.oqvist@cs.lth.se>
  */
-public class TestWarnings {
-	
+@SuppressWarnings("serial")
+public class TemplateExpansionWarning extends RuntimeException {
 	/**
 	 * Constructor
+	 * @param message The error message
 	 */
-	public TestWarnings() {
-		TinyTemplate.printWarnings(false);
-		TinyTemplate.throwExceptions(true);
+	public TemplateExpansionWarning(String message) {
+		super("Template expansion error: " + message);
 	}
-	
-	/**
-	 * Tests expanding an undefined template
-	 * @throws SyntaxError
-	 */
-	@Test(expected=TemplateExpansionWarning.class)
-	public void testUndefinedTemplate_1() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate("");
-		
-		assertEquals("", tt.expand("test"));
-	}
-	
 }
