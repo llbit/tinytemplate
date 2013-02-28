@@ -84,33 +84,27 @@ public abstract class TemplateContext {
 	 * Expand a template
 	 * @param templateName
 	 * @param out
-	 * @return <code>true</code> if the template was expanded,
-	 * <code>false</code> if no such template exists
 	 */
-	final public boolean expand(String templateName, PrintStream out) {
-		return expand(this, templateName, out);
+	final public void expand(String templateName, PrintStream out) {
+		expand(this, templateName, out);
 	}
 	
 	/**
 	 * Expand a template
 	 * @param templateName
 	 * @param out
-	 * @return <code>true</code> if the template was expanded,
-	 * <code>false</code> if no such template exists
 	 */
-	final public boolean expand(String templateName, PrintWriter out) {
-		return expand(this, templateName, out);
+	final public void expand(String templateName, PrintWriter out) {
+		expand(this, templateName, out);
 	}
 	
 	/**
 	 * Expand a template
 	 * @param templateName
 	 * @param buf
-	 * @return <code>true</code> if the template was expanded,
-	 * <code>false</code> if no such template exists
 	 */
-	final public boolean expand(String templateName, StringBuffer buf) {
-		return expand(this, templateName, buf);
+	final public void expand(String templateName, StringBuffer buf) {
+		expand(this, templateName, buf);
 	}
 	
 	/**
@@ -118,40 +112,32 @@ public abstract class TemplateContext {
 	 * @param tc Context to expand the template in
 	 * @param templateName
 	 * @param out
-	 * @return <code>true</code> if the template was expanded,
-	 * <code>false</code> if no such template exists
 	 */
-	abstract public boolean expand(TemplateContext tc, String templateName, PrintStream out);
+	abstract public void expand(TemplateContext tc, String templateName, PrintStream out);
 
 	/**
 	 * Expand a template
 	 * @param tc Context to expand the template in
 	 * @param templateName
 	 * @param out
-	 * @return <code>true</code> if the template was expanded,
-	 * <code>false</code> if no such template exists
 	 */
-	abstract public boolean expand(TemplateContext tc, String templateName, PrintWriter out);
+	abstract public void expand(TemplateContext tc, String templateName, PrintWriter out);
 
 	/**
 	 * Expand a template
 	 * @param tc Context to expand the template in
 	 * @param templateName
 	 * @param out
-	 * @return <code>true</code> if the template was expanded,
-	 * <code>false</code> if no such template exists
 	 */
-	abstract public boolean expand(TemplateContext tc, String templateName, StringBuffer out);
+	abstract public void expand(TemplateContext tc, String templateName, StringBuffer out);
 
 	/**
 	 * Expand a template
 	 * @param tc Context to expand the template in
 	 * @param templateName
 	 * @param out
-	 * @return <code>true</code> if the template was expanded,
-	 * <code>false</code> if no such template exists
 	 */
-	abstract public boolean expand(TemplateContext tc, String templateName, StringBuilder out);
+	abstract public void expand(TemplateContext tc, String templateName, StringBuilder out);
 
 	/**
 	 * Bind a string value to a variable

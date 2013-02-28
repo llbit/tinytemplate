@@ -122,51 +122,49 @@ public class TinyTemplate extends TemplateContext {
 	}
 	
 	@Override
-	public boolean expand(TemplateContext tc, String templateName, PrintStream out) {
-		Template temp = templates.get(templateName);
-		if (temp == null) {
-			expansionWarning("unknown template: " + templateName);
-			return false;
-		} else {
+	public void expand(TemplateContext tc, String templateName, PrintStream out) {
+		Template temp = lookupTemplate(templateName);
+		if (temp != null) {
 			temp.expand(tc, out);
-			return true;
 		}
 	}
 
 	@Override
-	public boolean expand(TemplateContext tc, String templateName, PrintWriter out) {
-		Template temp = templates.get(templateName);
-		if (temp == null) {
-			expansionWarning("unknown template: " + templateName);
-			return false;
-		} else {
+	public void expand(TemplateContext tc, String templateName, PrintWriter out) {
+		Template temp = lookupTemplate(templateName);
+		if (temp != null) {
 			temp.expand(tc, out);
-			return true;
 		}
 	}
 
 	@Override
-	public boolean expand(TemplateContext tc, String templateName, StringBuffer out) {
-		Template temp = templates.get(templateName);
-		if (temp == null) {
-			expansionWarning("unknown template: " + templateName);
-			return false;
-		} else {
+	public void expand(TemplateContext tc, String templateName, StringBuffer out) {
+		Template temp = lookupTemplate(templateName);
+		if (temp != null) {
 			temp.expand(tc, out);
-			return true;
 		}
 	}
 
 	@Override
-	public boolean expand(TemplateContext tc, String templateName, StringBuilder out) {
-		Template temp = templates.get(templateName);
-		if (temp == null) {
-			expansionWarning("unknown template: " + templateName);
-			return false;
-		} else {
+	public void expand(TemplateContext tc, String templateName, StringBuilder out) {
+		Template temp = lookupTemplate(templateName);
+		if (temp != null) {
 			temp.expand(tc, out);
-			return true;
 		}
+	}
+	
+	/**
+	 * Search for a template with a given name. If the template does not
+	 * exist a warning is generated.
+	 * @param name
+	 * @return <code>null</code> if no template with the given name exists
+	 */
+	private Template lookupTemplate(String name) {
+		Template temp = templates.get(name);
+		if (temp == null) {
+			expansionWarning("unknown template: " + name);
+		}
+		return temp;
 	}
 
 	@Override

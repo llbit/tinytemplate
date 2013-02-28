@@ -27,9 +27,6 @@ package org.jastadd.tinytemplate.test;
 
 import static org.junit.Assert.*;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-
 import org.jastadd.tinytemplate.SimpleContext;
 import org.jastadd.tinytemplate.TinyTemplate;
 import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
@@ -48,34 +45,37 @@ public class TestTinyTemplate {
 		TinyTemplate.printWarnings(false);
 	}
 	
-	@SuppressWarnings("javadoc")
+	/**
+	 * Tests expanding an undefined template
+	 * @throws SyntaxError
+	 */
 	@Test
 	public void testUndefinedTemplate() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("");
 		
 		assertEquals("", tt.expand("test"));
-		assertFalse("expand returns false if the template was not expanded",
-				tt.expand("test", new PrintStream(new ByteArrayOutputStream())));
 	}
 	
-	@SuppressWarnings("javadoc")
+	/**
+	 * Tests expanding a simple template
+	 * @throws SyntaxError
+	 */
 	@Test
 	public void testSimple_1() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("test [[hello]]");
 		
 		assertEquals("hello", tt.expand("test"));
-		assertTrue("expand returns true if the template was expanded",
-				tt.expand("test", new PrintStream(new ByteArrayOutputStream())));
 	}
 	
-	@SuppressWarnings("javadoc")
+	/**
+	 * Tests expanding an empty template
+	 * @throws SyntaxError
+	 */
 	@Test
 	public void testSimple_2() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("foo [[]]");
 		
 		assertEquals("", tt.expand("foo"));
-		assertTrue("expand returns true if the template was expanded",
-				tt.expand("foo", new PrintStream(new ByteArrayOutputStream())));
 	}
 	
 	/**
