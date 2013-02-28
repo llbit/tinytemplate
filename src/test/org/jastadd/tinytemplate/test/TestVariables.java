@@ -47,52 +47,20 @@ public class TestVariables {
 	}
 	
 	/**
-	 * Tests a template variable
+	 * Tests variable shadowing in subcontext
 	 * @throws SyntaxError
 	 */
 	@Test
-	public void testVariable_1() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate("test = [[$hello]]");
-		SimpleContext tc = new SimpleContext(tt, new Object());
+	public void testContext_1() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("a[[$x]]");
+		SimpleContext c0 = new SimpleContext(tt, new Object());
+		SimpleContext c1 = new SimpleContext(c0, new Object());
 		
-		tc.bind("hello", "hej");
-		assertEquals("hej", tc.expand("test"));
-	}
-	
-	/**
-	 * Tests an unbound variable
-	 * @throws SyntaxError
-	 */
-	@Test
-	public void testVariable_2() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate("test = [[x $hello y]]");
+		c0.bind("x", "123");
+		c1.bind("x", "UIO");
 		
-		assertEquals("x <unbound variable hello> y", tt.expand("test"));
-	}
-	
-	/**
-	 * Double dollar signs escape to a single dollar sign
-	 * @throws SyntaxError
-	 */
-	@Test
-	public void testVariable_3() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate("test = [[ $$ not a variable ]]");
-		
-		assertEquals(" $ not a variable ", tt.expand("test"));
-	}
-	
-	/**
-	 * Simple variable names can contain any valid Java identifier character
-	 * except the dollar sign.
-	 * @throws SyntaxError
-	 */
-	@Test
-	public void testName_1() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate("foo = [[$8_wat]]");
-		SimpleContext tc = new SimpleContext(tt, new Object());
-		
-		tc.bind("8_wat", "batman");
-		assertEquals("batman", tc.expand("foo"));
+		assertEquals("UIO", c1.expand("a"));
+		assertEquals("123", c0.expand("a"));
 	}
 	
 	/**
@@ -143,20 +111,32 @@ public class TestVariables {
 	}
 	
 	/**
-	 * Tests variable shadowing in subcontext
+	 * Simple variable names can contain any valid Java identifier character
+	 * except the dollar sign.
 	 * @throws SyntaxError
 	 */
 	@Test
-	public void testContext_1() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate("a[[$x]]");
-		SimpleContext c0 = new SimpleContext(tt, new Object());
-		SimpleContext c1 = new SimpleContext(c0, new Object());
+	public void testName_1() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("foo = [[$8_wat]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
 		
-		c0.bind("x", "123");
-		c1.bind("x", "UIO");
+		tc.bind("8_wat", "batman");
+		assertEquals("batman", tc.expand("foo"));
+	}
+	
+	/**
+	 * Non-parenthesized variable names can not contain a dollar sign
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testName_2() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("test = [[$hello$you]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
 		
-		assertEquals("UIO", c1.expand("a"));
-		assertEquals("123", c0.expand("a"));
+		tc.bind("hello", "hej");
+		tc.bind("you", " du");
+		assertEquals("Non-parenthesized variable names can not contain a dollar sign",
+				"hej du", tc.expand("test"));
 	}
 	
 	/**
@@ -164,7 +144,7 @@ public class TestVariables {
 	 * @throws SyntaxError
 	 */
 	@Test
-	public void testName_2() throws SyntaxError {
+	public void testNameError_1() throws SyntaxError {
 		try {
 			new TinyTemplate("foo = [[$(:;^(xyz)) wat1..]]");
 			fail("Expected syntax error!");
@@ -178,7 +158,7 @@ public class TestVariables {
 	 * @throws SyntaxError
 	 */
 	@Test
-	public void testName_3() throws SyntaxError {
+	public void testNameError_2() throws SyntaxError {
 		try {
 			new TinyTemplate("foo = [[$abc(%(!&*))=\n" +
 					"wat1..]]");
@@ -193,7 +173,7 @@ public class TestVariables {
 	 * @throws SyntaxError
 	 */
 	@Test
-	public void testName_4() throws SyntaxError {
+	public void testNameError_3() throws SyntaxError {
 		try {
 			new TinyTemplate("foo = [[$abc(xyz)]]");
 			fail("Expected syntax error!");
@@ -203,18 +183,31 @@ public class TestVariables {
 	}
 	
 	/**
-	 * Non-parenthesized variable names can not contain a dollar sign
+	 * Parenthesis inside a variable name are parsed and raise a syntax error
 	 * @throws SyntaxError
 	 */
 	@Test
-	public void testName_5() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate("test = [[$hello$you]]");
-		SimpleContext tc = new SimpleContext(tt, new Object());
-		
-		tc.bind("hello", "hej");
-		tc.bind("you", " du");
-		assertEquals("Non-parenthesized variable names can not contain a dollar sign",
-				"hej du", tc.expand("test"));
+	public void testNameError_4() throws SyntaxError {
+		try {
+			new TinyTemplate("foo = [[$abc()]]");
+			fail("Expected syntax error!");
+		} catch (SyntaxError e) {
+			assertEquals("Parse error at line 1: illegal characters in variable name abc()", e.getMessage());
+		}
+	}
+	
+	/**
+	 * Empty variable names are not allowed
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testNameError_5() throws SyntaxError {
+		try {
+			new TinyTemplate("foo = [[$ ]]");
+			fail("Expected syntax error!");
+		} catch (SyntaxError e) {
+			assertEquals("Parse error at line 1: empty variable name", e.getMessage());
+		}
 	}
 	
 	/**
@@ -235,6 +228,41 @@ public class TestVariables {
 		tc.bind("name", "  ");
 		String nl = System.getProperty("line.separator");
 		assertEquals(" again" + nl, tc.expand("message"));
+	}
+	
+	/**
+	 * Tests a template variable
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testVariable_1() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("test = [[$hello]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
+		
+		tc.bind("hello", "hej");
+		assertEquals("hej", tc.expand("test"));
+	}
+	
+	/**
+	 * Tests an unbound variable
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testVariable_2() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("test = [[x $hello y]]");
+		
+		assertEquals("x <unbound variable hello> y", tt.expand("test"));
+	}
+	
+	/**
+	 * Double dollar signs escape to a single dollar sign
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testVariable_3() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("test = [[ $$ not a variable ]]");
+		
+		assertEquals(" $ not a variable ", tt.expand("test"));
 	}
 	
 }
