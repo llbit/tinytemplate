@@ -54,4 +54,9 @@ abstract public class AbstractFragment implements IFragment {
 	public boolean isConditional() {
 		return false;
 	}
+	
+	@Override
+	public boolean isExpansion() {
+		return false;
+	}
 }

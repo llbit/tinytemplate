@@ -5,6 +5,8 @@
     * Trim leading empty line from template body
     * Conditionals surrounded by whitespace on a line by themself are
     stripped of their surrounding whitespace including the newline
+    * Remove empty lines after expansion if they contained a non-whitespace
+    fragment before expansion
 
 2013-02-26  Jesper Öqvist <jesper.oqvist@cs.lth.se>
 

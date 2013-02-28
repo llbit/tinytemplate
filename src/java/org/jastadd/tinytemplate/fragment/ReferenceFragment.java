@@ -109,4 +109,9 @@ public abstract class ReferenceFragment extends AbstractFragment {
 	public void setIndentation(IndentationFragment indent) {
 		indentation = indent;
 	}
+	
+	@Override
+	public boolean isExpansion() {
+		return true;
+	}
 }

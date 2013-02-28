@@ -215,4 +215,25 @@ public class TestVariables {
 		assertEquals("Non-parenthesized variable names can not contain a dollar sign",
 				"hej du", tc.expand("test"));
 	}
+	
+	/**
+	 * Remove empty lines after expansion if they contained a non-whitespace
+	 * fragment before expansion
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testTrimming_1() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"message = [[" +
+				"  $hello  \n" +
+				" again\n" +
+				"\t$name]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
+		
+		tc.bind("hello", "");
+		tc.bind("name", "  ");
+		String nl = System.getProperty("line.separator");
+		assertEquals(" again" + nl, tc.expand("message"));
+	}
+	
 }

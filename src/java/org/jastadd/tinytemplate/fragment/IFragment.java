@@ -83,4 +83,8 @@ public interface IFragment {
 	 */
 	boolean isConditional();
 
+	/**
+	 * @return <code>true</code> if this fragment is an expansion fragment
+	 */
+	public boolean isExpansion();
 }

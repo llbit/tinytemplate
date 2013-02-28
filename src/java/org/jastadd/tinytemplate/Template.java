@@ -54,8 +54,22 @@ public class Template {
 	 * @param out
 	 */
 	public void expand(TemplateContext template, PrintStream out) {
+		StringBuffer buf = new StringBuffer();
+		boolean expanded = false;
 		for (IFragment fragment : fragments) {
-			fragment.expand(template, out);
+			expanded |= fragment.isExpansion();
+			fragment.expand(template, buf);
+			
+			if (fragment.isNewline()) {
+				if (!(expanded && isEmptyLine(buf))) {
+					out.print(buf.toString());
+				}
+				buf.delete(0, buf.length());
+				expanded = false;
+			}
+		}
+		if (!(expanded && isEmptyLine(buf))) {
+			out.print(buf.toString());
 		}
 	}
 
@@ -65,20 +79,56 @@ public class Template {
 	 * @param out
 	 */
 	public void expand(TemplateContext template, PrintWriter out) {
+		StringBuffer buf = new StringBuffer();
+		boolean expanded = false;
 		for (IFragment fragment : fragments) {
-			fragment.expand(template, out);
+			expanded |= fragment.isExpansion();
+			fragment.expand(template, buf);
+			
+			if (fragment.isNewline()) {
+				if (!(expanded && isEmptyLine(buf))) {
+					out.print(buf.toString());
+				}
+				buf.delete(0, buf.length());
+				expanded = false;
+			}
+		}
+		if (!(expanded && isEmptyLine(buf))) {
+			out.print(buf.toString());
 		}
 	}
 
 	/**
 	 * Expand the template to a StringBuffer
 	 * @param template 
-	 * @param buf
+	 * @param out
 	 */
-	public void expand(TemplateContext template, StringBuffer buf) {
+	public void expand(TemplateContext template, StringBuffer out) {
+		StringBuffer buf = new StringBuffer();
+		boolean expanded = false;
 		for (IFragment fragment : fragments) {
+			expanded |= fragment.isExpansion();
 			fragment.expand(template, buf);
+			
+			if (fragment.isNewline()) {
+				if (!(expanded && isEmptyLine(buf))) {
+					out.append(buf.toString());
+				}
+				buf.delete(0, buf.length());
+				expanded = false;
+			}
 		}
+		if (!(expanded && isEmptyLine(buf))) {
+			out.append(buf.toString());
+		}
+	}
+
+	private boolean isEmptyLine(StringBuffer buf) {
+		for (int i = 0; i < buf.length(); ++i) {
+			if (!Character.isWhitespace(buf.charAt(i)))
+				return false;
+		}
+		return true;
 	}
 
 	/**
