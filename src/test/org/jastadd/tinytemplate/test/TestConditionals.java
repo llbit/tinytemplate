@@ -117,7 +117,7 @@ public class TestConditionals {
 		TinyTemplate tt = new TinyTemplate(
 				"Father = [[" +
 				"$if(x) x\n" +
-				"$(if(y))Wednesday$endif\n" +
+				"$(if(y))Wednesday$endif y" +
 				"$endif" +
 				"]]");
 		SimpleContext tc = new SimpleContext(tt, new Object());
@@ -126,11 +126,11 @@ public class TestConditionals {
 		tc.bind("y", "true");
 		
 		String nl = System.getProperty("line.separator");
-		assertEquals(" x" + nl + "Wednesday" + nl, tc.expand("Father"));
+		assertEquals(" x" + nl + "Wednesday y", tc.expand("Father"));
 	}
 
 	/**
-	 * Test trimming leading newline
+	 * Test trimming leading newline in conditional body
 	 * @throws SyntaxError
 	 */
 	@Test
@@ -147,6 +147,22 @@ public class TestConditionals {
 		
 		String nl = System.getProperty("line.separator");
 		assertEquals("Woof!" + nl, tc.expand("dog"));
+	}
+
+	/**
+	 * If the conditional is surrounded by whitespace then the surrounding
+	 * whitespace up to and including the newline is removed.
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testTrimming_2() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"dog = [[  $(if(bark))Woof!$endif   \n]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
+
+		tc.bind("bark", "true");
+		
+		assertEquals("Woof!", tc.expand("dog"));
 	}
 
 }

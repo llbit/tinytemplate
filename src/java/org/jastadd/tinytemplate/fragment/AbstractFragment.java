@@ -49,4 +49,9 @@ abstract public class AbstractFragment implements IFragment {
 	public boolean isWhitespace() {
 		return false;
 	}
+	
+	@Override
+	public boolean isConditional() {
+		return false;
+	}
 }

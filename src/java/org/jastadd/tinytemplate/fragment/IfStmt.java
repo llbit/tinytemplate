@@ -81,4 +81,8 @@ public class IfStmt extends AbstractFragment {
 		}
 	}
 
+	@Override
+	public boolean isConditional() {
+		return true;
+	}
 }

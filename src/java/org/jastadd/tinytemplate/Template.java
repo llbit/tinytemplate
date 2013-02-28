@@ -175,4 +175,44 @@ public class Template {
 			fragments.remove(0);
 		}
 	}
+	
+	/**
+	 * Trim leading and trailing whitespace around conditionals surrounded
+	 * by whitespace on their line.
+	 */
+	public void trimConditionalWhitespace() {
+		List<IFragment> tmp = new ArrayList<IFragment>(fragments.size());
+		List<IFragment> line = new ArrayList<IFragment>();
+		boolean trimmable = true;
+		boolean hasCond = false;
+		for (IFragment fragment: fragments) {
+			line.add(fragment);
+			if (!fragment.isNewline()) {
+				
+				if ((!fragment.isWhitespace() && !fragment.isConditional())
+						|| fragment.isConditional() && hasCond) {
+					
+					trimmable = false;
+				}
+				hasCond |= fragment.isConditional();
+			} else {
+				addLine(tmp, line, trimmable && hasCond);
+				line.clear();
+				trimmable = true;
+				hasCond = false;
+			}
+		}
+		addLine(tmp, line, trimmable && hasCond);
+		fragments = tmp;
+	}
+
+	private void addLine(List<IFragment> tmp, List<IFragment> line,
+			boolean trimmable) {
+		
+		for (IFragment frag: line) {
+			if (!trimmable || !frag.isWhitespace()) {
+				tmp.add(frag);
+			}
+		}
+	}
 }

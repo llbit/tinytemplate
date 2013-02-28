@@ -78,4 +78,9 @@ public interface IFragment {
 	 */
 	boolean isWhitespace();
 
+	/**
+	 * @return <code>true</code> if this is a conditional statement
+	 */
+	boolean isConditional();
+
 }
