@@ -108,4 +108,25 @@ public class TestConditionals {
 		assertEquals("boo!", tc.expand("foo"));
 	}
 
+	/**
+	 * Test nested conditional
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testNested_1() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"Father = [[" +
+				"$if(x)\n" +
+				"$(if(y))Wednesday$endif\n" +
+				"$endif" +
+				"]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
+
+		tc.bind("x", "true");
+		tc.bind("y", "true");
+		
+		String nl = System.getProperty("line.separator");
+		assertEquals(nl + "Wednesday" + nl, tc.expand("Father"));
+	}
+
 }
