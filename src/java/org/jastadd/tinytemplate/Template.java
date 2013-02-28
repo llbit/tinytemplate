@@ -64,7 +64,7 @@ public class Template {
 				if (!(expanded && isEmptyLine(buf))) {
 					out.print(buf.toString());
 				}
-				buf.delete(0, buf.length());
+				buf.setLength(0);
 				expanded = false;
 			}
 		}
@@ -79,6 +79,7 @@ public class Template {
 	 * @param out
 	 */
 	public void expand(TemplateContext template, PrintWriter out) {
+		// TODO remove duplicated code
 		StringBuffer buf = new StringBuffer();
 		boolean expanded = false;
 		for (IFragment fragment : fragments) {
@@ -89,7 +90,7 @@ public class Template {
 				if (!(expanded && isEmptyLine(buf))) {
 					out.print(buf.toString());
 				}
-				buf.delete(0, buf.length());
+				buf.setLength(0);
 				expanded = false;
 			}
 		}
@@ -104,6 +105,7 @@ public class Template {
 	 * @param out
 	 */
 	public void expand(TemplateContext template, StringBuffer out) {
+		// TODO remove duplicated code
 		StringBuffer buf = new StringBuffer();
 		boolean expanded = false;
 		for (IFragment fragment : fragments) {
@@ -114,7 +116,7 @@ public class Template {
 				if (!(expanded && isEmptyLine(buf))) {
 					out.append(buf.toString());
 				}
-				buf.delete(0, buf.length());
+				buf.setLength(0);
 				expanded = false;
 			}
 		}
