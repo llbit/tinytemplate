@@ -59,4 +59,9 @@ abstract public class AbstractFragment implements IFragment {
 	public boolean isExpansion() {
 		return false;
 	}
+	
+	@Override
+	public boolean isIndentation() {
+		return false;
+	}
 }

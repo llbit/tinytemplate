@@ -56,6 +56,11 @@ public class Indentation {
 		public boolean isWhitespace() {
 			return true;
 		}
+		
+		@Override
+		public boolean isIndentation() {
+			return true;
+		}
 	}
 
 	private final String indentation;

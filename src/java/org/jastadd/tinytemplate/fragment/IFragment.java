@@ -70,4 +70,9 @@ public interface IFragment {
 	 * @return <code>true</code> if this fragment is an expansion fragment
 	 */
 	public boolean isExpansion();
+
+	/**
+	 * @return <code>true</code> if this fragment is an indentation fragment
+	 */
+	boolean isIndentation();
 }
