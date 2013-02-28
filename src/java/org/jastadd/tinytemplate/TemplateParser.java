@@ -105,8 +105,6 @@ public class TemplateParser {
 							"missing template body at end of file");
 				}
 				break;
-			} else if (isWhitespace()) {
-				skipWhitespace();
 			} else if (isNewline()) {
 				skipLineEnd();
 			} else if (isLinecomment()) {
