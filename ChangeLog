@@ -2,6 +2,7 @@
 
     * Non-parenthesized variable names can not contain a dollar sign
     * Trim leading empty line from if-statement body
+    * Trim leading empty line from template body
     * Conditionals surrounded by whitespace on a line by themself are
     stripped of their surrounding whitespace including the newline
 

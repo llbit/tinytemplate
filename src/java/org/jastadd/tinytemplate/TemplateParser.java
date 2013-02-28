@@ -252,7 +252,7 @@ public class TemplateParser {
 		in.pop();
 		in.pop();
 		
-		template.trimConditionalWhitespace();
+		template.trim();
 		return template;
 	}
 	
@@ -354,12 +354,8 @@ public class TemplateParser {
 			}
 		}
 		
-		thenPart.trimLeadingNewline();
-		thenPart.trimConditionalWhitespace();
-		if (elsePart != null) {
-			elsePart.trimLeadingNewline();
-			elsePart.trimConditionalWhitespace();
-		}
+		thenPart.trim();
+		if (elsePart != null) elsePart.trim();
 		
 		return new IfStmt(condition, thenPart, elsePart);
 	}

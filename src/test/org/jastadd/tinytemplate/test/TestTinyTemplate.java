@@ -115,7 +115,7 @@ public class TestTinyTemplate {
 				"]]");
 		
 		String nl = System.getProperty("line.separator");
-		assertEquals(nl + "z" + nl + nl, tt.expand("x"));
+		assertEquals("z" + nl + nl, tt.expand("x"));
 	}
 	
 	/**

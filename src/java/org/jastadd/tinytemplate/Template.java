@@ -156,15 +156,25 @@ public class Template {
 	public void addIndentation(int level) {
 		fragments.add(Indentation.getFragment(level));
 	}
+	
+	/**
+	 * Trims first line from the template if it contains only whitespace.
+	 * Trims leading and trailing whitespace surrounding conditionals that
+	 * are alone on their line.
+	 */
+	public void trim() {
+		trimLeadingNewline();
+		trimConditionalWhitespace();
+	}
 
 	/**
 	 * Trim the first line from the template if it contains only whitespace
 	 */
-	public void trimLeadingNewline() {
+	private void trimLeadingNewline() {
 		int numToStrip = 0;
 		for (IFragment fragment: fragments) {
 			if (!fragment.isWhitespace()) {
-				break;
+				return;
 			}
 			numToStrip += 1;
 			if (fragment.isNewline()) {
@@ -180,7 +190,7 @@ public class Template {
 	 * Trim leading and trailing whitespace around conditionals surrounded
 	 * by whitespace on their line.
 	 */
-	public void trimConditionalWhitespace() {
+	private void trimConditionalWhitespace() {
 		List<IFragment> tmp = new ArrayList<IFragment>(fragments.size());
 		List<IFragment> line = new ArrayList<IFragment>();
 		boolean trimmable = true;
