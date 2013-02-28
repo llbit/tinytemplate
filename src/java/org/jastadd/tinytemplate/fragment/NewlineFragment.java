@@ -25,9 +25,6 @@
  */
 package org.jastadd.tinytemplate.fragment;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
-
 import org.jastadd.tinytemplate.TemplateContext;
 
 /**
@@ -49,18 +46,8 @@ public class NewlineFragment extends AbstractFragment {
 	private NewlineFragment() {}
 
 	@Override
-	public void expand(TemplateContext context, PrintStream out) {
-		out.println();
-	}
-	
-	@Override
-	public void expand(TemplateContext context, PrintWriter out) {
-		out.println();
-	}
-	
-	@Override
-	public void expand(TemplateContext context, StringBuffer buf) {
-		buf.append(SYS_NL);
+	public void expand(TemplateContext context, StringBuilder out) {
+		out.append(SYS_NL);
 	}
 	
 	@Override

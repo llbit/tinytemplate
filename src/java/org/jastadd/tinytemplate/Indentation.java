@@ -25,14 +25,11 @@
  */
 package org.jastadd.tinytemplate;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jastadd.tinytemplate.fragment.AbstractFragment;
 import org.jastadd.tinytemplate.fragment.IFragment;
-
 
 /**
  * Indentation fragment factory and indentation scheme
@@ -51,18 +48,8 @@ public class Indentation {
 		}
 
 		@Override
-		public void expand(TemplateContext context, PrintStream out) {
-			out.print(context.evalIndentation(level));
-		}
-
-		@Override
-		public void expand(TemplateContext context, PrintWriter out) {
-			out.print(context.evalIndentation(level));
-		}
-
-		@Override
-		public void expand(TemplateContext context, StringBuffer buf) {
-			buf.append(context.evalIndentation(level));
+		public void expand(TemplateContext context, StringBuilder out) {
+			out.append(context.evalIndentation(level));
 		}
 		
 		@Override

@@ -25,9 +25,6 @@
  */
 package org.jastadd.tinytemplate.fragment;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
-
 import org.jastadd.tinytemplate.TemplateContext;
 import org.jastadd.tinytemplate.Indentation.IndentationFragment;
 
@@ -40,10 +37,10 @@ public abstract class NestedIndentationFragment extends AbstractFragment {
 	private static final String SYS_NL = System.getProperty("line.separator");
 	
 	protected void expandWithIndentation(String expansion,
-			TemplateContext context, PrintStream out) {
+			TemplateContext context, StringBuilder out) {
 		
 		if (indentation == null) {
-			out.print(expansion);
+			out.append(expansion);
 		} else {
 			String[] lines = expansion.split("\n|\r\n?");
 			for (int i = 0; i < lines.length; ++i) {
@@ -51,52 +48,10 @@ public abstract class NestedIndentationFragment extends AbstractFragment {
 					indentation.expand(context, out);
 				}
 				if ((i+1) < lines.length) {
-					out.println(lines[i]);
+					out.append(lines[i]);
+					out.append(SYS_NL);
 				} else {
-					out.print(lines[i]);
-				}
-			}
-		}
-	}
-
-	// TODO remove duplicated code
-	protected void expandWithIndentation(String expansion,
-			TemplateContext context, PrintWriter out) {
-		
-		if (indentation == null) {
-			out.print(expansion);
-		} else {
-			String[] lines = expansion.split("\n|\r\n?");
-			for (int i = 0; i < lines.length; ++i) {
-				if (i != 0) {
-					indentation.expand(context, out);
-				}
-				if ((i+1) < lines.length) {
-					out.println(lines[i]);
-				} else {
-					out.print(lines[i]);
-				}
-			}
-		}
-	}
-
-	// TODO remove duplicated code
-	protected void expandWithIndentation(String expansion,
-			TemplateContext context, StringBuffer buf) {
-		
-		if (indentation == null) {
-			buf.append(expansion);
-		} else {
-			String[] lines = expansion.split("\n|\r\n?");
-			for (int i = 0; i < lines.length; ++i) {
-				if (i != 0) {
-					indentation.expand(context, buf);
-				}
-				if ((i+1) < lines.length) {
-					buf.append(lines[i]);
-					buf.append(SYS_NL);
-				} else {
-					buf.append(lines[i]);
+					out.append(lines[i]);
 				}
 			}
 		}

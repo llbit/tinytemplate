@@ -25,9 +25,6 @@
  */
 package org.jastadd.tinytemplate.fragment;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
-
 import org.jastadd.tinytemplate.TemplateContext;
 
 /**
@@ -37,25 +34,11 @@ import org.jastadd.tinytemplate.TemplateContext;
 public interface IFragment {
 
 	/**
-	 * Expand the fragment to a PrintStream
-	 * @param context
-	 * @param out
-	 */
-	void expand(TemplateContext context, PrintStream out);
-
-	/**
-	 * Expand the fragment to a PrintWriter
-	 * @param context
-	 * @param out
-	 */
-	void expand(TemplateContext context, PrintWriter out);
-
-	/**
-	 * Expand the fragment to a StringBuffer
+	 * Expand the fragment to a StringBuilder
 	 * @param context
 	 * @param buf
 	 */
-	void expand(TemplateContext context, StringBuffer buf);
+	void expand(TemplateContext context, StringBuilder buf);
 
 	/**
 	 * @return <code>true</code> if this fragment is empty

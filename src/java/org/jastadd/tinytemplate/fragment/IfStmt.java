@@ -1,8 +1,5 @@
 package org.jastadd.tinytemplate.fragment;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
-
 import org.jastadd.tinytemplate.Template;
 import org.jastadd.tinytemplate.TemplateContext;
 import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
@@ -55,29 +52,11 @@ public class IfStmt extends AbstractFragment {
 	}
 
 	@Override
-	public void expand(TemplateContext context, PrintStream out) {
+	public void expand(TemplateContext context, StringBuilder out) {
 		if (evalCondition(context)) {
 			thenPart.expand(context, out);
 		} else if (elsePart != null) {
 			elsePart.expand(context, out);
-		}
-	}
-
-	@Override
-	public void expand(TemplateContext context, PrintWriter out) {
-		if (evalCondition(context)) {
-			thenPart.expand(context, out);
-		} else if (elsePart != null) {
-			elsePart.expand(context, out);
-		}
-	}
-
-	@Override
-	public void expand(TemplateContext context, StringBuffer buf) {
-		if (evalCondition(context)) {
-			thenPart.expand(context, buf);
-		} else if (elsePart != null) {
-			elsePart.expand(context, buf);
 		}
 	}
 

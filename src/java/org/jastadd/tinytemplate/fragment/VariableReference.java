@@ -25,9 +25,6 @@
  */
 package org.jastadd.tinytemplate.fragment;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
-
 import org.jastadd.tinytemplate.TemplateContext;
 
 /**
@@ -45,18 +42,8 @@ public class VariableReference extends NestedIndentationFragment {
 	}
 
 	@Override
-	public void expand(TemplateContext context, PrintStream out) {
+	public void expand(TemplateContext context, StringBuilder out) {
 		expandWithIndentation(context.evalVariable(variable), context, out);
-	}
-
-	@Override
-	public void expand(TemplateContext context, PrintWriter out) {
-		expandWithIndentation(context.evalVariable(variable), context, out);
-	}
-
-	@Override
-	public void expand(TemplateContext context, StringBuffer buf) {
-		expandWithIndentation(context.evalVariable(variable), context, buf);
 	}
 
 	@Override

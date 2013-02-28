@@ -54,7 +54,7 @@ public class Template {
 	 * @param out
 	 */
 	public void expand(TemplateContext template, PrintStream out) {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		boolean expanded = false;
 		for (IFragment fragment : fragments) {
 			expanded |= fragment.isExpansion();
@@ -80,7 +80,7 @@ public class Template {
 	 */
 	public void expand(TemplateContext template, PrintWriter out) {
 		// TODO remove duplicated code
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		boolean expanded = false;
 		for (IFragment fragment : fragments) {
 			expanded |= fragment.isExpansion();
@@ -106,7 +106,7 @@ public class Template {
 	 */
 	public void expand(TemplateContext template, StringBuffer out) {
 		// TODO remove duplicated code
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		boolean expanded = false;
 		for (IFragment fragment : fragments) {
 			expanded |= fragment.isExpansion();
@@ -125,7 +125,33 @@ public class Template {
 		}
 	}
 
-	private boolean isEmptyLine(StringBuffer buf) {
+	/**
+	 * Expand the template to a StringBuilder
+	 * @param template 
+	 * @param out
+	 */
+	public void expand(TemplateContext template, StringBuilder out) {
+		// TODO remove duplicated code
+		StringBuilder buf = new StringBuilder();
+		boolean expanded = false;
+		for (IFragment fragment : fragments) {
+			expanded |= fragment.isExpansion();
+			fragment.expand(template, buf);
+			
+			if (fragment.isNewline()) {
+				if (!(expanded && isEmptyLine(buf))) {
+					out.append(buf.toString());
+				}
+				buf.setLength(0);
+				expanded = false;
+			}
+		}
+		if (!(expanded && isEmptyLine(buf))) {
+			out.append(buf.toString());
+		}
+	}
+
+	private boolean isEmptyLine(StringBuilder buf) {
 		for (int i = 0; i < buf.length(); ++i) {
 			if (!Character.isWhitespace(buf.charAt(i)))
 				return false;
