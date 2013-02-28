@@ -152,6 +152,13 @@ public abstract class TemplateContext {
 	abstract public void bind(String varName, String value);
 
 	/**
+	 * Bind a boolean value to a variable
+	 * @param varName Variable to bind
+	 * @param value Value to bind
+	 */
+	abstract public void bind(String varName, boolean value);
+
+	/**
 	 * Bind a template expansion to a variable.
 	 * Synonymous to <code>bind(varName, expand(templateName))</code>.
 	 * @param varName Variable to bind

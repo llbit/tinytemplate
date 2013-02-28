@@ -167,6 +167,11 @@ public class TinyTemplate extends TemplateContext {
 	}
 
 	@Override
+	public void bind(String varName, boolean value) {
+		throw new UnsupportedOperationException("Can not bind variable on root template context");
+	}
+
+	@Override
 	public String evalVariable(String varName) {
 		String msg = "unbound variable " + varName;
 		return expansionWarning(msg);
