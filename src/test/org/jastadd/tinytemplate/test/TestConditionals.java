@@ -136,18 +136,17 @@ public class TestConditionals {
 	@Test
 	public void testTrimming_1() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate(
-				"Father = [[" +
-				"$if(x)  \t \n" +
-				"$(if(y))Wednesday$endif\n" +
+				"dog = [[" +
+				"$if(bark)  \t \n" +
+				"Woof!\n" +
 				"$endif" +
 				"]]");
 		SimpleContext tc = new SimpleContext(tt, new Object());
 
-		tc.bind("x", "true");
-		tc.bind("y", "true");
+		tc.bind("bark", "true");
 		
 		String nl = System.getProperty("line.separator");
-		assertEquals("Wednesday" + nl, tc.expand("Father"));
+		assertEquals("Woof!" + nl, tc.expand("dog"));
 	}
 
 }
