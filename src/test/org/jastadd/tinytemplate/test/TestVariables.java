@@ -43,6 +43,7 @@ public class TestVariables {
 	 */
 	public TestVariables() {
 		TinyTemplate.printWarnings(false);
+		TinyTemplate.throwExceptions(false);
 	}
 	
 	/**

@@ -39,6 +39,14 @@ import org.junit.Test;
 public class TestConditionals {
 	
 	/**
+	 * Constructor
+	 */
+	public TestConditionals() {
+		TinyTemplate.printWarnings(false);
+		TinyTemplate.throwExceptions(false);
+	}
+	
+	/**
 	 * Test the if-then conditional
 	 * @throws SyntaxError
 	 */

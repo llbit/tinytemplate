@@ -43,6 +43,7 @@ public class TestTinyTemplate {
 	 */
 	public TestTinyTemplate() {
 		TinyTemplate.printWarnings(false);
+		TinyTemplate.throwExceptions(false);
 	}
 	
 	/**
