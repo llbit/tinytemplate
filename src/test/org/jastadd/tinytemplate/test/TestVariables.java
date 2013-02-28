@@ -82,10 +82,11 @@ public class TestVariables {
 	
 	/**
 	 * Simple variable names can contain any valid Java identifier character
+	 * except the dollar sign.
 	 * @throws SyntaxError
 	 */
 	@Test
-	public void testVariable_4() throws SyntaxError {
+	public void testName_1() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("foo = [[$8_wat]]");
 		SimpleContext tc = new SimpleContext(tt, new Object());
 		
@@ -99,7 +100,7 @@ public class TestVariables {
 	 * @throws SyntaxError
 	 */
 	@Test
-	public void testVariable_5() throws SyntaxError {
+	public void testExpansion_1() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("foo = [[$block]]");
 		SimpleContext tc = new SimpleContext(tt, new Object());
 
@@ -122,7 +123,7 @@ public class TestVariables {
 	 * @throws SyntaxError
 	 */
 	@Test
-	public void testVariable_6() throws SyntaxError {
+	public void testExpansion_2() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("foo = [[  x$block]]");
 		SimpleContext tc = new SimpleContext(tt, new Object());
 
@@ -145,7 +146,7 @@ public class TestVariables {
 	 * @throws SyntaxError
 	 */
 	@Test
-	public void testVariable_7() throws SyntaxError {
+	public void testContext_1() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("a[[$x]]");
 		SimpleContext c0 = new SimpleContext(tt, new Object());
 		SimpleContext c1 = new SimpleContext(c0, new Object());
@@ -162,7 +163,7 @@ public class TestVariables {
 	 * @throws SyntaxError
 	 */
 	@Test
-	public void testVariable_8() throws SyntaxError {
+	public void testName_2() throws SyntaxError {
 		try {
 			new TinyTemplate("foo = [[$(:;^(xyz)) wat1..]]");
 			fail("Expected syntax error!");
@@ -176,7 +177,7 @@ public class TestVariables {
 	 * @throws SyntaxError
 	 */
 	@Test
-	public void testVariable_9() throws SyntaxError {
+	public void testName_3() throws SyntaxError {
 		try {
 			new TinyTemplate("foo = [[$abc(%(!&*))=\n" +
 					"wat1..]]");
@@ -187,16 +188,31 @@ public class TestVariables {
 	}
 	
 	/**
-	 * Parenthesis inside a variable name are parsed but not accepted
+	 * Parenthesis inside a variable name are parsed and raise a syntax error
 	 * @throws SyntaxError
 	 */
 	@Test
-	public void testVariable_10() throws SyntaxError {
+	public void testName_4() throws SyntaxError {
 		try {
 			new TinyTemplate("foo = [[$abc(xyz)]]");
 			fail("Expected syntax error!");
 		} catch (SyntaxError e) {
 			assertEquals("Parse error at line 1: illegal characters in variable name abc(xyz)", e.getMessage());
 		}
+	}
+	
+	/**
+	 * Non-parenthesized variable names can not contain a dollar sign
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testName_5() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("test = [[$hello$you]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
+		
+		tc.bind("hello", "hej");
+		tc.bind("you", " du");
+		assertEquals("Non-parenthesized variable names can not contain a dollar sign",
+				"hej du", tc.expand("test"));
 	}
 }

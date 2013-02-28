@@ -384,7 +384,7 @@ public class TemplateParser {
 		in.pop();
 		
 		if (in.peek(0) == '(') {
-			return parseParens();
+			return parseParenthesizedReference();
 		} else {
 			return parseSimpleReference();
 		}
@@ -395,7 +395,7 @@ public class TemplateParser {
 		while (!isSimpleReferenceEnd()) {
 			if (in.peek(0) == '(') {
 				buf.append('(');
-				buf.append(parseParens());
+				buf.append(parseParenthesizedReference());
 				buf.append(')');
 			} else {
 				buf.append((char) in.pop());
@@ -405,23 +405,25 @@ public class TemplateParser {
 	}
 
 	private boolean isSimpleReferenceEnd() throws IOException {
-		return isEOF() || (!Character.isJavaIdentifierPart(in.peek(0)) && in.peek(0) != '(');
+		return isEOF() || in.peek(0) == '$'
+				|| (!Character.isJavaIdentifierPart(in.peek(0))
+						&& in.peek(0) != '(');
 	}
 
-	private boolean isReferenceEnd() throws IOException {
+	private boolean isParenthesizedReferenceEnd() throws IOException {
 		return isEOF() || isLineEnd() || isWhitespace() ||
 				in.peek(0) == '[' || in.peek(0) == ']' ||
 				in.peek(0) == '$' || in.peek(0) == '#';
 	}
 
-	private String parseParens() throws IOException, SyntaxError {
+	private String parseParenthesizedReference() throws IOException, SyntaxError {
 		// skip the (
 		in.pop();
 		
 		StringBuffer buf = new StringBuffer(128);
 		int depth = 1;
 		while (true) {
-			if (isReferenceEnd()) {
+			if (isParenthesizedReferenceEnd()) {
 				throw new SyntaxError(line, "could not find end of parenthesis");
 			}
 			
