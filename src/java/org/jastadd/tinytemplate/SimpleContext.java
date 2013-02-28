@@ -84,8 +84,13 @@ public class SimpleContext extends TemplateContext {
 	}
 
 	@Override
-	public boolean expand(TemplateContext tc, String templateName, StringBuffer buf) {
-		return parentContext.expand(tc, templateName, buf);
+	public boolean expand(TemplateContext tc, String templateName, StringBuffer out) {
+		return parentContext.expand(tc, templateName, out);
+	}
+
+	@Override
+	public boolean expand(TemplateContext tc, String templateName, StringBuilder out) {
+		return parentContext.expand(tc, templateName, out);
 	}
 
 	@Override

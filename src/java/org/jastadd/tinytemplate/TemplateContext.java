@@ -26,7 +26,6 @@
 package org.jastadd.tinytemplate;
 
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -66,9 +65,9 @@ public abstract class TemplateContext {
 	 * @return The template expansion
 	 */
 	final public String expand(String templateName) {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		expand(templateName, new PrintStream(out));
-		return out.toString();
+		StringBuilder buf = new StringBuilder();
+		expand(this, templateName, buf);
+		return buf.toString();
 	}
 	
 	/**
@@ -138,11 +137,21 @@ public abstract class TemplateContext {
 	 * Expand a template
 	 * @param tc Context to expand the template in
 	 * @param templateName
-	 * @param buf
+	 * @param out
 	 * @return <code>true</code> if the template was expanded,
 	 * <code>false</code> if no such template exists
 	 */
-	abstract public boolean expand(TemplateContext tc, String templateName, StringBuffer buf);
+	abstract public boolean expand(TemplateContext tc, String templateName, StringBuffer out);
+
+	/**
+	 * Expand a template
+	 * @param tc Context to expand the template in
+	 * @param templateName
+	 * @param out
+	 * @return <code>true</code> if the template was expanded,
+	 * <code>false</code> if no such template exists
+	 */
+	abstract public boolean expand(TemplateContext tc, String templateName, StringBuilder out);
 
 	/**
 	 * Bind a string value to a variable

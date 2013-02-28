@@ -146,13 +146,25 @@ public class TinyTemplate extends TemplateContext {
 	}
 
 	@Override
-	public boolean expand(TemplateContext tc, String templateName, StringBuffer buf) {
+	public boolean expand(TemplateContext tc, String templateName, StringBuffer out) {
 		Template temp = templates.get(templateName);
 		if (temp == null) {
 			expansionWarning("unknown template: " + templateName);
 			return false;
 		} else {
-			temp.expand(tc, buf);
+			temp.expand(tc, out);
+			return true;
+		}
+	}
+
+	@Override
+	public boolean expand(TemplateContext tc, String templateName, StringBuilder out) {
+		Template temp = templates.get(templateName);
+		if (temp == null) {
+			expansionWarning("unknown template: " + templateName);
+			return false;
+		} else {
+			temp.expand(tc, out);
 			return true;
 		}
 	}
