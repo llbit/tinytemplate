@@ -26,7 +26,7 @@
 package org.jastadd.tinytemplate;
 
 /**
- * A template expansion error can occur:
+ * A template expansion warning can occur:
  * 
  * <p><ul>
  * <li>when attempting to expand an unknown template
@@ -41,9 +41,9 @@ package org.jastadd.tinytemplate;
 public class TemplateExpansionWarning extends RuntimeException {
 	/**
 	 * Constructor
-	 * @param message The error message
+	 * @param message The warning message
 	 */
 	public TemplateExpansionWarning(String message) {
-		super("Template expansion error: " + message);
+		super("Template expansion warning: " + message);
 	}
 }
