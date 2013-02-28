@@ -116,7 +116,7 @@ public class TestConditionals {
 	public void testNested_1() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate(
 				"Father = [[" +
-				"$if(x)\n" +
+				"$if(x) x\n" +
 				"$(if(y))Wednesday$endif\n" +
 				"$endif" +
 				"]]");
@@ -126,7 +126,28 @@ public class TestConditionals {
 		tc.bind("y", "true");
 		
 		String nl = System.getProperty("line.separator");
-		assertEquals(nl + "Wednesday" + nl, tc.expand("Father"));
+		assertEquals(" x" + nl + "Wednesday" + nl, tc.expand("Father"));
+	}
+
+	/**
+	 * Test trimming leading newline
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testTrimming_1() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"Father = [[" +
+				"$if(x)  \t \n" +
+				"$(if(y))Wednesday$endif\n" +
+				"$endif" +
+				"]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
+
+		tc.bind("x", "true");
+		tc.bind("y", "true");
+		
+		String nl = System.getProperty("line.separator");
+		assertEquals("Wednesday" + nl, tc.expand("Father"));
 	}
 
 }

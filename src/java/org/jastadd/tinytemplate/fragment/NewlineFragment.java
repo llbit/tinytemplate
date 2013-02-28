@@ -72,4 +72,9 @@ public class NewlineFragment extends AbstractFragment {
 	public boolean isNewline() {
 		return true;
 	}
+	
+	@Override
+	public boolean isWhitespace() {
+		return true;
+	}
 }

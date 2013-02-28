@@ -353,6 +353,9 @@ public class TemplateParser {
 			}
 		}
 		
+		thenPart.trimLeadingNewline();
+		if (elsePart != null) elsePart.trimLeadingNewline();
+		
 		return new IfStmt(condition, thenPart, elsePart);
 	}
 

@@ -64,6 +64,11 @@ public class Indentation {
 		public void expand(TemplateContext context, StringBuffer buf) {
 			buf.append(context.evalIndentation(level));
 		}
+		
+		@Override
+		public boolean isWhitespace() {
+			return true;
+		}
 	}
 
 	private final String indentation;

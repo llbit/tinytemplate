@@ -73,4 +73,9 @@ public interface IFragment {
 	 */
 	boolean isVar(String var);
 
+	/**
+	 * @return <code>true</code> if this fragment is whitespace
+	 */
+	boolean isWhitespace();
+
 }

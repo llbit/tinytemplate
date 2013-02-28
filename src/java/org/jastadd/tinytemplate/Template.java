@@ -156,4 +156,23 @@ public class Template {
 	public void addIndentation(int level) {
 		fragments.add(Indentation.getFragment(level));
 	}
+
+	/**
+	 * Trim the first line from the template if it contains only whitespace
+	 */
+	public void trimLeadingNewline() {
+		int numToStrip = 0;
+		for (IFragment fragment: fragments) {
+			if (!fragment.isWhitespace()) {
+				break;
+			}
+			numToStrip += 1;
+			if (fragment.isNewline()) {
+				break;
+			}
+		}
+		for (int i = 0; i < numToStrip; ++i) {
+			fragments.remove(0);
+		}
+	}
 }

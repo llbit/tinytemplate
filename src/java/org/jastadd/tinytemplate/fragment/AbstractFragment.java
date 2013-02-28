@@ -44,4 +44,9 @@ abstract public class AbstractFragment implements IFragment {
 	public boolean isVar(String var) {
 		return false;
 	}
+	
+	@Override
+	public boolean isWhitespace() {
+		return false;
+	}
 }

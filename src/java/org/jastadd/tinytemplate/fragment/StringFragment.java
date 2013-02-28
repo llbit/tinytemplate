@@ -63,4 +63,14 @@ public class StringFragment extends AbstractFragment {
 	public String toString() {
 		return string;
 	}
+	
+	@Override
+	public boolean isWhitespace() {
+		for (int i = 0; i < string.length(); ++i) {
+			if (!Character.isWhitespace(string.charAt(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
 }
