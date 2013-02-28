@@ -35,7 +35,7 @@ import org.jastadd.tinytemplate.Indentation.IndentationFragment;
 import org.jastadd.tinytemplate.fragment.AttributeReference;
 import org.jastadd.tinytemplate.fragment.IFragment;
 import org.jastadd.tinytemplate.fragment.NewlineFragment;
-import org.jastadd.tinytemplate.fragment.ReferenceFragment;
+import org.jastadd.tinytemplate.fragment.NestedIndentationFragment;
 import org.jastadd.tinytemplate.fragment.StringFragment;
 import org.jastadd.tinytemplate.fragment.VariableReference;
 
@@ -169,7 +169,7 @@ public class Template {
 	 * Add indentation to an indented fragment
 	 * @param ref
 	 */
-	public void addIndentation(ReferenceFragment ref) {
+	public void addIndentation(NestedIndentationFragment ref) {
 		// find previous indentation
 		int ind;
 		for (ind = fragments.size()-1; ind >= 0; ind -= 1) {

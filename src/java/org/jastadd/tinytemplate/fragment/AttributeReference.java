@@ -34,7 +34,7 @@ import org.jastadd.tinytemplate.TemplateContext;
  * Reflectively expands an attribute in the template context
  * @author Jesper Öqvist <jesper@llbit.se>
  */
-public class AttributeReference extends ReferenceFragment {
+public class AttributeReference extends NestedIndentationFragment {
 	
 	private final String attribute;
 	

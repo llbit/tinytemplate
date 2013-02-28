@@ -33,7 +33,7 @@ import org.jastadd.tinytemplate.TemplateContext;
 /**
  * @author Jesper Öqvist <jesper@llbit.se>
  */
-public class VariableReference extends ReferenceFragment {
+public class VariableReference extends NestedIndentationFragment {
 	
 	private final String variable;
 	
