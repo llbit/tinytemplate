@@ -47,6 +47,24 @@ public class TestVariables {
 	}
 	
 	/**
+	 * Can not bind variable on root context
+	 */
+	@Test(expected=UnsupportedOperationException.class)
+	public void testBindError_1() {
+		TinyTemplate tt = new TinyTemplate();
+		tt.bind("x", "");
+	}
+	
+	/**
+	 * Can not bind variable on root context
+	 */
+	@Test(expected=UnsupportedOperationException.class)
+	public void testBindError_2() {
+		TinyTemplate tt = new TinyTemplate();
+		tt.bind("x", true);
+	}
+	
+	/**
 	 * Tests variable shadowing in subcontext
 	 * @throws SyntaxError
 	 */
@@ -149,7 +167,7 @@ public class TestVariables {
 			new TinyTemplate("foo = [[$(:;^(xyz)) wat1..]]");
 			fail("Expected syntax error!");
 		} catch (SyntaxError e) {
-			assertEquals("Parse error at line 1: illegal characters in variable name :;^(xyz)", e.getMessage());
+			assertEquals("Syntax error at line 1: illegal characters in variable name :;^(xyz)", e.getMessage());
 		}
 	}
 	
@@ -164,7 +182,7 @@ public class TestVariables {
 					"wat1..]]");
 			fail("Expected syntax error!");
 		} catch (SyntaxError e) {
-			assertEquals("Parse error at line 1: illegal characters in variable name abc(%(!&*))", e.getMessage());
+			assertEquals("Syntax error at line 1: illegal characters in variable name abc(%(!&*))", e.getMessage());
 		}
 	}
 	
@@ -178,7 +196,7 @@ public class TestVariables {
 			new TinyTemplate("foo = [[$abc(xyz)]]");
 			fail("Expected syntax error!");
 		} catch (SyntaxError e) {
-			assertEquals("Parse error at line 1: illegal characters in variable name abc(xyz)", e.getMessage());
+			assertEquals("Syntax error at line 1: illegal characters in variable name abc(xyz)", e.getMessage());
 		}
 	}
 	
@@ -192,7 +210,7 @@ public class TestVariables {
 			new TinyTemplate("foo = [[$abc()]]");
 			fail("Expected syntax error!");
 		} catch (SyntaxError e) {
-			assertEquals("Parse error at line 1: illegal characters in variable name abc()", e.getMessage());
+			assertEquals("Syntax error at line 1: illegal characters in variable name abc()", e.getMessage());
 		}
 	}
 	
@@ -206,7 +224,21 @@ public class TestVariables {
 			new TinyTemplate("foo = [[$ ]]");
 			fail("Expected syntax error!");
 		} catch (SyntaxError e) {
-			assertEquals("Parse error at line 1: empty variable name", e.getMessage());
+			assertEquals("Syntax error at line 1: empty variable name", e.getMessage());
+		}
+	}
+	
+	/**
+	 * All left parenthesis in variable names must be matched
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testNameError_6() throws SyntaxError {
+		try {
+			new TinyTemplate("foo = [[$(]]");
+			fail("Expected syntax error!");
+		} catch (SyntaxError e) {
+			assertEquals("Syntax error at line 1: missing right parenthesis", e.getMessage());
 		}
 	}
 	

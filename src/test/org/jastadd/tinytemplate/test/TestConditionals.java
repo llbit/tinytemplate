@@ -138,6 +138,79 @@ public class TestConditionals {
 	}
 
 	/**
+	 * Stray else
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testSyntaxError_1() throws SyntaxError {
+		try {
+			new TinyTemplate("dog = [[$else]]");
+			fail("Expected syntax error!");
+		} catch (SyntaxError e) {
+			assertEquals("Syntax error at line 1: stray $else", e.getMessage());
+		}
+	}
+
+	/**
+	 * Stray endif
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testSyntaxError_2() throws SyntaxError {
+		try {
+			new TinyTemplate("dog = [[$endif]]");
+			fail("Expected syntax error!");
+		} catch (SyntaxError e) {
+			assertEquals("Syntax error at line 1: stray $endif", e.getMessage());
+		}
+	}
+
+	/**
+	 * Missing endif
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testSyntaxError_3() throws SyntaxError {
+		try {
+			new TinyTemplate("dog = [[$if(x)]]");
+			fail("Expected syntax error!");
+		} catch (SyntaxError e) {
+			assertEquals("Syntax error at line 1: missing $endif", e.getMessage());
+		}
+	}
+
+	/**
+	 * Missing endif
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testSyntaxError_4() throws SyntaxError {
+		try {
+			new TinyTemplate("dog = [[$if(x)$else]]");
+			fail("Expected syntax error!");
+		} catch (SyntaxError e) {
+			assertEquals("Syntax error at line 1: missing $endif", e.getMessage());
+		}
+	}
+
+	/**
+	 * Extra else inside if-else
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testSyntaxError_5() throws SyntaxError {
+		try {
+			new TinyTemplate("dog = [[\n" +
+					"$if(x)\n" +
+					"$else\n" +
+					"$else]]");
+			fail("Expected syntax error!");
+		} catch (SyntaxError e) {
+			assertEquals("Syntax error at line 4: too many $else", e.getMessage());
+		}
+	}
+
+	/**
 	 * Test trimming leading newline in conditional body
 	 * @throws SyntaxError
 	 */

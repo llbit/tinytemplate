@@ -55,7 +55,7 @@ public class TemplateParser {
 		 * @param msg Error message
 		 */
 		public SyntaxError(int line, String msg) {
-			super("Parse error at line " + line + ": " + msg);
+			super("Syntax error at line " + line + ": " + msg);
 		}
 		/**
 		 * @param msg Error message
@@ -337,7 +337,7 @@ public class TemplateParser {
 			if (!nextFragment.isEmpty()) {
 				if (nextFragment.isVar("else")) {
 					if (elsePart != null)
-						throw new SyntaxError(line, "stray $else");
+						throw new SyntaxError(line, "too many $else");
 					elsePart = new Template();
 					part = elsePart;
 				} else if (nextFragment.isVar("endif")) {
@@ -425,7 +425,7 @@ public class TemplateParser {
 		int depth = 1;
 		while (true) {
 			if (isParenthesizedReferenceEnd()) {
-				throw new SyntaxError(line, "could not find end of parenthesis");
+				throw new SyntaxError(line, "missing right parenthesis");
 			}
 			
 			int c = in.pop();
