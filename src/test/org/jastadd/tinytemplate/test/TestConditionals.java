@@ -165,4 +165,38 @@ public class TestConditionals {
 		assertEquals("Woof!", tc.expand("dog"));
 	}
 
+	/**
+	 * Don't trim whitespace around the conditional if it has non-whitespace
+	 * surrounding it
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testTrimming_3() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"dog = [[  $(if(bark))Woof!$endif   ;\n]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
+
+		tc.bind("bark", "true");
+		
+		String nl = System.getProperty("line.separator");
+		assertEquals("  Woof!   ;" + nl, tc.expand("dog"));
+	}
+
+	/**
+	 * Don't trim whitespace around the conditional if there is another
+	 * conditional on the same line
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testTrimming_4() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"dog = [[  $(if(bark))Woof!$endif   $(if(bark))Woof!$endif\n]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
+
+		tc.bind("bark", "true");
+		
+		String nl = System.getProperty("line.separator");
+		assertEquals("  Woof!   Woof!" + nl, tc.expand("dog"));
+	}
+
 }
