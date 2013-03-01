@@ -400,9 +400,9 @@ public class TestTinyTemplate {
 		String nl = System.getProperty("line.separator");
 		assertEquals(
 				"  \\" + nl +
-				"{" + nl +
-				"  hello\\" + nl +
-				"  you" + nl +
+				"{\n" +
+				"  hello\\\n" +
+				"  you\n" +
 				"}\\" + nl + nl, tc.expand("foo"));
 	}
 }
