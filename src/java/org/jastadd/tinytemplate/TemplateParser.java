@@ -214,7 +214,7 @@ public class TemplateParser {
 	}
 	
 	private String nextName() throws IOException, SyntaxError {
-		StringBuffer name = new StringBuffer();
+		StringBuilder name = new StringBuilder();
 		while (!isWhitespace() && !isAssign() && !isTemplateStart() &&
 				!isEOF()) {
 			
@@ -373,7 +373,7 @@ public class TemplateParser {
 	}
 
 	private String nextString() throws IOException, SyntaxError {
-		StringBuffer buf = new StringBuffer(512);
+		StringBuilder buf = new StringBuilder(512);
 		while ( !(isEOF() || isVariable() || isAttribute() || isLineEnd() ||
 				isTemplateEnd()) ) {
 			
@@ -403,7 +403,7 @@ public class TemplateParser {
 	}
 
 	private String parseSimpleReference() throws IOException, SyntaxError {
-		StringBuffer buf = new StringBuffer(128);
+		StringBuilder buf = new StringBuilder(128);
 		while (!isSimpleReferenceEnd()) {
 			buf.append((char) in.pop());
 		}
@@ -426,7 +426,7 @@ public class TemplateParser {
 		// skip the (
 		in.pop();
 		
-		StringBuffer buf = new StringBuffer(128);
+		StringBuilder buf = new StringBuilder(128);
 		int depth = 1;
 		while (true) {
 			if (isParenthesizedReferenceEnd()) {
