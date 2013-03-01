@@ -117,6 +117,20 @@ public class TestConditionals {
 	}
 
 	/**
+	 * Test whitespace before the condition
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testConditional_6() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("dog = [[$if \t (x)Woof!$endif]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
+
+		tc.bind("x", true);
+		
+		assertEquals("Woof!", tc.expand("dog"));
+	}
+
+	/**
 	 * Test nested conditional
 	 * @throws SyntaxError
 	 */
