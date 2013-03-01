@@ -1,3 +1,7 @@
+2013-03-01  Jesper Öqvist <jesper.oqvist@cs.lth.se>
+
+    * Disabled line splicing
+
 2013-02-28  Jesper Öqvist <jesper.oqvist@cs.lth.se>
 
     * Non-parenthesized variable names can not contain a dollar sign

@@ -106,7 +106,7 @@ public class TemplateParser {
 				}
 				break;
 			} else if (isNewline()) {
-				skipLineEnd();
+				skipNewline();
 			} else if (isLinecomment()) {
 				skipLinecomment();
 			} else if (isAssign()) {
@@ -191,15 +191,11 @@ public class TemplateParser {
 		return ch == '\n' || ch == '\r';
 	}
 
-	private boolean isLineEnd() throws IOException {
-		return isNewline() || (in.peek(0) == '\\' && isNewline(in.peek(1)));
-	}
-
 	private boolean isEOF() throws IOException {
 		return in.peek(0) == -1;
 	}
 
-	private void skipLineEnd() throws IOException {
+	private void skipNewline() throws IOException {
 		if (in.peek(0) == '\\') {
 			in.pop();
 		}
@@ -309,14 +305,9 @@ public class TemplateParser {
 				AttributeReference ref = new AttributeReference(attr);
 				template.addIndentation(ref);
 				return ref;
-			} else if (isLineEnd()) {
-				if (isNewline()) {
-					skipLineEnd();
-					return NewlineFragment.INSTANCE;
-				} else {
-					skipLineEnd();
-					continue;
-				}
+			} else if (isNewline()) {
+				skipNewline();
+				return NewlineFragment.INSTANCE;
 			} else if (isTemplateEnd()) {
 				return EmptyFragment.INSTANCE;
 			} else {
@@ -374,7 +365,7 @@ public class TemplateParser {
 
 	private String nextString() throws IOException, SyntaxError {
 		StringBuilder buf = new StringBuilder(512);
-		while ( !(isEOF() || isVariable() || isAttribute() || isLineEnd() ||
+		while ( !(isEOF() || isVariable() || isAttribute() || isNewline() ||
 				isTemplateEnd()) ) {
 			
 			if (in.peek(0) == '[' && in.peek(1) == '[')
@@ -417,7 +408,7 @@ public class TemplateParser {
 	}
 
 	private boolean isParenthesizedReferenceEnd() throws IOException {
-		return isEOF() || isLineEnd() || isWhitespace() ||
+		return isEOF() || isNewline() || isWhitespace() ||
 				in.peek(0) == '[' || in.peek(0) == ']' ||
 				in.peek(0) == '$' || in.peek(0) == '#';
 	}

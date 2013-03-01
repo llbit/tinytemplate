@@ -377,7 +377,7 @@ public class TestTinyTemplate {
 	}
 	
 	/**
-	 * Tests line splicing
+	 * Line splicing is not enabled
 	 * @throws SyntaxError
 	 */
 	@Test
@@ -399,9 +399,10 @@ public class TestTinyTemplate {
 				
 		String nl = System.getProperty("line.separator");
 		assertEquals(
-				"  {" + nl +
-				"    hello\\" + nl +
-				"    you" + nl +
-				"  }" + nl, tc.expand("foo"));
+				"  \\" + nl +
+				"{" + nl +
+				"  hello\\" + nl +
+				"  you" + nl +
+				"}\\" + nl + nl, tc.expand("foo"));
 	}
 }
