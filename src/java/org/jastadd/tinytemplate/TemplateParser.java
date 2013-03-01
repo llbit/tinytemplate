@@ -277,7 +277,7 @@ public class TemplateParser {
 					throw new SyntaxError(line, "empty variable name");
 				}
 				if (isIfStmt(var)) {
-					return parseIfStmt(var);
+					return parseIfStmt();
 				} else {
 					for (int i = 0; i < var.length(); ++i) {
 						char ch = var.charAt(i);
@@ -325,8 +325,8 @@ public class TemplateParser {
 		}
 	}
 
-	private IfStmt parseIfStmt(String stmtVar) throws IOException, SyntaxError {
-		String condition = stmtVar.substring(3, stmtVar.length()-1);
+	private IfStmt parseIfStmt() throws IOException, SyntaxError {
+		String condition = parseCondition();
 		Template thenPart = new Template();
 		Template elsePart = null;
 		Template part = thenPart;
@@ -357,8 +357,19 @@ public class TemplateParser {
 		return new IfStmt(condition, thenPart, elsePart);
 	}
 
+	private String parseCondition() throws IOException, SyntaxError {
+		while (isWhitespace()) {
+			skipWhitespace();
+		}
+		if (in.peek(0) != '(') {
+			throw new SyntaxError(line, "missing if condition");
+		} else {
+			return parseParenthesizedReference();
+		}
+	}
+
 	private boolean isIfStmt(String var) {
-		return var.startsWith("if(") && var.endsWith(")");
+		return var.equals("if");
 	}
 
 	private String nextString() throws IOException, SyntaxError {
@@ -394,21 +405,15 @@ public class TemplateParser {
 	private String parseSimpleReference() throws IOException, SyntaxError {
 		StringBuffer buf = new StringBuffer(128);
 		while (!isSimpleReferenceEnd()) {
-			if (in.peek(0) == '(') {
-				buf.append('(');
-				buf.append(parseParenthesizedReference());
-				buf.append(')');
-			} else {
-				buf.append((char) in.pop());
-			}
+			buf.append((char) in.pop());
 		}
 		return buf.toString();
 	}
 
 	private boolean isSimpleReferenceEnd() throws IOException {
-		return isEOF() || in.peek(0) == '$'
-				|| (!Character.isJavaIdentifierPart(in.peek(0))
-						&& in.peek(0) != '(');
+		return isEOF()
+				|| in.peek(0) == '$'
+				|| !Character.isJavaIdentifierPart(in.peek(0));
 	}
 
 	private boolean isParenthesizedReferenceEnd() throws IOException {

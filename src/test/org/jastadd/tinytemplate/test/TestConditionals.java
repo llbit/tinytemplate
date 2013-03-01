@@ -52,7 +52,7 @@ public class TestConditionals {
 	 */
 	@Test
 	public void testConditional_1() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate("foo = [[$(if(cond))boo!$endif]]");
+		TinyTemplate tt = new TinyTemplate("foo = [[$if(cond)boo!$endif]]");
 		SimpleContext tc = new SimpleContext(tt, new Object());
 
 		tc.bind("cond", "true");
@@ -66,7 +66,7 @@ public class TestConditionals {
 	 */
 	@Test
 	public void testConditional_2() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate("foo = [[$(if(cond))boo!$endif]]");
+		TinyTemplate tt = new TinyTemplate("foo = [[$if(cond)boo!$endif]]");
 		SimpleContext tc = new SimpleContext(tt, new Object());
 
 		tc.bind("cond", "not true");
@@ -80,7 +80,7 @@ public class TestConditionals {
 	 */
 	@Test
 	public void testConditional_3() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate("foo = [[$(if(cond))boo!$endif]]");
+		TinyTemplate tt = new TinyTemplate("foo = [[$if(cond)boo!$endif]]");
 		SimpleContext tc = new SimpleContext(tt, new Object());
 
 		tc.bind("cond", "True");
@@ -94,7 +94,7 @@ public class TestConditionals {
 	 */
 	@Test
 	public void testConditional_4() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate("foo = [[$(if(cond))boo!$(else)mjau$endif]]");
+		TinyTemplate tt = new TinyTemplate("foo = [[$if(cond)boo!$(else)mjau$endif]]");
 		SimpleContext tc = new SimpleContext(tt, new Object());
 
 		tc.bind("cond", "");
@@ -108,7 +108,7 @@ public class TestConditionals {
 	 */
 	@Test
 	public void testConditional_5() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate("foo = [[$(if(!cond))boo!$(else)mjau$endif]]");
+		TinyTemplate tt = new TinyTemplate("foo = [[$if(!cond)boo!$(else)mjau$endif]]");
 		SimpleContext tc = new SimpleContext(tt, new Object());
 
 		tc.bind("cond", "");
@@ -125,7 +125,7 @@ public class TestConditionals {
 		TinyTemplate tt = new TinyTemplate(
 				"Father = [[" +
 				"$if(x) x\n" +
-				"$(if(y))Wednesday$endif y" +
+				"$if(y)Wednesday$endif y" +
 				"$endif" +
 				"]]");
 		SimpleContext tc = new SimpleContext(tt, new Object());
@@ -238,7 +238,7 @@ public class TestConditionals {
 	@Test
 	public void testTrimming_2() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate(
-				"dog = [[  $(if(bark))Woof!$endif   \n]]");
+				"dog = [[  $if(bark)Woof!$endif   \n]]");
 		SimpleContext tc = new SimpleContext(tt, new Object());
 
 		tc.bind("bark", "true");
@@ -254,7 +254,7 @@ public class TestConditionals {
 	@Test
 	public void testTrimming_3() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate(
-				"dog = [[  $(if(bark))Woof!$endif   ;\n]]");
+				"dog = [[  $if(bark)Woof!$endif   ;\n]]");
 		SimpleContext tc = new SimpleContext(tt, new Object());
 
 		tc.bind("bark", "true");
@@ -271,7 +271,7 @@ public class TestConditionals {
 	@Test
 	public void testTrimming_4() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate(
-				"dog = [[  $(if(bark))Woof!$endif   $(if(bark))Woof!$endif\n]]");
+				"dog = [[  $if(bark)Woof!$endif   $if(bark)Woof!$endif\n]]");
 		SimpleContext tc = new SimpleContext(tt, new Object());
 
 		tc.bind("bark", "true");

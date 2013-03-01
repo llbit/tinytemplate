@@ -178,11 +178,11 @@ public class TestVariables {
 	@Test
 	public void testNameError_2() throws SyntaxError {
 		try {
-			new TinyTemplate("foo = [[$abc(%(!&*))=\n" +
+			new TinyTemplate("foo = [[$(%!&*)=\n" +
 					"wat1..]]");
 			fail("Expected syntax error!");
 		} catch (SyntaxError e) {
-			assertEquals("Syntax error at line 1: illegal characters in variable name abc(%(!&*))", e.getMessage());
+			assertEquals("Syntax error at line 1: illegal characters in variable name %!&*", e.getMessage());
 		}
 	}
 	
@@ -193,7 +193,7 @@ public class TestVariables {
 	@Test
 	public void testNameError_3() throws SyntaxError {
 		try {
-			new TinyTemplate("foo = [[$abc(xyz)]]");
+			new TinyTemplate("foo = [[$(abc(xyz))]]");
 			fail("Expected syntax error!");
 		} catch (SyntaxError e) {
 			assertEquals("Syntax error at line 1: illegal characters in variable name abc(xyz)", e.getMessage());
@@ -201,17 +201,16 @@ public class TestVariables {
 	}
 	
 	/**
-	 * Parenthesis inside a variable name are parsed and raise a syntax error
+	 * Parenthesis after the start of a variable name are not part of
+	 * the variable name
 	 * @throws SyntaxError
 	 */
 	@Test
 	public void testNameError_4() throws SyntaxError {
-		try {
-			new TinyTemplate("foo = [[$abc()]]");
-			fail("Expected syntax error!");
-		} catch (SyntaxError e) {
-			assertEquals("Syntax error at line 1: illegal characters in variable name abc()", e.getMessage());
-		}
+		TinyTemplate tt = new TinyTemplate("foo = [[$abc()]]");
+		SimpleContext tc = new SimpleContext(tt, this);
+		tc.bind("abc", "moo");
+		assertEquals("moo()", tc.expand("foo"));
 	}
 	
 	/**
