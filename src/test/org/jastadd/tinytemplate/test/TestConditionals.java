@@ -131,31 +131,30 @@ public class TestConditionals {
 	}
 
 	/**
-	 * Test whitespace in condition
+	 * Whitespace is not allowed in condition
 	 * @throws SyntaxError
 	 */
 	@Test(expected=SyntaxError.class)
 	public void testConditional_7() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate("dog = [[$if(\tx )Woof!$endif]]");
-		SimpleContext tc = new SimpleContext(tt, new Object());
-
-		tc.bind("x", true);
-		
-		assertEquals("Woof!", tc.expand("dog"));
+		new TinyTemplate("dog = [[$if(\tx )Woof!$endif]]");
 	}
 
 	/**
-	 * Test whitespace in condition
+	 * Whitespace is not allowed in condition
 	 * @throws SyntaxError
 	 */
 	@Test(expected=SyntaxError.class)
 	public void testConditional_8() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate("dog = [[$if(  ! \tx )Woof!$(else)silence$end]]");
-		SimpleContext tc = new SimpleContext(tt, new Object());
+		new TinyTemplate("dog = [[$if(  ! \tx )Woof!$(else)silence$end]]");
+	}
 
-		tc.bind("x", true);
-		
-		assertEquals("silence", tc.expand("dog"));
+	/**
+	 * Extra exclamation marks in condition
+	 * @throws SyntaxError
+	 */
+	@Test(expected=SyntaxError.class)
+	public void testConditional_9() throws SyntaxError {
+		new TinyTemplate("dog = [[$if(!!x)Woof!$(else)silence$end]]");
 	}
 
 	/**
