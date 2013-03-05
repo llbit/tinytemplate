@@ -2,6 +2,7 @@ package org.jastadd.tinytemplate.fragment;
 
 import org.jastadd.tinytemplate.Template;
 import org.jastadd.tinytemplate.TemplateContext;
+import org.jastadd.tinytemplate.TemplateParser;
 import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
 
 /**
@@ -27,21 +28,22 @@ public class IfStmt extends AbstractFragment {
 	
 	/**
 	 * Create an if-then-else conditional
-	 * @param condition
+	 * @param cond
 	 * @param thenPart 
 	 * @param elsePart 
 	 * @throws SyntaxError 
 	 */
-	public IfStmt(String condition, Template thenPart, Template elsePart) throws SyntaxError {
-		if (condition.startsWith("!")) {
+	public IfStmt(String cond, Template thenPart, Template elsePart) throws SyntaxError {
+		if (cond.startsWith("!")) {
 			this.negated = true;
-			this.condition = condition.substring(1);
+			this.condition = cond.substring(1).trim();
 		} else {
 			this.negated = false;
-			this.condition = condition;
+			this.condition = cond;
 		}
-		if (condition.isEmpty())
+		if (cond.isEmpty())
 			throw new SyntaxError("empty if condition");
+		TemplateParser.acceptVariableName(-1, this.condition);
 		this.thenPart = thenPart;
 		this.elsePart = elsePart;
 	}

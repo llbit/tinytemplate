@@ -275,14 +275,7 @@ public class TemplateParser {
 				if (isIfStmt(var)) {
 					return parseIfStmt();
 				} else {
-					for (int i = 0; i < var.length(); ++i) {
-						char ch = var.charAt(i);
-						if (!Character.isJavaIdentifierPart(ch) && ch != '.') {
-							throw new SyntaxError(line,
-								"illegal characters in variable name " + var);
-						}
-						
-					}
+					acceptVariableName(line, var);
 					VariableReference ref = new VariableReference(var);
 					template.addIndentation(ref);
 					return ref;
@@ -355,7 +348,7 @@ public class TemplateParser {
 		if (in.peek(0) != '(') {
 			throw new SyntaxError(line, "missing if condition");
 		} else {
-			return parseParenthesizedReference();
+			return parseParenthesizedReference().trim();
 		}
 	}
 
@@ -448,6 +441,25 @@ public class TemplateParser {
 	private boolean isAttribute() throws IOException {
 		// double hash is an escape for single hash
 		return in.peek(0) == '#' && in.peek(1) != '#';
+	}
+
+	/**
+	 * Throws a SyntaxError if the given string was not a valid variable name
+	 * @param line 
+	 * @param var
+	 * @throws SyntaxError 
+	 */
+	public static void acceptVariableName(int line, String var) throws SyntaxError {
+		for (int i = 0; i < var.length(); ++i) {
+			char ch = var.charAt(i);
+			if (!Character.isJavaIdentifierPart(ch) && ch != '.') {
+				String msg = "illegal characters in variable name " + var;
+				if (line == -1)
+					throw new SyntaxError(msg);
+				else
+					throw new SyntaxError(line, msg);
+			}
+		}
 	}
 
 }
