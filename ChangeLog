@@ -4,6 +4,7 @@
     * Whitespace is stripped from if conditions
     * The condition of an if must be a valid variable name
     * Added template inclusion
+    * Scan dollar and hash signs inside parenthesis
 
 2013-03-01  Jesper Öqvist <jesper.oqvist@cs.lth.se>
 

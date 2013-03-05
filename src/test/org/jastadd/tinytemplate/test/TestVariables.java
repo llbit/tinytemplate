@@ -178,11 +178,11 @@ public class TestVariables {
 	@Test
 	public void testNameError_2() throws SyntaxError {
 		try {
-			new TinyTemplate("foo = [[$(%!&*)=\n" +
+			new TinyTemplate("foo = [[$(%!&*$#)=\n" +
 					"wat1..]]");
 			fail("Expected syntax error!");
 		} catch (SyntaxError e) {
-			assertEquals("Syntax error at line 1: illegal characters in variable name %!&*", e.getMessage());
+			assertEquals("Syntax error at line 1: illegal characters in variable name %!&*$#", e.getMessage());
 		}
 	}
 	

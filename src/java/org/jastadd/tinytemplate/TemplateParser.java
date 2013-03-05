@@ -413,8 +413,7 @@ public class TemplateParser {
 
 	private boolean isParenthesizedReferenceEnd() throws IOException {
 		return isEOF() || isNewline() ||
-				in.peek(0) == '[' || in.peek(0) == ']' ||
-				in.peek(0) == '$' || in.peek(0) == '#';
+				in.peek(0) == '[' || in.peek(0) == ']';
 	}
 
 	private String parseParenthesizedReference() throws IOException, SyntaxError {
