@@ -13,9 +13,18 @@
     </target>
 
 	<target name="test" depends="build">
-        <java classname="org.junit.runner.JUnitCore"
-              classpath="bin:lib/junit.jar" >
-            <arg value="org.jastadd.tinytemplate.test.TestTinyTemplate" />
-        </java>
+		<mkdir dir="test-reports"/>
+		<junit fork="yes" printsummary="yes">
+			<classpath>
+				<pathelement location="bin"/>
+				<pathelement location="lib/junit.jar"/>
+			</classpath>
+			<batchtest todir="test-reports">
+				<fileset dir="bin">
+					<include name="org/jastadd/tinytemplate/test/*.class"/>
+				</fileset>
+			</batchtest>
+			<formatter type="plain"/>
+		</junit>
     </target>
 </project>
