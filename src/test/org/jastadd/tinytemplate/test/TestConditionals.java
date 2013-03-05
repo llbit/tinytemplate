@@ -47,6 +47,28 @@ public class TestConditionals {
 	}
 	
 	/**
+	 * Test an attribute condition
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testAttributeCondition_1() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("dog = [[$if(#toString)Woof!$endif]]");
+		SimpleContext tc = new SimpleContext(tt, "true");
+		assertEquals("Woof!", tc.expand("dog"));
+	}
+
+	/**
+	 * Test an attribute condition
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testAttributeCondition_2() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("dog = [[$if(#toString)Woof!$endif]]");
+		SimpleContext tc = new SimpleContext(tt, "false");
+		assertEquals("", tc.expand("dog"));
+	}
+
+	/**
 	 * Test the if-then conditional
 	 * @throws SyntaxError
 	 */

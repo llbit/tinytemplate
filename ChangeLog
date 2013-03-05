@@ -5,6 +5,7 @@
     * The condition of an if must be a valid variable name
     * Added template inclusion
     * Scan dollar and hash signs inside parenthesis
+    * If condition can be an attribute
 
 2013-03-01  Jesper Öqvist <jesper.oqvist@cs.lth.se>
 

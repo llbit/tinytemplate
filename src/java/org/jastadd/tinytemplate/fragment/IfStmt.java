@@ -15,6 +15,7 @@ public class IfStmt extends AbstractFragment {
 	private final Template thenPart;
 	private Template elsePart = null;
 	private final boolean negated;
+	private final boolean isAttribute;
 
 	/**
 	 * Create a if-then conditional
@@ -36,20 +37,32 @@ public class IfStmt extends AbstractFragment {
 	public IfStmt(String cond, Template thenPart, Template elsePart) throws SyntaxError {
 		if (cond.startsWith("!")) {
 			this.negated = true;
-			this.condition = cond.substring(1).trim();
+			cond = cond.substring(1).trim();
 		} else {
 			this.negated = false;
+		}
+		if (cond.startsWith("#")) {
+			this.isAttribute = true;
+			this.condition = cond.substring(1);
+		} else {
+			this.isAttribute = false;
 			this.condition = cond;
 		}
-		if (cond.isEmpty())
+		if (cond.isEmpty()) {
 			throw new SyntaxError("empty if condition");
+		}
 		TemplateParser.acceptVariableName(-1, this.condition);
 		this.thenPart = thenPart;
 		this.elsePart = elsePart;
 	}
 
 	private boolean evalCondition(TemplateContext context) {
-		boolean result = context.evalVariable(condition).equals("true");
+		String value;
+		if (isAttribute)
+			value = context.evalAttribute(condition);
+		else
+			value = context.evalVariable(condition);
+		boolean result = value.equals("true");
 		return negated ? !result : result;
 	}
 
