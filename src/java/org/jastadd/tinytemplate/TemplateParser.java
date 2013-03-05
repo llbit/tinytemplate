@@ -35,6 +35,7 @@ import org.jastadd.tinytemplate.fragment.AttributeReference;
 import org.jastadd.tinytemplate.fragment.EmptyFragment;
 import org.jastadd.tinytemplate.fragment.IFragment;
 import org.jastadd.tinytemplate.fragment.IfStmt;
+import org.jastadd.tinytemplate.fragment.IncludeStmt;
 import org.jastadd.tinytemplate.fragment.NewlineFragment;
 import org.jastadd.tinytemplate.fragment.StringFragment;
 import org.jastadd.tinytemplate.fragment.VariableReference;
@@ -272,8 +273,10 @@ public class TemplateParser {
 				if (var.isEmpty()) {
 					throw new SyntaxError(line, "empty variable name");
 				}
-				if (isIfStmt(var)) {
+				if (var.equals("if")) {
 					return parseIfStmt();
+				} else if (var.equals("include")) {
+					return parseIncludeStmt();
 				} else {
 					acceptVariableName(line, var);
 					VariableReference ref = new VariableReference(var);
@@ -341,6 +344,18 @@ public class TemplateParser {
 		return new IfStmt(condition, thenPart, elsePart);
 	}
 
+	private IncludeStmt parseIncludeStmt() throws IOException, SyntaxError {
+		while (isWhitespace()) {
+			skipWhitespace();
+		}
+		if (in.peek(0) != '(') {
+			throw new SyntaxError(line, "missing template name");
+		} else {
+			String template = parseParenthesizedReference().trim();
+			return new IncludeStmt(template);
+		}
+	}
+
 	private String parseCondition() throws IOException, SyntaxError {
 		while (isWhitespace()) {
 			skipWhitespace();
@@ -350,10 +365,6 @@ public class TemplateParser {
 		} else {
 			return parseParenthesizedReference().trim();
 		}
-	}
-
-	private boolean isIfStmt(String var) {
-		return var.equals("if");
 	}
 
 	private String nextString() throws IOException, SyntaxError {

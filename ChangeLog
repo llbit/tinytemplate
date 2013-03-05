@@ -3,6 +3,7 @@
     * Whitespace does not break a parenthesized variable name
     * Whitespace is stripped from if conditions
     * The condition of an if must be a valid variable name
+    * Added template inclusion
 
 2013-03-01  Jesper Öqvist <jesper.oqvist@cs.lth.se>
 
