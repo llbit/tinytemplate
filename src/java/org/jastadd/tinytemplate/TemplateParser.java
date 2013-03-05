@@ -408,7 +408,7 @@ public class TemplateParser {
 	}
 
 	private boolean isParenthesizedReferenceEnd() throws IOException {
-		return isEOF() || isNewline() || isWhitespace() ||
+		return isEOF() || isNewline() ||
 				in.peek(0) == '[' || in.peek(0) == ']' ||
 				in.peek(0) == '$' || in.peek(0) == '#';
 	}

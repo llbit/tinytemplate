@@ -187,7 +187,7 @@ public class TestVariables {
 	}
 	
 	/**
-	 * Parenthesis inside a variable name are parsed and raise a syntax error
+	 * Parenthesis are not allowed in a variable name
 	 * @throws SyntaxError
 	 */
 	@Test
@@ -238,6 +238,34 @@ public class TestVariables {
 			fail("Expected syntax error!");
 		} catch (SyntaxError e) {
 			assertEquals("Syntax error at line 1: missing right parenthesis", e.getMessage());
+		}
+	}
+	
+	/**
+	 * Whitespace is not allowed in a variable name
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testNameError_7() throws SyntaxError {
+		try {
+			new TinyTemplate("foo = [[$(abc\txyz)]]");
+			fail("Expected syntax error!");
+		} catch (SyntaxError e) {
+			assertEquals("Syntax error at line 1: illegal characters in variable name abc\txyz", e.getMessage());
+		}
+	}
+	
+	/**
+	 * Whitespace is not allowed in a variable name
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testNameError_8() throws SyntaxError {
+		try {
+			new TinyTemplate("foo = [[$(abc xyz)]]");
+			fail("Expected syntax error!");
+		} catch (SyntaxError e) {
+			assertEquals("Syntax error at line 1: illegal characters in variable name abc xyz", e.getMessage());
 		}
 	}
 	

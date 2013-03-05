@@ -1,3 +1,7 @@
+2013-03-05  Jesper Öqvist <jesper.oqvist@cs.lth.se>
+
+    * Whitespace does not break a parenthesized variable name
+
 2013-03-01  Jesper Öqvist <jesper.oqvist@cs.lth.se>
 
     * Disabled line splicing
