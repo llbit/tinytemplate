@@ -206,6 +206,30 @@ public class TestConditionals {
 	}
 
 	/**
+	 * A dollar sign is allowed for variable conditions
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testConditional_10() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("dog = [[$if($x)Woof!$endif]]");
+		SimpleContext tc = new SimpleContext(tt, this);
+		tc.bind("x", "true");
+		assertEquals("Woof!", tc.expand("dog"));
+	}
+
+	/**
+	 * A dollar sign is allowed for variable conditions
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testConditional_11() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("dog = [[$if(!$x)Woof!$endif]]");
+		SimpleContext tc = new SimpleContext(tt, this);
+		tc.bind("x", "true");
+		assertEquals("", tc.expand("dog"));
+	}
+
+	/**
 	 * Test nested conditional
 	 * @throws SyntaxError
 	 */

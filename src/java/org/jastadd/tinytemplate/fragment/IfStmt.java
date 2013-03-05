@@ -44,6 +44,9 @@ public class IfStmt extends AbstractFragment {
 		if (cond.startsWith("#")) {
 			this.isAttribute = true;
 			this.condition = cond.substring(1);
+		} else if (cond.startsWith("$")) {
+			this.isAttribute = false;
+			this.condition = cond.substring(1);
 		} else {
 			this.isAttribute = false;
 			this.condition = cond;

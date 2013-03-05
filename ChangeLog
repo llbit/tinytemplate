@@ -6,6 +6,7 @@
     * Added template inclusion
     * Scan dollar and hash signs inside parenthesis
     * If condition can be an attribute
+    * A dollar sign is allowed in variable if conditions (implicit)
 
 2013-03-01  Jesper Öqvist <jesper.oqvist@cs.lth.se>
 
