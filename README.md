@@ -24,11 +24,21 @@ Examples
 
     # A template file contains several named templates.
     # Each template begins with [[ and ends with ]]
-    msg.hello.0 = [[Hello there!]]
+    greeting1 = [[Hello!]]
     
     # The = after the template name is optional
     # Variables are referenced using a $
-    msg.hello.1 [[Hello $name!]]
+    greeting2 [[Hello $name!]]
     
     # Parenthesis must be used if the variable name contains a period
-    msg.hello.2 = [[Hello $(your.name)!]]
+    greeting3 = [[Hello $(your.name)!]]
+    
+    # Conditional expansion can be done using if statements
+    dog.bark = [[
+    $if(Happy)
+      Woof!
+    $endif
+    ]]
+    
+    # It is possible to include a subtemplate
+    greeting4 = [[She said "$include(greeting3)"]]
