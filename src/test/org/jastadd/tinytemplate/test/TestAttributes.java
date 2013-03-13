@@ -67,7 +67,7 @@ public class TestAttributes {
 		TinyTemplate tt = new TinyTemplate("foo = [[#imaginaryMethod]]");
 		SimpleContext tc = new SimpleContext(tt, "the string");
 		
-		assertEquals("<failed to eval imaginaryMethod; reason: no such method>", tc.expand("foo"));
+		assertEquals("<failed to eval attribute 'imaginaryMethod'; reason: no such method>", tc.expand("foo"));
 	}
 	
 	/**

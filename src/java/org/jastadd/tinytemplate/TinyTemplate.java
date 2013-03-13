@@ -214,19 +214,19 @@ public class TinyTemplate extends TemplateContext {
 			Method method = context.getClass().getMethod(attribute, new Class[] {});
 			return "" + method.invoke(context, new Object[] {});
 		} catch (SecurityException e) {
-			String msg = "failed to eval " + attribute + "; reason: security exception";
+			String msg = "failed to eval attribute '" + attribute + "'; reason: security exception";
 			return expansionWarning(msg);
 		} catch (NoSuchMethodException e) {
-			String msg = "failed to eval " + attribute + "; reason: no such method";
+			String msg = "failed to eval attribute '" + attribute + "'; reason: no such method";
 			return expansionWarning(msg);
 		} catch (IllegalArgumentException e) {
-			String msg = "failed to eval " + attribute + "; reason: illegal argument exception";
+			String msg = "failed to eval attribute '" + attribute + "'; reason: illegal argument exception";
 			return expansionWarning(msg);
 		} catch (IllegalAccessException e) {
-			String msg = "failed to eval " + attribute + "; reason: illegal access exception";
+			String msg = "failed to eval attribute '" + attribute + "'; reason: illegal access exception";
 			return expansionWarning(msg);
 		} catch (InvocationTargetException e) {
-			String msg = "failed to eval " + attribute + "; reason: invocation target exception";
+			String msg = "failed to eval attribute '" + attribute + "'; reason: invocation target exception";
 			return expansionWarning(msg);
 		}
 	}
