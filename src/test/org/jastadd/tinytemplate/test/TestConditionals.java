@@ -215,7 +215,7 @@ public class TestConditionals {
 			new TinyTemplate("dog = [[$if(!!x)Woof!$(else)silence$endif]]");
 			fail("Expected syntax error!");
 		} catch (SyntaxError e) {
-			assertEquals("illegal characters in variable name !x", e.getMessage());
+			assertEquals("illegal characters in variable name '!x'", e.getMessage());
 		}
 	}
 
@@ -241,6 +241,34 @@ public class TestConditionals {
 		SimpleContext tc = new SimpleContext(tt, this);
 		tc.bind("x", "true");
 		assertEquals("", tc.expand("dog"));
+	}
+
+	/**
+	 * Illegal characters in condition
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testConditionError_1() throws SyntaxError {
+		try {
+			new TinyTemplate("dog = [[$if(x%)Woof!$(else)silence$endif]]");
+			fail("Expected syntax error!");
+		} catch (SyntaxError e) {
+			assertEquals("illegal characters in variable name 'x%'", e.getMessage());
+		}
+	}
+
+	/**
+	 * Attribute conditions must be legal Java identifiers
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testConditionError_2() throws SyntaxError {
+		try {
+			new TinyTemplate("dog = [[$if(#x.y)Woof!$(else)silence$endif]]");
+			fail("Expected syntax error!");
+		} catch (SyntaxError e) {
+			assertEquals("the attribute name 'x.y' is not a valid Java identifier", e.getMessage());
+		}
 	}
 
 	/**

@@ -167,7 +167,7 @@ public class TestVariables {
 			new TinyTemplate("foo = [[$(:;^(xyz)) wat1..]]");
 			fail("Expected syntax error!");
 		} catch (SyntaxError e) {
-			assertEquals("Syntax error at line 1: illegal characters in variable name :;^(xyz)", e.getMessage());
+			assertEquals("Syntax error at line 1: illegal characters in variable name ':;^(xyz)'", e.getMessage());
 		}
 	}
 	
@@ -182,7 +182,7 @@ public class TestVariables {
 					"wat1..]]");
 			fail("Expected syntax error!");
 		} catch (SyntaxError e) {
-			assertEquals("Syntax error at line 1: illegal characters in variable name %!&*$#", e.getMessage());
+			assertEquals("Syntax error at line 1: illegal characters in variable name '%!&*$#'", e.getMessage());
 		}
 	}
 	
@@ -196,7 +196,7 @@ public class TestVariables {
 			new TinyTemplate("foo = [[$(abc(xyz))]]");
 			fail("Expected syntax error!");
 		} catch (SyntaxError e) {
-			assertEquals("Syntax error at line 1: illegal characters in variable name abc(xyz)", e.getMessage());
+			assertEquals("Syntax error at line 1: illegal characters in variable name 'abc(xyz)'", e.getMessage());
 		}
 	}
 	
@@ -251,7 +251,7 @@ public class TestVariables {
 			new TinyTemplate("foo = [[$(abc\txyz)]]");
 			fail("Expected syntax error!");
 		} catch (SyntaxError e) {
-			assertEquals("Syntax error at line 1: illegal characters in variable name abc\txyz", e.getMessage());
+			assertEquals("Syntax error at line 1: illegal characters in variable name 'abc\txyz'", e.getMessage());
 		}
 	}
 	
@@ -265,7 +265,7 @@ public class TestVariables {
 			new TinyTemplate("foo = [[$(abc xyz)]]");
 			fail("Expected syntax error!");
 		} catch (SyntaxError e) {
-			assertEquals("Syntax error at line 1: illegal characters in variable name abc xyz", e.getMessage());
+			assertEquals("Syntax error at line 1: illegal characters in variable name 'abc xyz'", e.getMessage());
 		}
 	}
 	

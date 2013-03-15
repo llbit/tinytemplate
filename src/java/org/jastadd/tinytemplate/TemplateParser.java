@@ -288,16 +288,7 @@ public class TemplateParser {
 				if (attr.isEmpty()) {
 					throw new SyntaxError(line, "empty attribute name");
 				}
-				for (int i = 0; i < attr.length(); ++i) {
-					char ch = attr.charAt(i);
-					if ((i == 0 && !Character.isJavaIdentifierStart(ch)) ||
-							!Character.isJavaIdentifierPart(ch)) {
-						
-						throw new SyntaxError(line, "the attribute " + attr +
-								" is not a valid Java identifier");
-					}
-					
-				}
+				acceptAttributeName(line, attr);
 				AttributeReference ref = new AttributeReference(attr);
 				template.addIndentation(ref);
 				return ref;
@@ -480,12 +471,35 @@ public class TemplateParser {
 		for (int i = 0; i < var.length(); ++i) {
 			char ch = var.charAt(i);
 			if (!Character.isJavaIdentifierPart(ch) && ch != '.') {
-				String msg = "illegal characters in variable name " + var;
+				String msg = "illegal characters in variable name '" + var + "'";
 				if (line == -1)
 					throw new SyntaxError(msg);
 				else
 					throw new SyntaxError(line, msg);
 			}
+		}
+	}
+
+	/**
+	 * Throws a SyntaxError if the given string was not a valid attribute name
+	 * @param line 
+	 * @param attr
+	 * @throws SyntaxError 
+	 */
+	public static void acceptAttributeName(int line, String attr) throws SyntaxError {
+		for (int i = 0; i < attr.length(); ++i) {
+			char ch = attr.charAt(i);
+			if ((i == 0 && !Character.isJavaIdentifierStart(ch)) ||
+					!Character.isJavaIdentifierPart(ch)) {
+				
+				String msg =  "the attribute name '" + attr +
+						"' is not a valid Java identifier";
+				if (line == -1)
+					throw new SyntaxError(msg);
+				else
+					throw new SyntaxError(line, msg);
+			}
+			
 		}
 	}
 

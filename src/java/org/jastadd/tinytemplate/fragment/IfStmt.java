@@ -54,7 +54,11 @@ public class IfStmt extends AbstractFragment {
 		if (cond.isEmpty()) {
 			throw new SyntaxError("empty if condition");
 		}
-		TemplateParser.acceptVariableName(-1, this.condition);
+		if (isAttribute) {
+			TemplateParser.acceptAttributeName(-1, this.condition);
+		} else {
+			TemplateParser.acceptVariableName(-1, this.condition);
+		}
 		this.thenPart = thenPart;
 		this.elsePart = elsePart;
 	}

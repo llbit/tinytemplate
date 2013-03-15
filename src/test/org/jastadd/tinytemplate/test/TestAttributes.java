@@ -105,7 +105,7 @@ public class TestAttributes {
 			new TinyTemplate("foo = [[#0x]]");
 			fail("Expected syntax error!");
 		} catch (SyntaxError e) {
-			assertEquals("Syntax error at line 1: the attribute 0x is not a valid Java identifier", e.getMessage());
+			assertEquals("Syntax error at line 1: the attribute name '0x' is not a valid Java identifier", e.getMessage());
 		}
 	}
 	
