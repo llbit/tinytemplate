@@ -76,7 +76,7 @@ public class TemplateParser {
 	 */
 	public TemplateParser(TinyTemplate tt, InputStream is) {
 		templates = tt;
-		in = new LookaheadReader(is, 2);
+		in = new LookaheadReader(is, 8);
 	}
 	
 	/**
@@ -231,9 +231,9 @@ public class TemplateParser {
 		while (true) {
 			IFragment nextFragment = nextFragment(template, newLine);
 			if (!nextFragment.isEmpty()) {
-				if (nextFragment.isVar("else"))
+				if (nextFragment.isKeyword("else"))
 					throw new SyntaxError(line, "stray $else");
-				else if (nextFragment.isVar("endif"))
+				else if (nextFragment.isKeyword("endif"))
 					throw new SyntaxError(line, "stray $endif");
 				newLine = nextFragment.isNewline();
 				template.addFragment(nextFragment);
@@ -268,21 +268,21 @@ public class TemplateParser {
 				}
 			}
 	
-			if (isVariable()) {
+			if (isIf()) {
+				in.consume(3);
+				return parseIfStmt();
+			} else if (isInclude()) {
+				in.consume(8);
+				return parseIncludeStmt();
+			} else if (isVariable()) {
 				String var = nextReference();
 				if (var.isEmpty()) {
 					throw new SyntaxError(line, "empty variable name");
 				}
-				if (var.equals("if")) {
-					return parseIfStmt();
-				} else if (var.equals("include")) {
-					return parseIncludeStmt();
-				} else {
-					acceptVariableName(line, var);
-					VariableReference ref = new VariableReference(var);
-					template.addIndentation(ref);
-					return ref;
-				}
+				acceptVariableName(line, var);
+				VariableReference ref = new VariableReference(var);
+				template.addIndentation(ref);
+				return ref;
 			} else if (isAttribute()) {
 				String attr = nextReference();
 				if (attr.isEmpty()) {
@@ -312,6 +312,23 @@ public class TemplateParser {
 		}
 	}
 
+	private boolean isIf() throws IOException {
+		return (in.peek(0) == '$' || in.peek(0) == '#')
+				&& in.peek(1) == 'i'
+				&& in.peek(2) == 'f';
+	}
+
+	private boolean isInclude() throws IOException {
+		return (in.peek(0) == '$' || in.peek(0) == '#')
+				&& in.peek(1) == 'i'
+				&& in.peek(2) == 'n'
+				&& in.peek(3) == 'c'
+				&& in.peek(4) == 'l'
+				&& in.peek(5) == 'u'
+				&& in.peek(6) == 'd'
+				&& in.peek(7) == 'e';
+	}
+
 	private IfStmt parseIfStmt() throws IOException, SyntaxError {
 		String condition = parseCondition();
 		Template thenPart = new Template();
@@ -322,12 +339,12 @@ public class TemplateParser {
 		while (true) {
 			IFragment nextFragment = nextFragment(part, newLine);
 			if (!nextFragment.isEmpty()) {
-				if (nextFragment.isVar("else")) {
+				if (nextFragment.isKeyword("else")) {
 					if (elsePart != null)
 						throw new SyntaxError(line, "too many $else");
 					elsePart = new Template();
 					part = elsePart;
-				} else if (nextFragment.isVar("endif")) {
+				} else if (nextFragment.isKeyword("endif")) {
 					break;
 				} else {
 					newLine = nextFragment.isNewline();

@@ -47,6 +47,20 @@ public class TestConditionals {
 	}
 	
 	/**
+	 * Test alternate form of if-then-else with hash sign instead of dollar sign
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testAlternate_1() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("foo = [[#if(cond)boo!#(else)mjau#endif]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
+
+		tc.bind("cond", "");
+		
+		assertEquals("mjau", tc.expand("foo"));
+	}
+	
+	/**
 	 * Test an attribute condition
 	 * @throws SyntaxError
 	 */

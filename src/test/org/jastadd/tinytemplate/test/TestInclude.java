@@ -73,4 +73,18 @@ public class TestInclude {
 		tc.bind("boop", "beep");
 		assertEquals("beep", tc.expand("b"));
 	}
+	
+	/**
+	 * Test the include keyword with a hash instead of dollar sign
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testInclude_3() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"a = [[$boop]]\n" +
+				"b = [[#include(a)]]");
+		TemplateContext tc = new SimpleContext(tt, this);
+		tc.bind("boop", "beep");
+		assertEquals("beep", tc.expand("b"));
+	}
 }

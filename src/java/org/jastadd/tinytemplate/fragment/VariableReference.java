@@ -52,7 +52,7 @@ public class VariableReference extends NestedIndentationFragment {
 	}
 	
 	@Override
-	public boolean isVar(String varName) {
+	public boolean isKeyword(String varName) {
 		return variable.equals(varName);
 	}
 }

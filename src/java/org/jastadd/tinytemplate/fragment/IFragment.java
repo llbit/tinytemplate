@@ -54,7 +54,7 @@ public interface IFragment {
 	 * @param var Name
 	 * @return <code>true</code> if this fragment is a variable reference with the given name
 	 */
-	boolean isVar(String var);
+	boolean isKeyword(String var);
 
 	/**
 	 * @return <code>true</code> if this fragment is whitespace

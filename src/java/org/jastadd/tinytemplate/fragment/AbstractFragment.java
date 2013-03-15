@@ -41,7 +41,7 @@ abstract public class AbstractFragment implements IFragment {
 	}
 	
 	@Override
-	public boolean isVar(String var) {
+	public boolean isKeyword(String var) {
 		return false;
 	}
 	

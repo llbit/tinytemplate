@@ -1,3 +1,8 @@
+2013-03-15  Jesper Öqvist <jesper.oqvist@cs.lth.se>
+
+    * Keywords such as if, include, else can now be preceded by a hash sign
+    in addition to the dollar sign
+
 2013-03-13  Jesper Öqvist <jesper.oqvist@cs.lth.se>
 
     * Improved attribute expansion warnings

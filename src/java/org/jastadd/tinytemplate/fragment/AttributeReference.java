@@ -51,4 +51,9 @@ public class AttributeReference extends NestedIndentationFragment {
 	public String toString() {
 		return "#(" + attribute + ")";
 	}
+	
+	@Override
+	public boolean isKeyword(String varName) {
+		return attribute.equals(varName);
+	}
 }
