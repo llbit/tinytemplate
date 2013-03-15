@@ -138,7 +138,7 @@ public class TinyTemplate extends TemplateContext {
 	private Template lookupTemplate(String name) {
 		Template temp = templates.get(name);
 		if (temp == null) {
-			expansionWarning("unknown template: " + name);
+			expansionWarning("unknown template '" + name + "'");
 		}
 		return temp;
 	}

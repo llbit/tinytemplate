@@ -50,11 +50,14 @@ public class TestWarnings {
 	 * Tests expanding an undefined template
 	 * @throws SyntaxError
 	 */
-	@Test(expected=TemplateExpansionWarning.class)
+	@Test
 	public void testUndefinedTemplate_1() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate("");
-		
-		assertEquals("", tt.expand("test"));
+		try {
+			new TinyTemplate("").expand("test");
+			fail("Expected template expansion warning!");
+		} catch (TemplateExpansionWarning e) {
+			assertEquals("Template expansion warning: unknown template 'test'", e.getMessage());
+		}
 	}
 	
 }
