@@ -11,7 +11,7 @@
  *     * Neither the name of the <organization> nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -25,6 +25,8 @@
  */
 package org.jastadd.tinytemplate.fragment;
 
+import java.io.PrintStream;
+
 import org.jastadd.tinytemplate.TemplateContext;
 
 /**
@@ -32,12 +34,12 @@ import org.jastadd.tinytemplate.TemplateContext;
  * @author Jesper Öqvist <jesper.oqvist@cs.lth.se>
  */
 public class EmptyFragment extends AbstractFragment {
-	
+
 	/**
 	 * Singleton instance
 	 */
 	public static final EmptyFragment INSTANCE = new EmptyFragment();
-	
+
 	private EmptyFragment() {}
 
 	@Override
@@ -47,5 +49,9 @@ public class EmptyFragment extends AbstractFragment {
 	@Override
 	public boolean isEmpty() {
 		return true;
+	}
+
+	@Override
+	public void printAspectCode(TemplateContext context, PrintStream out) {
 	}
 }

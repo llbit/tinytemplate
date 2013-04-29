@@ -11,7 +11,7 @@
  *     * Neither the name of the <organization> nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -24,6 +24,8 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.jastadd.tinytemplate.fragment;
+
+import java.io.PrintStream;
 
 import org.jastadd.tinytemplate.TemplateContext;
 
@@ -75,4 +77,11 @@ public interface IFragment {
 	 * @return <code>true</code> if this fragment is an indentation fragment
 	 */
 	boolean isIndentation();
+
+	/**
+	 * Print aspect code for this fragment to the given output stream
+	 * @param context Context for indentation
+	 * @param out
+	 */
+	void printAspectCode(TemplateContext context, PrintStream out);
 }

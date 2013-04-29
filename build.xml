@@ -27,4 +27,15 @@
 			<formatter type="plain"/>
 		</junit>
     </target>
+
+	<target name="jar" depends="build">
+		<jar destfile="aspectgen.jar">
+			<manifest>
+				<attribute name="Main-Class" value="org.jastadd.tinytemplate.AspectGenerator"/>
+			</manifest>
+			<fileset dir="bin">
+				<include name="**/*"/>
+			</fileset>
+		</jar>
+	</target>
 </project>

@@ -11,7 +11,7 @@
  *     * Neither the name of the <organization> nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -25,6 +25,7 @@
  */
 package org.jastadd.tinytemplate;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,15 +52,22 @@ public class Indentation {
 		public void expand(TemplateContext context, StringBuilder out) {
 			out.append(context.evalIndentation(level));
 		}
-		
+
 		@Override
 		public boolean isWhitespace() {
 			return true;
 		}
-		
+
 		@Override
 		public boolean isIndentation() {
 			return true;
+		}
+
+		@Override
+		public void printAspectCode(TemplateContext context, PrintStream out) {
+			out.print("    out.print(\"");
+			out.print(context.evalIndentation(level).replaceAll("\n", "\\n"));
+			out.println("\");");
 		}
 	}
 
@@ -68,7 +76,7 @@ public class Indentation {
 
 	private static final List<IFragment> fragments =
 		new ArrayList<IFragment>(32);
-	
+
 	/**
 	 * Create a new indentation scheme
 	 * @param indent One level of indentation
@@ -77,7 +85,7 @@ public class Indentation {
 		indentation = indent;
 		ind.add("");
 	}
-		
+
 	/**
 	 * @param level The level of indentation
 	 * @return An indentation fragment for the given indentation level

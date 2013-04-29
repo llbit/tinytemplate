@@ -11,7 +11,7 @@
  *     * Neither the name of the <organization> nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -41,45 +41,45 @@ import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
  * @author Jesper Öqvist <jesper@llbit.se>
  */
 public class TinyTemplate extends TemplateContext {
-	
+
 	/**
  	 * Output indentation scheme
  	 */
 	private Indentation indentation = new Indentation("  ");
-	
+
 	/**
 	 * Template map
 	 */
-	private Map<String, Template> templates = new HashMap<String, Template>();
-	
+	private final Map<String, Template> templates = new HashMap<String, Template>();
+
 	static private boolean throwExceptions = false;
-	
+
 	static private boolean printWarnings = true;
-	
+
 	/**
  	 * Start with empty template set
  	 */
 	public TinyTemplate() {
 	}
-	
+
 	/**
 	 * Load templates from input stream
 	 * @param in
-	 * @throws SyntaxError 
+	 * @throws SyntaxError
 	 */
 	public TinyTemplate(InputStream in) throws SyntaxError {
 		loadTemplates(in);
 	}
-	
+
 	/**
 	 * Load a templates from string
 	 * @param string
-	 * @throws SyntaxError 
+	 * @throws SyntaxError
 	 */
 	public TinyTemplate(String string) throws SyntaxError {
 		loadTemplates(string);
 	}
-	
+
 	/**
 	 * Toggle whether exceptions shall be thrown whenever a template expansion
 	 * fails.
@@ -88,7 +88,7 @@ public class TinyTemplate extends TemplateContext {
 	public static void throwExceptions(boolean b) {
 		throwExceptions = b;
 	}
-	
+
 	/**
 	 * Toggle whether warnings shall be printed to stderr.
 	 * @param b
@@ -96,7 +96,7 @@ public class TinyTemplate extends TemplateContext {
 	public static void printWarnings(boolean b) {
 		printWarnings = b;
 	}
-	
+
 	@Override
 	public void expand(TemplateContext tc, String templateName, PrintStream out) {
 		Template temp = lookupTemplate(templateName);
@@ -128,7 +128,7 @@ public class TinyTemplate extends TemplateContext {
 			temp.expand(tc, out);
 		}
 	}
-	
+
 	/**
 	 * Search for a template with a given name. If the template does not
 	 * exist a warning is generated.
@@ -146,7 +146,7 @@ public class TinyTemplate extends TemplateContext {
 	@Override
 	public void flushVariables() {
 	}
-	
+
 	@Override
 	public void bind(String varName, String value) {
 		throw new UnsupportedOperationException("Can not bind variable on root template context");
@@ -162,12 +162,12 @@ public class TinyTemplate extends TemplateContext {
 		String msg = "unbound variable " + varName;
 		return expansionWarning(msg);
 	}
-	
-	
+
+
 	/**
 	 * Load a template file
 	 * @param in
-	 * @throws SyntaxError 
+	 * @throws SyntaxError
 	 */
 	public void loadTemplates(InputStream in) throws SyntaxError {
 		TemplateParser parser = new TemplateParser(this, in);
@@ -177,7 +177,7 @@ public class TinyTemplate extends TemplateContext {
 	/**
 	 * Load templates from string literal
 	 * @param str
-	 * @throws SyntaxError 
+	 * @throws SyntaxError
 	 */
 	public void loadTemplates(String str) throws SyntaxError {
 		TemplateParser parser = new TemplateParser(this,
@@ -198,7 +198,7 @@ public class TinyTemplate extends TemplateContext {
 	public String evalAttribute(String attribute) {
 		return evalAttribute(attribute, null);
 	}
-	
+
 	/**
 	 * Eval attribute on context object
 	 * @param attribute
@@ -257,5 +257,20 @@ public class TinyTemplate extends TemplateContext {
  	 */
 	public void setIndentation(String indent) {
 		indentation = new Indentation(indent);
+	}
+
+	/**
+	 * @param out
+	 */
+	public void printTemplateAspect(PrintStream out) {
+		out.println("aspect TemplateAspect {");
+		for (Map.Entry<String, Template> entry: templates.entrySet()) {
+			String name = entry.getKey();
+			Template template = entry.getValue();
+			out.println("  public void " + name + "(PrintStream out) {");
+			template.printITD(this, out);
+			out.println("  }");
+		}
+		out.println("}");
 	}
 }

@@ -11,7 +11,7 @@
  *     * Neither the name of the <organization> nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -40,9 +40,9 @@ import org.jastadd.tinytemplate.fragment.NestedIndentationFragment;
  * @author Jesper Öqvist <jesper@llbit.se>
  */
 public class Template {
-	
-	private List<List<IFragment>> lines = new ArrayList<List<IFragment>>();
-	
+
+	private final List<List<IFragment>> lines = new ArrayList<List<IFragment>>();
+
 	{
 		// lines should never be empty
 		lines.add(new ArrayList<IFragment>());
@@ -50,7 +50,7 @@ public class Template {
 
 	/**
 	 * Expand the template to a PrintStream
-	 * @param context 
+	 * @param context
 	 * @param out
 	 */
 	public void expand(TemplateContext context, PrintStream out) {
@@ -63,7 +63,7 @@ public class Template {
 
 	/**
 	 * Expand the template to a PrintWriter
-	 * @param context 
+	 * @param context
 	 * @param out
 	 */
 	public void expand(TemplateContext context, PrintWriter out) {
@@ -76,7 +76,7 @@ public class Template {
 
 	/**
 	 * Expand the template to a StringBuffer
-	 * @param context 
+	 * @param context
 	 * @param out
 	 */
 	public void expand(TemplateContext context, StringBuffer out) {
@@ -89,7 +89,7 @@ public class Template {
 
 	/**
 	 * Expand the template to a StringBuilder
-	 * @param context 
+	 * @param context
 	 * @param out
 	 */
 	public void expand(TemplateContext context, StringBuilder out) {
@@ -99,7 +99,7 @@ public class Template {
 			out.append(buf.toString());
 		}
 	}
-	
+
 	private void expandLine(TemplateContext context, List<IFragment> line, StringBuilder buf) {
 		buf.setLength(0);
 		boolean expanded = false;
@@ -136,9 +136,9 @@ public class Template {
 		if (!lastLine.isEmpty() && lastLine.get(0).isIndentation()) {
 			fragment.setIndentation((IndentationFragment) lastLine.get(0));
 		}
-		
+
 	}
-	
+
 	/**
 	 * Add a fragment to the last line
 	 * @param fragment
@@ -174,7 +174,7 @@ public class Template {
 			lines.add(new ArrayList<IFragment>());
 		}
 	}
-	
+
 	/**
 	 * Trim leading and trailing whitespace around conditionals surrounded
 	 * by whitespace on their line.
@@ -204,5 +204,18 @@ public class Template {
 			}
 		}
 		return tmp;
+	}
+
+	/**
+	 * Print inter-type declaration for this template
+	 * @param context
+	 * @param out
+	 */
+	public void printITD(TemplateContext context, PrintStream out) {
+		for (List<IFragment> line: lines) {
+			for (IFragment fragment: line) {
+				fragment.printAspectCode(context, out);
+			}
+		}
 	}
 }

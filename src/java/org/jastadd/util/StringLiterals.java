@@ -1,4 +1,4 @@
-/* Copyright (c) 2013, Jesper Öqvist <jesper@cs.lth.se>
+/* Copyright (c) 2013, Jesper Öqvist <jesper.oqvist@cs.lth.se>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,51 +23,37 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.jastadd.tinytemplate.fragment;
-
-import java.io.PrintStream;
-
-import org.jastadd.tinytemplate.TemplateContext;
-import org.jastadd.util.StringLiterals;
+package org.jastadd.util;
 
 /**
  * @author Jesper Öqvist <jesper@llbit.se>
  */
-public class StringFragment extends AbstractFragment {
-
-	private final String string;
-
+public class StringLiterals {
 	/**
 	 * @param theString
+	 * @return Escaped Java string literal
 	 */
-	public StringFragment(String theString) {
-		string = theString;
-	}
-
-	@Override
-	public void expand(TemplateContext context, StringBuilder out) {
-		out.append(string);
-	}
-
-	@Override
-	public String toString() {
-		return string;
-	}
-
-	@Override
-	public boolean isWhitespace() {
-		for (int i = 0; i < string.length(); ++i) {
-			if (!Character.isWhitespace(string.charAt(i))) {
-				return false;
+	public static String buildStringLiteral(String theString) {
+		StringBuilder buf = new StringBuilder(theString.length());
+		for (int i = 0; i < theString.length(); ++i) {
+			char c = theString.charAt(i);
+			if (c >= 0x20 && c <= 0x7E) {
+				switch (c) {
+				case '"':
+					buf.append("\\\"");
+					break;
+				case '\\':
+					buf.append("\\\\");
+					break;
+				default:
+					buf.append(c);
+				}
+			} else if (c < 0x20) {
+				buf.append(String.format("\\%03o", (int) c));
+			} else {
+				buf.append(String.format("\\u%04X", (int) c));
 			}
 		}
-		return true;
-	}
-
-	@Override
-	public void printAspectCode(TemplateContext context, PrintStream out) {
-		out.print("    out.print(\"");
-		out.print(StringLiterals.buildStringLiteral(string));
-		out.println("\");");
+		return buf.toString();
 	}
 }

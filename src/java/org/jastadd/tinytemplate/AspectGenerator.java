@@ -1,4 +1,4 @@
-/* Copyright (c) 2013, Jesper Öqvist <jesper@cs.lth.se>
+/* Copyright (c) 2013, Jesper Öqvist <jesper.oqvist@cs.lth.se>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,51 +23,46 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.jastadd.tinytemplate.fragment;
+package org.jastadd.tinytemplate;
 
-import java.io.PrintStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.Collection;
+import java.util.LinkedList;
 
-import org.jastadd.tinytemplate.TemplateContext;
-import org.jastadd.util.StringLiterals;
+import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
 
 /**
+ * Generates a JastAdd aspect from templates.
  * @author Jesper Öqvist <jesper@llbit.se>
  */
-public class StringFragment extends AbstractFragment {
-
-	private final String string;
+public class AspectGenerator {
 
 	/**
-	 * @param theString
+	 * Entry point for aspect generator
+	 * @param args
 	 */
-	public StringFragment(String theString) {
-		string = theString;
-	}
+	public static void main(String[] args) {
+		Collection<String> ttFiles = new LinkedList<String>();
+		for (int i = 0; i < args.length; ++i) {
+			ttFiles.add(args[i]);
+		}
 
-	@Override
-	public void expand(TemplateContext context, StringBuilder out) {
-		out.append(string);
-	}
-
-	@Override
-	public String toString() {
-		return string;
-	}
-
-	@Override
-	public boolean isWhitespace() {
-		for (int i = 0; i < string.length(); ++i) {
-			if (!Character.isWhitespace(string.charAt(i))) {
-				return false;
+		TinyTemplate tt = new TinyTemplate();
+		// Load all templates
+		for (String file: ttFiles) {
+			try {
+				tt.loadTemplates(new FileInputStream(file));
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SyntaxError e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
-		return true;
+
+		tt.printTemplateAspect(System.out);
 	}
 
-	@Override
-	public void printAspectCode(TemplateContext context, PrintStream out) {
-		out.print("    out.print(\"");
-		out.print(StringLiterals.buildStringLiteral(string));
-		out.println("\");");
-	}
 }

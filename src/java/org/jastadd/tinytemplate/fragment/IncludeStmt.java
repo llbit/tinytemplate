@@ -11,7 +11,7 @@
  *     * Neither the name of the <organization> nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -25,15 +25,17 @@
  */
 package org.jastadd.tinytemplate.fragment;
 
+import java.io.PrintStream;
+
 import org.jastadd.tinytemplate.TemplateContext;
 
 /**
  * @author Jesper Öqvist <jesper@llbit.se>
  */
 public class IncludeStmt extends NestedIndentationFragment {
-	
+
 	private final String template;
-	
+
 	/**
 	 * @param templateName
 	 */
@@ -45,9 +47,14 @@ public class IncludeStmt extends NestedIndentationFragment {
 	public void expand(TemplateContext context, StringBuilder out) {
 		expandWithIndentation(context.expand(template), context, out);
 	}
-	
+
 	@Override
 	public boolean isExpansion() {
 		return true;
+	}
+
+	@Override
+	public void printAspectCode(TemplateContext context, PrintStream out) {
+		out.println("    " + template + "(out);");
 	}
 }

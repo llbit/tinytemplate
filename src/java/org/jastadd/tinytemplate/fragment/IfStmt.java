@@ -1,5 +1,7 @@
 package org.jastadd.tinytemplate.fragment;
 
+import java.io.PrintStream;
+
 import org.jastadd.tinytemplate.Template;
 import org.jastadd.tinytemplate.TemplateContext;
 import org.jastadd.tinytemplate.TemplateParser;
@@ -10,7 +12,7 @@ import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
  * @author Jesper Öqvist <jesper.oqvist@cs.lth.se>
  */
 public class IfStmt extends AbstractFragment {
-	
+
 	private String condition;
 	private final Template thenPart;
 	private Template elsePart = null;
@@ -20,19 +22,19 @@ public class IfStmt extends AbstractFragment {
 	/**
 	 * Create a if-then conditional
 	 * @param condition
-	 * @param thenPart 
-	 * @throws SyntaxError 
+	 * @param thenPart
+	 * @throws SyntaxError
 	 */
 	public IfStmt(String condition, Template thenPart) throws SyntaxError {
 		this(condition, thenPart, null);
 	}
-	
+
 	/**
 	 * Create an if-then-else conditional
 	 * @param cond
-	 * @param thenPart 
-	 * @param elsePart 
-	 * @throws SyntaxError 
+	 * @param thenPart
+	 * @param elsePart
+	 * @throws SyntaxError
 	 */
 	public IfStmt(String cond, Template thenPart, Template elsePart) throws SyntaxError {
 		if (cond.startsWith("!")) {
@@ -86,9 +88,25 @@ public class IfStmt extends AbstractFragment {
 	public boolean isConditional() {
 		return true;
 	}
-	
+
 	@Override
 	public boolean isExpansion() {
 		return true;
+	}
+
+	@Override
+	public void printAspectCode(TemplateContext context, PrintStream out) {
+		out.print("    if (");
+		if (isAttribute) {
+			out.print(condition + "()");
+		} else {
+			out.print("get" + condition + "()");
+		}
+		out.println(") {");
+		if (elsePart != null) {
+			out.println("    } else {");
+			elsePart.printITD(context, out);
+		}
+		out.println("    }");
 	}
 }

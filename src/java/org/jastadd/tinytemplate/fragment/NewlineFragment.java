@@ -11,7 +11,7 @@
  *     * Neither the name of the <organization> nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -25,43 +25,50 @@
  */
 package org.jastadd.tinytemplate.fragment;
 
+import java.io.PrintStream;
+
 import org.jastadd.tinytemplate.TemplateContext;
 
 /**
  * Represents the system-dependent newline character sequence.
- * 
+ *
  * This is a singleton class.
- * 
+ *
  * @author Jesper Öqvist <jesper@llbit.se>
  */
 public class NewlineFragment extends AbstractFragment {
-	
+
 	private static final String SYS_NL = System.getProperty("line.separator");
-	
+
 	/**
 	 * Singleton instance
 	 */
 	public static IFragment INSTANCE = new NewlineFragment();
-	
+
 	private NewlineFragment() {}
 
 	@Override
 	public void expand(TemplateContext context, StringBuilder out) {
 		out.append(SYS_NL);
 	}
-	
+
 	@Override
 	public String toString() {
 		return SYS_NL;
 	}
-	
+
 	@Override
 	public boolean isNewline() {
 		return true;
 	}
-	
+
 	@Override
 	public boolean isWhitespace() {
 		return true;
+	}
+
+	@Override
+	public void printAspectCode(TemplateContext context, PrintStream out) {
+		out.println("    out.println();");
 	}
 }
