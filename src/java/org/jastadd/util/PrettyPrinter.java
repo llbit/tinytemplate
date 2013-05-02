@@ -35,6 +35,9 @@ import java.util.Stack;
 public class PrettyPrinter {
 	private final String indentation;
 	private final java.util.List<String> ind = new ArrayList<String>(32);
+	{
+		ind.add("");
+	}
 	private final Stack<Integer> indentStack = new Stack<Integer>();
 	{
 		indentStack.push(0);
