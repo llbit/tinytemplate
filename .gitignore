@@ -1,3 +1,4 @@
 /bin
 *.swp
 /test-reports
+/aspectgen.jar

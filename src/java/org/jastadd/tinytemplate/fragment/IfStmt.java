@@ -95,7 +95,7 @@ public class IfStmt extends AbstractFragment {
 	}
 
 	@Override
-	public void printAspectCode(TemplateContext context, PrintStream out) {
+	public void printAspectCode(PrintStream out) {
 		out.print("    if (");
 		if (isAttribute) {
 			out.print(condition + "()");
@@ -105,7 +105,7 @@ public class IfStmt extends AbstractFragment {
 		out.println(") {");
 		if (elsePart != null) {
 			out.println("    } else {");
-			elsePart.printITD(context, out);
+			elsePart.printITD(out);
 		}
 		out.println("    }");
 	}

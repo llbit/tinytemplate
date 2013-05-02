@@ -25,35 +25,96 @@
  */
 package org.jastadd.util;
 
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Stack;
+
 /**
  * @author Jesper Öqvist <jesper.oqvist@cs.lth.se>
  */
-public class StringLiterals {
+public class PrettyPrinter {
+	private final String indentation;
+	private final java.util.List<String> ind = new ArrayList<String>(32);
+	private final Stack<Integer> indentStack = new Stack<Integer>();
+	{
+		indentStack.push(0);
+	}
+	private int currentIndent = 0;
+
+	private PrintStream out = System.out;
+	private boolean newline = false;
+
 	/**
-	 * @param theString
-	 * @return Escaped Java string literal
+	 * @param ind
 	 */
-	public static String buildStringLiteral(String theString) {
-		StringBuilder buf = new StringBuilder(theString.length());
-		for (int i = 0; i < theString.length(); ++i) {
-			char c = theString.charAt(i);
-			if (c >= 0x20 && c <= 0x7E) {
-				switch (c) {
-				case '"':
-					buf.append("\\\"");
-					break;
-				case '\\':
-					buf.append("\\\\");
-					break;
-				default:
-					buf.append(c);
-				}
-			} else if (c < 0x20) {
-				buf.append(String.format("\\%03o", (int) c));
-			} else {
-				buf.append(String.format("\\u%04X", (int) c));
-			}
+	public PrettyPrinter(String ind) {
+		this.indentation = ind;
+	}
+
+	/**
+	 * @param target
+	 */
+	public void setTarget(PrintStream target) {
+		out = target;
+	}
+
+	/**
+ 	 * @param level The level of indentation
+ 	 * @return The indentation string for the given indentation level
+ 	 */
+	public String getIndentation(int level) {
+		while (ind.size() < (level+1)) {
+			ind.add(ind.get(ind.size()-1) + indentation);
 		}
-		return buf.toString();
+		return ind.get(level);
+	}
+
+
+	/**
+	 * @param str
+	 */
+	public void print(String str) {
+		indentNewline();
+		out.print(str);
+	}
+
+	/**
+	 *
+	 */
+	public void println() {
+		out.println();
+	}
+
+	/**
+	 * @param node
+	 */
+	public void print(PrettyPrintable node) {
+		pushIndentation();
+		node.prettyPrint(this);
+		popIndentation();
+	}
+
+	/**
+	 * @param level
+	 */
+	public void indent(int level) {
+		currentIndent = level;
+		out.print(getIndentation(level));
+	}
+
+	private void pushIndentation() {
+		indentStack.push(currentIndent + indentStack.peek());
+	}
+
+	private void popIndentation() {
+		currentIndent = indentStack.pop();
+		currentIndent -= indentStack.peek();
+	}
+
+	private void indentNewline() {
+		if (newline) {
+			out.println(getIndentation(indentStack.peek()));
+			newline = false;
+		}
 	}
 }

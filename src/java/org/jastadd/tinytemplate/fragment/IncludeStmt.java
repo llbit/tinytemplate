@@ -54,7 +54,7 @@ public class IncludeStmt extends NestedIndentationFragment {
 	}
 
 	@Override
-	public void printAspectCode(TemplateContext context, PrintStream out) {
+	public void printAspectCode(PrintStream out) {
 		out.println("    " + template + "(out);");
 	}
 }

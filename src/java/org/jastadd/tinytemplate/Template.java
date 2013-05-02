@@ -208,13 +208,12 @@ public class Template {
 
 	/**
 	 * Print inter-type declaration for this template
-	 * @param context
 	 * @param out
 	 */
-	public void printITD(TemplateContext context, PrintStream out) {
+	public void printITD(PrintStream out) {
 		for (List<IFragment> line: lines) {
 			for (IFragment fragment: line) {
-				fragment.printAspectCode(context, out);
+				fragment.printAspectCode(out);
 			}
 		}
 	}

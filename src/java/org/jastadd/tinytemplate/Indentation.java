@@ -64,10 +64,8 @@ public class Indentation {
 		}
 
 		@Override
-		public void printAspectCode(TemplateContext context, PrintStream out) {
-			out.print("    out.print(\"");
-			out.print(context.evalIndentation(level).replaceAll("\n", "\\n"));
-			out.println("\");");
+		public void printAspectCode(PrintStream out) {
+			out.println("    out.indent(" + level + ");");
 		}
 	}
 

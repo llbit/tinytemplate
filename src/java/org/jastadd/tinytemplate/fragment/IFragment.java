@@ -80,8 +80,7 @@ public interface IFragment {
 
 	/**
 	 * Print aspect code for this fragment to the given output stream
-	 * @param context Context for indentation
 	 * @param out
 	 */
-	void printAspectCode(TemplateContext context, PrintStream out);
+	void printAspectCode(PrintStream out);
 }

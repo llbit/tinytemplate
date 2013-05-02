@@ -60,7 +60,7 @@ public class AttributeReference extends NestedIndentationFragment {
 	}
 
 	@Override
-	public void printAspectCode(TemplateContext context, PrintStream out) {
+	public void printAspectCode(PrintStream out) {
 		out.println("    out.print(" + attribute + "());");
 	}
 }

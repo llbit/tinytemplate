@@ -33,7 +33,7 @@ import java.util.LinkedList;
 import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
 
 /**
- * Generates a JastAdd aspect from templates.
+ * Generates a JastAdd aspect from templates for pretty printing.
  * @author Jesper Öqvist <jesper@llbit.se>
  */
 public class AspectGenerator {

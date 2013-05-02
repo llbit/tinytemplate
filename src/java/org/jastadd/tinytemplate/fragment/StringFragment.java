@@ -65,7 +65,7 @@ public class StringFragment extends AbstractFragment {
 	}
 
 	@Override
-	public void printAspectCode(TemplateContext context, PrintStream out) {
+	public void printAspectCode(PrintStream out) {
 		out.print("    out.print(\"");
 		out.print(StringLiterals.buildStringLiteral(string));
 		out.println("\");");

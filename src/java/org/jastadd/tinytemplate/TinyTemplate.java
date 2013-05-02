@@ -267,8 +267,8 @@ public class TinyTemplate extends TemplateContext {
 		for (Map.Entry<String, Template> entry: templates.entrySet()) {
 			String name = entry.getKey();
 			Template template = entry.getValue();
-			out.println("  public void " + name + "(PrintStream out) {");
-			template.printITD(this, out);
+			out.println("  public void " + name + "(PrettyPrinter out) {");
+			template.printITD(out);
 			out.println("  }");
 		}
 		out.println("}");

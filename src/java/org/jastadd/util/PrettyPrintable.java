@@ -1,4 +1,4 @@
-/* Copyright (c) 2013, Jesper Öqvist <jesper@cs.lth.se>
+/* Copyright (c) 2013, Jesper Öqvist <jesper.oqvist@cs.lth.se>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,52 +23,15 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.jastadd.tinytemplate.fragment;
-
-import java.io.PrintStream;
-
-import org.jastadd.tinytemplate.TemplateContext;
+package org.jastadd.util;
 
 /**
- * Represents the system-dependent newline character sequence.
- *
- * This is a singleton class.
- *
- * @author Jesper Öqvist <jesper@llbit.se>
+ * @author Jesper Öqvist <jesper.oqvist@cs.lth.se>
  */
-public class NewlineFragment extends AbstractFragment {
-
-	private static final String SYS_NL = System.getProperty("line.separator");
+public interface PrettyPrintable {
 
 	/**
-	 * Singleton instance
+	 * @param prettyPrinter
 	 */
-	public static IFragment INSTANCE = new NewlineFragment();
-
-	private NewlineFragment() {}
-
-	@Override
-	public void expand(TemplateContext context, StringBuilder out) {
-		out.append(SYS_NL);
-	}
-
-	@Override
-	public String toString() {
-		return SYS_NL;
-	}
-
-	@Override
-	public boolean isNewline() {
-		return true;
-	}
-
-	@Override
-	public boolean isWhitespace() {
-		return true;
-	}
-
-	@Override
-	public void printAspectCode(PrintStream out) {
-		out.println("    out.println();");
-	}
+	void prettyPrint(PrettyPrinter prettyPrinter);
 }

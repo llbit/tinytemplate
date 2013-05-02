@@ -52,6 +52,6 @@ public class EmptyFragment extends AbstractFragment {
 	}
 
 	@Override
-	public void printAspectCode(TemplateContext context, PrintStream out) {
+	public void printAspectCode(PrintStream out) {
 	}
 }

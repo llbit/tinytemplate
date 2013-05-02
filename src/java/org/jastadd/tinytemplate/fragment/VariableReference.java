@@ -59,7 +59,7 @@ public class VariableReference extends NestedIndentationFragment {
 	}
 
 	@Override
-	public void printAspectCode(TemplateContext context, PrintStream out) {
+	public void printAspectCode(PrintStream out) {
 		out.println("    out.print(get" + variable + "());");
 	}
 }
