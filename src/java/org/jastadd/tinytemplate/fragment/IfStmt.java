@@ -103,6 +103,7 @@ public class IfStmt extends AbstractFragment {
 			out.print("get" + condition + "()");
 		}
 		out.println(") {");
+		thenPart.printITD(out);
 		if (elsePart != null) {
 			out.println("    } else {");
 			elsePart.printITD(out);
