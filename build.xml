@@ -1,40 +1,41 @@
 <project name="tinytemplate" default="build">
 
-    <target name="build">
-        <mkdir dir="bin"/>
-        <javac destdir="bin" classpath="lib/junit.jar">
-        	<src path="src/java"/>
-        	<src path="src/test"/>
-    	</javac>
-    </target>
+	<target name="build">
+		<mkdir dir="bin" />
+		<javac destdir="bin" classpath="lib/junit.jar"
+			includeantruntime="false">
+			<src path="src/java" />
+			<src path="src/test" />
+		</javac>
+	</target>
 
-    <target name="clean">
-        <delete dir="bin" />
-    </target>
+	<target name="clean">
+		<delete dir="bin" />
+	</target>
 
 	<target name="test" depends="build">
-		<mkdir dir="test-reports"/>
+		<mkdir dir="test-reports" />
 		<junit fork="yes" printsummary="yes">
 			<classpath>
-				<pathelement location="bin"/>
-				<pathelement location="lib/junit.jar"/>
+				<pathelement location="bin" />
+				<pathelement location="lib/junit.jar" />
 			</classpath>
 			<batchtest todir="test-reports">
 				<fileset dir="bin">
-					<include name="org/jastadd/tinytemplate/test/*.class"/>
+					<include name="org/jastadd/tinytemplate/test/*.class" />
 				</fileset>
 			</batchtest>
-			<formatter type="plain"/>
+			<formatter type="plain" />
 		</junit>
-    </target>
+	</target>
 
 	<target name="jar" depends="build">
 		<jar destfile="aspectgen.jar">
 			<manifest>
-				<attribute name="Main-Class" value="org.jastadd.tinytemplate.AspectGenerator"/>
+				<attribute name="Main-Class" value="org.jastadd.tinytemplate.AspectGenerator" />
 			</manifest>
 			<fileset dir="bin">
-				<include name="**/*"/>
+				<include name="**/*" />
 			</fileset>
 		</jar>
 	</target>
