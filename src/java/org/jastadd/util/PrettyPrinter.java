@@ -102,12 +102,14 @@ public class PrettyPrinter {
 	 * @param level
 	 */
 	public void indent(int level) {
+		indentNewline();
 		currentIndent = level;
 		out.print(getIndentation(level));
 	}
 
 	private void pushIndentation() {
 		indentStack.push(currentIndent + indentStack.peek());
+		currentIndent = 0;
 	}
 
 	private void popIndentation() {
@@ -117,7 +119,7 @@ public class PrettyPrinter {
 
 	private void indentNewline() {
 		if (newline) {
-			out.println(getIndentation(indentStack.peek()));
+			out.print(getIndentation(indentStack.peek()));
 			newline = false;
 		}
 	}
