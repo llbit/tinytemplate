@@ -86,6 +86,7 @@ public class PrettyPrinter {
 	 */
 	public void println() {
 		out.println();
+		newline = true;
 	}
 
 	/**
