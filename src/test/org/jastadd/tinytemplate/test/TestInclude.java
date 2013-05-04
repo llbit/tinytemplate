@@ -87,4 +87,17 @@ public class TestInclude {
 		tc.bind("boop", "beep");
 		assertEquals("beep", tc.expand("b"));
 	}
+
+	/**
+	 * Tests indentation in an including template
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testIndentation_1() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"a = [[a\nb]]\n" +
+				"b = [[  #include(a)]]");
+		TemplateContext tc = new SimpleContext(tt, this);
+		assertEquals("  a\n  b", tc.expand("b"));
+	}
 }
