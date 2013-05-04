@@ -1,4 +1,4 @@
-/* Copyright (c) 2013, Jesper Öqvist <jesper@cs.lth.se>
+/* Copyright (c) 2013, Niklas Fors <niklas.fors@cs.lth.se>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
