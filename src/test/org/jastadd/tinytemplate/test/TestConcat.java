@@ -27,6 +27,8 @@ package org.jastadd.tinytemplate.test;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.jastadd.tinytemplate.SimpleContext;
 import org.jastadd.tinytemplate.TemplateContext;
 import org.jastadd.tinytemplate.TinyTemplate;
@@ -34,70 +36,92 @@ import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
 import org.junit.Test;
 
 /**
- * Tests for template include directives
- * @author Jesper Öqvist <jesper.oqvist@cs.lth.se>
+ * Tests for template concatenation statements
+ * @author Niklas Fors <niklas.fors@cs.lth.se>
  */
-public class TestInclude {
+public class TestConcat {
 	
 	/**
 	 * Constructor
 	 */
-	public TestInclude() {
+	public TestConcat() {
 		TinyTemplate.printWarnings(false);
-		TinyTemplate.throwExceptions(false);
+		TinyTemplate.throwExceptions(true);
 	}
 	
 	/**
-	 * Tests expanding an included template
+	 * Tests simple concatenation 
 	 * @throws SyntaxError
 	 */
 	@Test
-	public void testInclude_1() throws SyntaxError {
+	public void testConcat_1() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate(
-				"a = [[boop]]\n" +
-				"b = [[$include(a)]]");
-		
-		assertEquals("boop", tt.expand("b"));
+				"t = [[$cat(#list)]]");
+		TemplateContext tc = new SimpleContext(tt, new A());
+		assertEquals("123", tc.expand("t"));
 	}
 	
 	/**
-	 * Tests expanding a variable in an included template
+	 * Tests concatenation with a separator
 	 * @throws SyntaxError
 	 */
 	@Test
-	public void testInclude_2() throws SyntaxError {
+	public void testConcat_2() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate(
-				"a = [[$boop]]\n" +
-				"b = [[$include(a)]]");
-		TemplateContext tc = new SimpleContext(tt, this);
-		tc.bind("boop", "beep");
-		assertEquals("beep", tc.expand("b"));
+				"t = [[$cat(#list, \",\")]]");
+		TemplateContext tc = new SimpleContext(tt, new A());
+		assertEquals("1,2,3", tc.expand("t"));
 	}
 	
 	/**
-	 * Test the include keyword with a hash instead of dollar sign
+	 * Tests indentation
 	 * @throws SyntaxError
 	 */
 	@Test
-	public void testInclude_3() throws SyntaxError {
+	public void testConcat_3() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate(
-				"a = [[$boop]]\n" +
-				"b = [[#include(a)]]");
-		TemplateContext tc = new SimpleContext(tt, this);
-		tc.bind("boop", "beep");
-		assertEquals("beep", tc.expand("b"));
+				"t = [[  $cat(#list, \"\n\")]]");
+		TemplateContext tc = new SimpleContext(tt, new A());
+		assertEquals("  1\n  2\n  3\n", tc.expand("t"));
+	}
+
+	public class A {
+		public ArrayList<Integer> list() {
+			ArrayList<Integer> list = new ArrayList<Integer>();
+			list.add(1);
+			list.add(2);
+			list.add(3);
+			return list;
+		}
+	}
+
+	@Test(expected=SyntaxError.class)
+	public void testSyntaxError1_() throws SyntaxError {
+		new TinyTemplate("t = [[$cat(#list, )]]");
+	}
+
+	@Test(expected=SyntaxError.class)
+	public void testSyntaxError_2() throws SyntaxError {
+		new TinyTemplate("t = [[$cat(list)]]");
+	}
+
+	@Test(expected=SyntaxError.class)
+	public void testSyntaxError_3() throws SyntaxError {
+		new TinyTemplate("t = [[$cat(#list, \")]]");
 	}
 	
-	/**
-	 * Tests indentation in an including template
-	 * @throws SyntaxError
-	 */
-	@Test
-	public void testInclude_4() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate(
-				"a = [[a\nb]]\n" +
-				"b = [[  #include(a)]]");
-		TemplateContext tc = new SimpleContext(tt, this);
-		assertEquals("  a\n  b", tc.expand("b"));
+	@Test(expected=SyntaxError.class)
+	public void testSyntaxError_4() throws SyntaxError {
+		new TinyTemplate("t = [[$cat(#list, \"\"\")]]");
+	}
+
+	@Test(expected=SyntaxError.class)
+	public void testSyntaxError_5() throws SyntaxError {
+		new TinyTemplate("t = [[$cat]]");
+	}
+
+	@Test(expected=SyntaxError.class)
+	public void testSyntaxError_6() throws SyntaxError {
+		new TinyTemplate("t = [[$cat($a]]");
 	}
 }

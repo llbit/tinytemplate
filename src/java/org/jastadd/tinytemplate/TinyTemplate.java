@@ -199,6 +199,11 @@ public class TinyTemplate extends TemplateContext {
 		return evalAttribute(attribute, null);
 	}
 
+	@Override
+	public Object evalAttributeToObject(String attribute) {
+		return evalAttributeToObject(attribute, null);
+	}
+	
 	/**
 	 * Eval attribute on context object
 	 * @param attribute
@@ -206,13 +211,23 @@ public class TinyTemplate extends TemplateContext {
 	 * @return The value of the attribute on context object
 	 */
 	public static String evalAttribute(String attribute, Object context) {
+		return String.valueOf(evalAttributeToObject(attribute, context));
+	}
+	
+	/**
+	 * Eval attribute on context object to an object
+	 * @param attribute
+	 * @param context
+	 * @return The value of the attribute on context object
+	 */
+	public static Object evalAttributeToObject(String attribute, Object context) {
 		try {
 			if (context == null) {
 				String msg = "failed to eval " + attribute + "; reason: no context";
 				return expansionWarning(msg);
 			}
 			Method method = context.getClass().getMethod(attribute, new Class[] {});
-			return "" + method.invoke(context, new Object[] {});
+			return method.invoke(context, new Object[] {});
 		} catch (SecurityException e) {
 			String msg = "failed to eval attribute '" + attribute + "'; reason: security exception";
 			return expansionWarning(msg);
@@ -236,7 +251,7 @@ public class TinyTemplate extends TemplateContext {
 	 * @param msg
 	 * @return Expansion-replacing error message
 	 */
-	private static String expansionWarning(String msg) {
+	public static String expansionWarning(String msg) {
 		if (throwExceptions) {
 			throw new TemplateExpansionWarning(msg);
 		}

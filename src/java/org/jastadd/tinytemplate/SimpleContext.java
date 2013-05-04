@@ -69,6 +69,11 @@ public class SimpleContext extends TemplateContext {
 	}
 
 	@Override
+	public Object evalAttributeToObject(String attribute) {
+		return TinyTemplate.evalAttributeToObject(attribute, contextObject);
+	}
+
+	@Override
 	public String evalIndentation(int levels) {
 		return parentContext.evalIndentation(levels);
 	}
@@ -107,5 +112,4 @@ public class SimpleContext extends TemplateContext {
 	public void bind(String varName, boolean value) {
 		variables.put(varName, "" + value);
 	}
-
 }

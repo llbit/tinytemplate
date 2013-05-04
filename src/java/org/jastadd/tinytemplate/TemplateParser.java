@@ -27,11 +27,13 @@ package org.jastadd.tinytemplate;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 
 import org.jastadd.io.LookaheadReader;
 import org.jastadd.tinytemplate.fragment.AttributeReference;
+import org.jastadd.tinytemplate.fragment.ConcatStmt;
 import org.jastadd.tinytemplate.fragment.EmptyFragment;
 import org.jastadd.tinytemplate.fragment.IFragment;
 import org.jastadd.tinytemplate.fragment.IfStmt;
@@ -274,6 +276,9 @@ public class TemplateParser {
 			} else if (isInclude()) {
 				in.consume(8);
 				return parseIncludeStmt();
+			} else if (isConcat()) {
+				in.consume(4);
+				return parseConcatStmt();
 			} else if (isVariable()) {
 				String var = nextReference();
 				if (var.isEmpty()) {
@@ -319,6 +324,13 @@ public class TemplateParser {
 				&& in.peek(6) == 'd'
 				&& in.peek(7) == 'e';
 	}
+	
+	private boolean isConcat() throws IOException {
+		return (in.peek(0) == '$' || in.peek(0) == '#')
+				&& in.peek(1) == 'c'
+				&& in.peek(2) == 'a'
+				&& in.peek(3) == 't';
+	}
 
 	private IfStmt parseIfStmt() throws IOException, SyntaxError {
 		String condition = parseCondition();
@@ -352,10 +364,40 @@ public class TemplateParser {
 		return new IfStmt(condition, thenPart, elsePart);
 	}
 
-	private IncludeStmt parseIncludeStmt() throws IOException, SyntaxError {
-		while (isWhitespace()) {
+	private ConcatStmt parseConcatStmt() throws IOException, SyntaxError {
+		accept('(');
+		char c = acceptAlternatives('$', '#');
+		String iterable = c + parseSimpleReference().trim();
+
+		skipWhitespace();
+
+		String sep = null;
+		if (in.peek(0) == ',') {
+			in.pop();
 			skipWhitespace();
+			sep = parseStringLiteral();
 		}
+		
+		accept(')');
+		return new ConcatStmt(iterable, sep);
+	}
+	
+	private char accept(char c) throws SyntaxError, IOException {
+		return acceptAlternatives(c);
+	}
+	private char acceptAlternatives(char ...cs) throws IOException, SyntaxError {
+		for (char c: cs) {
+			if (in.peek(0) == c) {
+				in.pop();
+				return c;
+			}
+		}
+		throw new SyntaxError(line, "wanted: " + Arrays.toString(cs) + ", got: " + (char) in.peek(0));
+	}
+
+	private IncludeStmt parseIncludeStmt() throws IOException, SyntaxError {
+		skipWhitespace();
+		
 		if (in.peek(0) != '(') {
 			throw new SyntaxError(line, "missing template name");
 		} else {
@@ -365,9 +407,8 @@ public class TemplateParser {
 	}
 
 	private String parseCondition() throws IOException, SyntaxError {
-		while (isWhitespace()) {
-			skipWhitespace();
-		}
+		skipWhitespace();
+
 		if (in.peek(0) != '(') {
 			throw new SyntaxError(line, "missing if condition");
 		} else {
@@ -375,6 +416,24 @@ public class TemplateParser {
 		}
 	}
 
+	private String parseStringLiteral() throws IOException, SyntaxError {
+		StringBuilder sb = new StringBuilder();
+		accept('"');
+
+		boolean escaped = false;
+		while (!isStringLiteralEnd(escaped)) {
+			escaped = in.peek(0) == '\\' && in.peek(1) == '"';
+			sb.append((char) in.pop());
+		}
+		
+		accept('"');
+		return sb.toString();
+	}
+
+	private boolean isStringLiteralEnd(boolean escaped) throws IOException {
+		return isEOF() || (in.peek(0) == '\"' && !escaped);
+	}
+	
 	private String nextString() throws IOException, SyntaxError {
 		StringBuilder buf = new StringBuilder(512);
 		while ( !(isEOF() || isVariable() || isAttribute() || isNewline() ||
