@@ -269,10 +269,8 @@ public class TemplateParser {
 			}
 	
 			if (isIf()) {
-				in.consume(3);
 				return parseIfStmt();
 			} else if (isInclude()) {
-				in.consume(8);
 				IncludeStmt include = parseIncludeStmt();
 				template.addIndentation(include);
 				return include;
@@ -323,6 +321,8 @@ public class TemplateParser {
 	}
 
 	private IfStmt parseIfStmt() throws IOException, SyntaxError {
+		// consume '$if'
+		in.consume(3);
 		String condition = parseCondition();
 		Template thenPart = new Template();
 		Template elsePart = null;
@@ -355,9 +355,9 @@ public class TemplateParser {
 	}
 
 	private IncludeStmt parseIncludeStmt() throws IOException, SyntaxError {
-		while (isWhitespace()) {
-			skipWhitespace();
-		}
+		// consume '$include'
+		in.consume(8);
+		skipWhitespace();
 		if (in.peek(0) != '(') {
 			throw new SyntaxError(line, "missing template name");
 		} else {
