@@ -1,46 +1,42 @@
-2013-03-15  Jesper Öqvist <jesper.oqvist@cs.lth.se>
+1.1 - 2013-05-14
 
-    * Keywords such as if, include, else can now be preceded by a hash sign
-    in addition to the dollar sign
+    * Added conditional statements (if-then, if-then-else)
 
-2013-03-13  Jesper Öqvist <jesper.oqvist@cs.lth.se>
+    * Conditionals surrounded by whitespace on a line by themself are stripped
+	of their surrounding whitespace including the newline
 
-    * Improved attribute expansion warnings
-
-2013-03-05  Jesper Öqvist <jesper.oqvist@cs.lth.se>
+    * Keywords such as if, include, else can now be preceded by a hash sign in
+	addition to the dollar sign
 
     * Whitespace does not break a parenthesized variable name
+
     * Whitespace is stripped from if conditions
-    * The condition of an if must be a valid variable name
-    * Added template inclusion
+
+    * The condition of an if must be a valid variable (implicit or explicit
+	dollar sign) or attribute name
+
+    * Added template inclusion using the 'include' keyword
+
     * Scan dollar and hash signs inside parenthesis
+
     * If condition can be an attribute
-    * A dollar sign is allowed in variable if conditions (implicit)
-
-2013-03-01  Jesper Öqvist <jesper.oqvist@cs.lth.se>
-
-    * Disabled line splicing
-
-2013-02-28  Jesper Öqvist <jesper.oqvist@cs.lth.se>
 
     * Non-parenthesized variable names can not contain a dollar sign
+
     * Trim leading empty line from if-statement body
+
     * Trim leading empty line from template body
-    * Conditionals surrounded by whitespace on a line by themself are
-    stripped of their surrounding whitespace including the newline
-    * Remove empty lines after expansion if they contained a non-whitespace
-    fragment before expansion
 
-2013-02-26  Jesper Öqvist <jesper.oqvist@cs.lth.se>
-
-    * Printing of warnings to stderr can be disabled
-    * Added conditional statements (if-then, if-then-else)
-    * Added line splicing (\) in template body
-
-2013-02-20  Jesper Öqvist <jesper.oqvist@cs.lth.se>
+    * Empty lines are removed after expansion if they contained a
+	non-whitespace fragment before expansion
 
     * Templates can now expand to a StringBuffer
 
-2013-02-02 Jesper Öqvist <jesper@cs.lth.se>
-
     * Template expansion warnings are printed to stderr
+
+    * Printing of warnings to stderr can be disabled
+
+
+1.0 - 2013-01-31
+
+    * Initial release
