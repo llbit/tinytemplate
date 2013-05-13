@@ -148,7 +148,7 @@ public class TinyTemplate extends TemplateContext {
 	}
 
 	@Override
-	public void bind(String varName, String value) {
+	public void bind(String varName, Object value) {
 		throw new UnsupportedOperationException("Can not bind variable on root template context");
 	}
 
@@ -158,11 +158,10 @@ public class TinyTemplate extends TemplateContext {
 	}
 
 	@Override
-	public String evalVariable(String varName) {
+	public Object evalVariable(String varName) {
 		String msg = "unbound variable " + varName;
 		return expansionWarning(msg);
 	}
-
 
 	/**
 	 * Load a template file
@@ -195,7 +194,7 @@ public class TinyTemplate extends TemplateContext {
 	}
 
 	@Override
-	public String evalAttribute(String attribute) {
+	public Object evalAttribute(String attribute) {
 		return evalAttribute(attribute, null);
 	}
 
@@ -205,14 +204,14 @@ public class TinyTemplate extends TemplateContext {
 	 * @param context
 	 * @return The value of the attribute on context object
 	 */
-	public static String evalAttribute(String attribute, Object context) {
+	public static Object evalAttribute(String attribute, Object context) {
 		try {
 			if (context == null) {
 				String msg = "failed to eval " + attribute + "; reason: no context";
 				return expansionWarning(msg);
 			}
 			Method method = context.getClass().getMethod(attribute, new Class[] {});
-			return "" + method.invoke(context, new Object[] {});
+			return method.invoke(context, new Object[] {});
 		} catch (SecurityException e) {
 			String msg = "failed to eval attribute '" + attribute + "'; reason: security exception";
 			return expansionWarning(msg);

@@ -66,12 +66,13 @@ public class IfStmt extends AbstractFragment {
 	}
 
 	private boolean evalCondition(TemplateContext context) {
-		String value;
-		if (isAttribute)
+		Object value;
+		if (isAttribute) {
 			value = context.evalAttribute(condition);
-		else
+		} else {
 			value = context.evalVariable(condition);
-		boolean result = value.equals("true");
+		}
+		boolean result = value.toString().equals("true");
 		return negated ? !result : result;
 	}
 

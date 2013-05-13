@@ -46,7 +46,8 @@ public class AttributeReference extends NestedIndentationFragment {
 
 	@Override
 	public void expand(TemplateContext context, StringBuilder out) {
-		expandWithIndentation(context.evalAttribute(attribute), context, out);
+		expandWithIndentation(context.evalAttribute(attribute).toString(),
+				context, out);
 	}
 
 	@Override

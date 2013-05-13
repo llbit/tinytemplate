@@ -39,7 +39,7 @@ public class SimpleContext extends TemplateContext {
 	
 	private final TemplateContext parentContext;
 	
-	private final Map<String, String> variables = new HashMap<String, String>();
+	private final Map<String, Object> variables = new HashMap<String, Object>();
 
 	private final Object contextObject;
 
@@ -54,8 +54,8 @@ public class SimpleContext extends TemplateContext {
 	}
 
 	@Override
-	public String evalVariable(String varName) {
-		String var = variables.get(varName);
+	public Object evalVariable(String varName) {
+		Object var = variables.get(varName);
 		if (var != null) {
 			return var;
 		} else {
@@ -64,7 +64,7 @@ public class SimpleContext extends TemplateContext {
 	}
 
 	@Override
-	public String evalAttribute(String attribute) {
+	public Object evalAttribute(String attribute) {
 		return TinyTemplate.evalAttribute(attribute, contextObject);
 	}
 
@@ -99,7 +99,7 @@ public class SimpleContext extends TemplateContext {
 	}
 	
 	@Override
-	public void bind(String varName, String value) {
+	public void bind(String varName, Object value) {
 		variables.put(varName, value);
 	}
 

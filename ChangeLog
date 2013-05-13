@@ -1,3 +1,8 @@
+1.2 - TBD
+
+    * Attributes and variables are now objects, no longer restricted to be
+	strings
+
 1.1 - 2013-05-14
 
     * Added conditional statements (if-then, if-then-else)

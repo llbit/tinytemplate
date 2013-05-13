@@ -45,7 +45,8 @@ public class VariableReference extends NestedIndentationFragment {
 
 	@Override
 	public void expand(TemplateContext context, StringBuilder out) {
-		expandWithIndentation(context.evalVariable(variable), context, out);
+		expandWithIndentation(context.evalVariable(variable).toString(),
+				context, out);
 	}
 
 	@Override

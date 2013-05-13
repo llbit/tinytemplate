@@ -43,14 +43,14 @@ public abstract class TemplateContext {
 	 * @return The variable value, or the string "&lt;unbound variable varName&gt;"
 	 * if the variable was not bound
 	 */
-	abstract public String evalVariable(String varName);
+	abstract public Object evalVariable(String varName);
 	
 	/**
 	 * Evaluate an attribute
 	 * @param attribute
 	 * @return The string value returned from the attribute
 	 */
-	abstract public String evalAttribute(String attribute);
+	abstract public Object evalAttribute(String attribute);
 
 	/**
  	 * @param levels Number of indentation levels
@@ -144,7 +144,7 @@ public abstract class TemplateContext {
 	 * @param varName Variable to bind
 	 * @param value Value to bind
 	 */
-	abstract public void bind(String varName, String value);
+	abstract public void bind(String varName, Object value);
 
 	/**
 	 * Bind a boolean value to a variable
