@@ -273,7 +273,9 @@ public class TemplateParser {
 				return parseIfStmt();
 			} else if (isInclude()) {
 				in.consume(8);
-				return parseIncludeStmt();
+				IncludeStmt include = parseIncludeStmt();
+				template.addIndentation(include);
+				return include;
 			} else if (isVariable()) {
 				String var = nextReference();
 				if (var.isEmpty()) {
