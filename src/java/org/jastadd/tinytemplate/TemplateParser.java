@@ -223,8 +223,7 @@ public class TemplateParser {
 	private Template parseTemplate() throws IOException, SyntaxError {
 		
 		// skip [[
-		in.pop();
-		in.pop();
+		in.consume(2);
 		
 		Template template = new Template();
 		boolean newLine = true;
@@ -243,8 +242,7 @@ public class TemplateParser {
 		}
 		
 		// skip ]]
-		in.pop();
-		in.pop();
+		in.consume(2);
 		
 		template.trim();
 		return template;
@@ -268,9 +266,9 @@ public class TemplateParser {
 				}
 			}
 	
-			if (isIf()) {
+			if (isKeyword("if")) {
 				return parseIfStmt();
-			} else if (isInclude()) {
+			} else if (isKeyword("include")) {
 				IncludeStmt include = parseIncludeStmt();
 				template.addIndentation(include);
 				return include;
@@ -302,22 +300,22 @@ public class TemplateParser {
 			}
 		}
 	}
-
-	private boolean isIf() throws IOException {
-		return (in.peek(0) == '$' || in.peek(0) == '#')
-				&& in.peek(1) == 'i'
-				&& in.peek(2) == 'f';
-	}
-
-	private boolean isInclude() throws IOException {
-		return (in.peek(0) == '$' || in.peek(0) == '#')
-				&& in.peek(1) == 'i'
-				&& in.peek(2) == 'n'
-				&& in.peek(3) == 'c'
-				&& in.peek(4) == 'l'
-				&& in.peek(5) == 'u'
-				&& in.peek(6) == 'd'
-				&& in.peek(7) == 'e';
+	
+	/**
+	 * @param keyword
+	 * @return <code>true</code> if the next token matches the keyword
+	 * @throws IOException 
+	 */
+	private boolean isKeyword(String keyword) throws IOException {
+		if (in.peek(0) != '$' && in.peek(0) != '#') {
+			return false;
+		}
+		for (int i = 0; i < keyword.length(); ++i) {
+			if (in.peek(i+1) != keyword.charAt(i)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private IfStmt parseIfStmt() throws IOException, SyntaxError {
