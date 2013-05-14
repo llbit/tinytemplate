@@ -358,21 +358,26 @@ public class TemplateParser {
 
 	private ConcatStmt parseConcatStmt() throws IOException, SyntaxError {
 		in.consume(4);
-		accept('(');
-		char c = acceptAlternatives('$', '#');
-		String iterable = c + parseSimpleReference().trim();
-
 		skipWhitespace();
-
-		String sep = null;
-		if (in.peek(0) == ',') {
+		if (in.peek(0) != '(') {
+			throw new SyntaxError(line, "missing cat parameters");
+		} else {
 			in.pop();
-			skipWhitespace();
-			sep = parseStringLiteral();
-		}
+			char c = acceptAlternatives('$', '#');
+			String iterable = c + parseSimpleReference().trim();
 
-		accept(')');
-		return new ConcatStmt(iterable, sep);
+			skipWhitespace();
+
+			String sep = null;
+			if (in.peek(0) == ',') {
+				in.pop();
+				skipWhitespace();
+				sep = parseStringLiteral();
+			}
+
+			accept(')');
+			return new ConcatStmt(iterable, sep);
+		}
 	}
 
 	private char accept(char c) throws SyntaxError, IOException {
