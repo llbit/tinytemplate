@@ -11,7 +11,7 @@
  *     * Neither the name of the <organization> nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,11 +27,13 @@ package org.jastadd.tinytemplate;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 
 import org.jastadd.io.LookaheadReader;
 import org.jastadd.tinytemplate.fragment.AttributeReference;
+import org.jastadd.tinytemplate.fragment.ConcatStmt;
 import org.jastadd.tinytemplate.fragment.EmptyFragment;
 import org.jastadd.tinytemplate.fragment.IFragment;
 import org.jastadd.tinytemplate.fragment.IfStmt;
@@ -65,7 +67,7 @@ public class TemplateParser {
 			super(msg);
 		}
 	}
-	
+
 	private final TinyTemplate templates;
 	private final LookaheadReader in;
 	private int line = 1;
@@ -78,7 +80,7 @@ public class TemplateParser {
 		templates = tt;
 		in = new LookaheadReader(is, 8);
 	}
-	
+
 	/**
 	 * @throws SyntaxError Indicates that there occurred a syntax error during
 	 * parsing
@@ -97,9 +99,9 @@ public class TemplateParser {
 	private void parseTemplates() throws IOException, SyntaxError {
 		Collection<String> names = new LinkedList<String>();
 		while (true) {
-			
+
 			skipWhitespace();
-			
+
 			if (isEOF()) {
 				if (!names.isEmpty()) {
 					throw new SyntaxError(line,
@@ -114,14 +116,14 @@ public class TemplateParser {
 				if (names.isEmpty()) {
 					throw new SyntaxError(line, "misplaced '='");
 				}
-				
+
 				// skip the =
 				in.pop();
 			} else if (isTemplateStart()) {
 				if (names.isEmpty()) {
 					throw new SyntaxError(line, "missing template name");
 				}
-				
+
 				Template template = parseTemplate();
 				for (String name: names) {
 					templates.addTemplate(name, template);
@@ -206,25 +208,25 @@ public class TemplateParser {
 			}
 		}
 		in.pop();
-		
+
 		line += 1;
 	}
-	
+
 	private String nextName() throws IOException, SyntaxError {
 		StringBuilder name = new StringBuilder();
 		while (!isWhitespace() && !isAssign() && !isTemplateStart() &&
 				!isEOF()) {
-			
+
 			name.append((char) in.pop());
 		}
 		return name.toString();
 	}
 
 	private Template parseTemplate() throws IOException, SyntaxError {
-		
+
 		// skip [[
 		in.consume(2);
-		
+
 		Template template = new Template();
 		boolean newLine = true;
 		while (true) {
@@ -240,21 +242,21 @@ public class TemplateParser {
 				break;
 			}
 		}
-		
+
 		// skip ]]
 		in.consume(2);
-		
+
 		template.trim();
 		return template;
 	}
-	
+
 	private IFragment nextFragment(Template template, boolean newLine) throws IOException, SyntaxError {
-		
+
 		while (true) {
 			if (isEOF()) {
 				throw new SyntaxError(line, "unexpected end of file while parsing template body");
 			}
-			
+
 			if (newLine) {
 				int levels = 0;
 				while (isIndentation()) {
@@ -265,13 +267,15 @@ public class TemplateParser {
 					return Indentation.getFragment(levels);
 				}
 			}
-	
+
 			if (isKeyword("if")) {
 				return parseIfStmt();
 			} else if (isKeyword("include")) {
 				IncludeStmt include = parseIncludeStmt();
 				template.addIndentation(include);
 				return include;
+			} else if (isKeyword("cat")) {
+				return parseConcatStmt();
 			} else if (isVariable()) {
 				String var = nextReference();
 				if (var.isEmpty()) {
@@ -300,11 +304,11 @@ public class TemplateParser {
 			}
 		}
 	}
-	
+
 	/**
 	 * @param keyword
 	 * @return <code>true</code> if the next token matches the keyword
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	private boolean isKeyword(String keyword) throws IOException {
 		if (in.peek(0) != '$' && in.peek(0) != '#') {
@@ -325,7 +329,7 @@ public class TemplateParser {
 		Template thenPart = new Template();
 		Template elsePart = null;
 		Template part = thenPart;
-		
+
 		boolean newLine = true;
 		while (true) {
 			IFragment nextFragment = nextFragment(part, newLine);
@@ -345,11 +349,44 @@ public class TemplateParser {
 				throw new SyntaxError(line, "missing $endif");
 			}
 		}
-		
+
 		thenPart.trim();
 		if (elsePart != null) elsePart.trim();
-		
+
 		return new IfStmt(condition, thenPart, elsePart);
+	}
+
+	private ConcatStmt parseConcatStmt() throws IOException, SyntaxError {
+		in.consume(4);
+		accept('(');
+		char c = acceptAlternatives('$', '#');
+		String iterable = c + parseSimpleReference().trim();
+
+		skipWhitespace();
+
+		String sep = null;
+		if (in.peek(0) == ',') {
+			in.pop();
+			skipWhitespace();
+			sep = parseStringLiteral();
+		}
+
+		accept(')');
+		return new ConcatStmt(iterable, sep);
+	}
+
+	private char accept(char c) throws SyntaxError, IOException {
+		return acceptAlternatives(c);
+	}
+
+	private char acceptAlternatives(char ...cs) throws IOException, SyntaxError {
+		for (char c: cs) {
+			if (in.peek(0) == c) {
+				in.pop();
+				return c;
+			}
+		}
+		throw new SyntaxError(line, "wanted: " + Arrays.toString(cs) + ", got: " + (char) in.peek(0));
 	}
 
 	private IncludeStmt parseIncludeStmt() throws IOException, SyntaxError {
@@ -365,9 +402,8 @@ public class TemplateParser {
 	}
 
 	private String parseCondition() throws IOException, SyntaxError {
-		while (isWhitespace()) {
-			skipWhitespace();
-		}
+		skipWhitespace();
+
 		if (in.peek(0) != '(') {
 			throw new SyntaxError(line, "missing if condition");
 		} else {
@@ -375,20 +411,38 @@ public class TemplateParser {
 		}
 	}
 
+	private String parseStringLiteral() throws IOException, SyntaxError {
+		StringBuilder sb = new StringBuilder();
+		accept('"');
+
+		boolean escaped = false;
+		while (!isStringLiteralEnd(escaped)) {
+			escaped = in.peek(0) == '\\' && in.peek(1) == '"';
+			sb.append((char) in.pop());
+		}
+
+		accept('"');
+		return sb.toString();
+	}
+
+	private boolean isStringLiteralEnd(boolean escaped) throws IOException {
+		return isEOF() || (in.peek(0) == '\"' && !escaped);
+	}
+
 	private String nextString() throws IOException, SyntaxError {
 		StringBuilder buf = new StringBuilder(512);
 		while ( !(isEOF() || isVariable() || isAttribute() || isNewline() ||
 				isTemplateEnd()) ) {
-			
+
 			if (in.peek(0) == '[' && in.peek(1) == '[')
 				throw new SyntaxError(line, "double brackets are not allowed inside templates");
-			
+
 			if (in.peek(0) == '#' || in.peek(0) == '$') {
 				// it's cool - the # or $ was escaped!
 				// isAttribute() or isVariable() would have been true if not
 				in.pop();
 			}
-			
+
 			buf.append((char) in.pop());
 		}
 		return buf.toString();
@@ -397,7 +451,7 @@ public class TemplateParser {
 	private String nextReference() throws IOException, SyntaxError {
 		// skip the # or $
 		in.pop();
-		
+
 		if (in.peek(0) == '(') {
 			return parseParenthesizedReference();
 		} else {
@@ -427,16 +481,16 @@ public class TemplateParser {
 	private String parseParenthesizedReference() throws IOException, SyntaxError {
 		// skip the (
 		in.pop();
-		
+
 		StringBuilder buf = new StringBuilder(128);
 		int depth = 1;
 		while (true) {
 			if (isParenthesizedReferenceEnd()) {
 				throw new SyntaxError(line, "missing right parenthesis");
 			}
-			
+
 			int c = in.pop();
-			
+
 			if (c == '(') {
 				depth += 1;
 			} else if (c == ')') {
@@ -445,7 +499,7 @@ public class TemplateParser {
 					break;
 				}
 			}
-			
+
 			buf.append((char) c);
 		}
 		return buf.toString();
@@ -463,9 +517,9 @@ public class TemplateParser {
 
 	/**
 	 * Throws a SyntaxError if the given string was not a valid variable name
-	 * @param line 
+	 * @param line
 	 * @param var
-	 * @throws SyntaxError 
+	 * @throws SyntaxError
 	 */
 	public static void acceptVariableName(int line, String var) throws SyntaxError {
 		for (int i = 0; i < var.length(); ++i) {
@@ -482,16 +536,16 @@ public class TemplateParser {
 
 	/**
 	 * Throws a SyntaxError if the given string was not a valid attribute name
-	 * @param line 
+	 * @param line
 	 * @param attr
-	 * @throws SyntaxError 
+	 * @throws SyntaxError
 	 */
 	public static void acceptAttributeName(int line, String attr) throws SyntaxError {
 		for (int i = 0; i < attr.length(); ++i) {
 			char ch = attr.charAt(i);
 			if ((i == 0 && !Character.isJavaIdentifierStart(ch)) ||
 					!Character.isJavaIdentifierPart(ch)) {
-				
+
 				String msg =  "the attribute name '" + attr +
 						"' is not a valid Java identifier";
 				if (line == -1)
@@ -499,7 +553,7 @@ public class TemplateParser {
 				else
 					throw new SyntaxError(line, msg);
 			}
-			
+
 		}
 	}
 
