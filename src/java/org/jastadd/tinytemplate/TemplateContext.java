@@ -11,7 +11,7 @@
  *     * Neither the name of the <organization> nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -44,7 +44,7 @@ public abstract class TemplateContext {
 	 * if the variable was not bound
 	 */
 	abstract public Object evalVariable(String varName);
-	
+
 	/**
 	 * Evaluate an attribute
 	 * @param attribute
@@ -58,7 +58,7 @@ public abstract class TemplateContext {
  	 * indentation level
  	 */
 	abstract public String evalIndentation(int levels);
-	
+
 	/**
 	 * Expand a template
 	 * @param templateName
@@ -69,7 +69,7 @@ public abstract class TemplateContext {
 		expand(this, templateName, buf);
 		return buf.toString();
 	}
-	
+
 	/**
 	 * Expand a template
 	 * @param templateName
@@ -79,7 +79,7 @@ public abstract class TemplateContext {
 		PrintStream ps = new PrintStream(new BufferedOutputStream(out));
 		expand(templateName, ps);
 	}
-	
+
 	/**
 	 * Expand a template
 	 * @param templateName
@@ -88,7 +88,7 @@ public abstract class TemplateContext {
 	final public void expand(String templateName, PrintStream out) {
 		expand(this, templateName, out);
 	}
-	
+
 	/**
 	 * Expand a template
 	 * @param templateName
@@ -97,7 +97,7 @@ public abstract class TemplateContext {
 	final public void expand(String templateName, PrintWriter out) {
 		expand(this, templateName, out);
 	}
-	
+
 	/**
 	 * Expand a template
 	 * @param templateName
@@ -106,7 +106,7 @@ public abstract class TemplateContext {
 	final public void expand(String templateName, StringBuffer buf) {
 		expand(this, templateName, buf);
 	}
-	
+
 	/**
 	 * Expand a template
 	 * @param tc Context to expand the template in
