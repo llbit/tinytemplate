@@ -117,7 +117,8 @@ public class ConcatStmt extends NestedIndentationFragment {
 		out.println(") {");
 		if (sep != null) {
 			out.println("        if (!first) {");
-			out.println("          out.println(\"" + sep + "\");");
+			out.println("          out.print(\"" + sep + "\");");
+			out.println("          out.println();");
 			out.println("        }");
 			out.println("        first = false;");
 		}
