@@ -117,7 +117,22 @@ public class ConcatStmt extends NestedIndentationFragment {
 		out.println(") {");
 		if (sep != null) {
 			out.println("        if (!first) {");
-			out.println("          out.print(\"" + sep + "\");");
+			StringBuilder buf = new StringBuilder();
+			for (int i = 0; i < sep.length()-1; ++i) {
+				if (sep.charAt(i) == '\\' && sep.charAt(i+1) == 'n') {
+					i += 1;
+					if (buf.length() > 0) {
+						out.println("          out.print(\"" + buf.toString() + "\");");
+					}
+					out.println("          out.println();");
+					buf.setLength(0);
+				} else {
+					buf.append(sep.charAt(i));
+				}
+			}
+			if (buf.length() > 0) {
+				out.print("          out.print(\"" + buf.toString() + "\");");
+			}
 			out.println("        }");
 			out.println("        first = false;");
 		}
