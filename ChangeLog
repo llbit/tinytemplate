@@ -1,5 +1,7 @@
 1.2 - TBD
 
+    * Added concatenation statement ($cat)
+
     * Attributes and variables are now objects, no longer restricted to be
 	strings
 
