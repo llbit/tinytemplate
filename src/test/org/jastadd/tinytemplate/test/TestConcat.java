@@ -83,7 +83,7 @@ public class TestConcat {
 		TinyTemplate tt = new TinyTemplate(
 				"t = [[  $cat(#list, \"\n\")]]");
 		TemplateContext tc = new SimpleContext(tt, new A());
-		assertEquals("  1\n  2\n  3\n", tc.expand("t"));
+		assertEquals("  1\n  2\n  3", tc.expand("t"));
 	}
 
 	public class A {

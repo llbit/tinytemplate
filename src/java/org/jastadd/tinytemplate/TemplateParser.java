@@ -275,7 +275,9 @@ public class TemplateParser {
 				template.addIndentation(include);
 				return include;
 			} else if (isKeyword("cat")) {
-				return parseConcatStmt();
+				ConcatStmt cat = parseConcatStmt();
+				template.addIndentation(cat);
+				return cat;
 			} else if (isVariable()) {
 				String var = nextReference();
 				if (var.isEmpty()) {
