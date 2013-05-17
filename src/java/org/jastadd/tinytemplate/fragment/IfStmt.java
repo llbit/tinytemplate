@@ -98,6 +98,9 @@ public class IfStmt extends AbstractFragment {
 	@Override
 	public void printAspectCode(PrintStream out) {
 		out.print("    if (");
+		if (negated) {
+			out.print("!");
+		}
 		if (isAttribute) {
 			out.print(condition + "()");
 		} else {
