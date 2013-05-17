@@ -23,6 +23,7 @@
 			<batchtest todir="test-reports">
 				<fileset dir="bin">
 					<include name="org/jastadd/tinytemplate/test/*.class" />
+					<exclude name="**/*$*.class" />
 				</fileset>
 			</batchtest>
 			<formatter type="plain" />

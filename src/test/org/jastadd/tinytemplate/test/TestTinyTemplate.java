@@ -405,4 +405,11 @@ public class TestTinyTemplate {
 				"  you\n" +
 				"}\\" + nl + nl, tc.expand("foo"));
 	}
+
+	@Test
+	public void testTrailingBrackets_1() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("test [[anArray[]]]");
+		
+		assertEquals("anArray[]", tt.expand("test"));
+	}
 }

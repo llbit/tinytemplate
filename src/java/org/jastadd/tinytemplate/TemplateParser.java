@@ -171,7 +171,7 @@ public class TemplateParser {
 	}
 
 	private boolean isTemplateEnd() throws IOException {
-		return in.peek(0) == ']' && in.peek(1) == ']';
+		return in.peek(0) == ']' && in.peek(1) == ']' && in.peek(2) != ']';
 	}
 
 	private boolean isAssign() throws IOException {
@@ -442,6 +442,7 @@ public class TemplateParser {
 				isTemplateEnd()) ) {
 
 			if (in.peek(0) == '[' && in.peek(1) == '[')
+				// TODO: remove this error?
 				throw new SyntaxError(line, "double brackets are not allowed inside templates");
 
 			if (in.peek(0) == '#' || in.peek(0) == '$') {

@@ -86,7 +86,7 @@ public class TestConcat {
 		assertEquals("  1\n  2\n  3", tc.expand("t"));
 	}
 
-	public class A {
+	public static class A {
 		public ArrayList<Integer> list() {
 			ArrayList<Integer> list = new ArrayList<Integer>();
 			list.add(1);
