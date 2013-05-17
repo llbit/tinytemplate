@@ -29,7 +29,7 @@ package org.jastadd.tinytemplate.fragment;
  * Abstract fragment supertype
  * @author Jesper Öqvist <jesper.oqvist@cs.lth.se>
  */
-abstract public class AbstractFragment implements IFragment {
+abstract public class AbstractFragment implements Fragment {
 	@Override
 	public boolean isEmpty() {
 		return false;

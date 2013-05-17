@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jastadd.tinytemplate.Indentation.IndentationFragment;
-import org.jastadd.tinytemplate.fragment.IFragment;
+import org.jastadd.tinytemplate.fragment.Fragment;
 import org.jastadd.tinytemplate.fragment.NestedIndentationFragment;
 
 /**
@@ -41,11 +41,11 @@ import org.jastadd.tinytemplate.fragment.NestedIndentationFragment;
  */
 public class Template {
 
-	private final List<List<IFragment>> lines = new ArrayList<List<IFragment>>();
+	private final List<List<Fragment>> lines = new ArrayList<List<Fragment>>();
 
 	{
 		// lines should never be empty
-		lines.add(new ArrayList<IFragment>());
+		lines.add(new ArrayList<Fragment>());
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class Template {
 	 */
 	public void expand(TemplateContext context, PrintStream out) {
 		StringBuilder buf = new StringBuilder();
-		for (List<IFragment> line: lines) {
+		for (List<Fragment> line: lines) {
 			expandLine(context, line, buf);
 			out.print(buf.toString());
 		}
@@ -68,7 +68,7 @@ public class Template {
 	 */
 	public void expand(TemplateContext context, PrintWriter out) {
 		StringBuilder buf = new StringBuilder();
-		for (List<IFragment> line: lines) {
+		for (List<Fragment> line: lines) {
 			expandLine(context, line, buf);
 			out.print(buf.toString());
 		}
@@ -81,7 +81,7 @@ public class Template {
 	 */
 	public void expand(TemplateContext context, StringBuffer out) {
 		StringBuilder buf = new StringBuilder();
-		for (List<IFragment> line: lines) {
+		for (List<Fragment> line: lines) {
 			expandLine(context, line, buf);
 			out.append(buf.toString());
 		}
@@ -94,16 +94,16 @@ public class Template {
 	 */
 	public void expand(TemplateContext context, StringBuilder out) {
 		StringBuilder buf = new StringBuilder();
-		for (List<IFragment> line: lines) {
+		for (List<Fragment> line: lines) {
 			expandLine(context, line, buf);
 			out.append(buf.toString());
 		}
 	}
 
-	private void expandLine(TemplateContext context, List<IFragment> line, StringBuilder buf) {
+	private void expandLine(TemplateContext context, List<Fragment> line, StringBuilder buf) {
 		buf.setLength(0);
 		boolean expanded = false;
-		for (IFragment fragment : line) {
+		for (Fragment fragment : line) {
 			expanded |= fragment.isExpansion();
 			fragment.expand(context, buf);
 		}
@@ -132,7 +132,7 @@ public class Template {
 	 * @param fragment
 	 */
 	public void addIndentation(NestedIndentationFragment fragment) {
-		List<IFragment> lastLine = lines.get(lines.size()-1);
+		List<Fragment> lastLine = lines.get(lines.size()-1);
 		if (!lastLine.isEmpty() && lastLine.get(0).isIndentation()) {
 			fragment.setIndentation((IndentationFragment) lastLine.get(0));
 		}
@@ -143,10 +143,10 @@ public class Template {
 	 * Add a fragment to the last line
 	 * @param fragment
 	 */
-	public void addFragment(IFragment fragment) {
+	public void addFragment(Fragment fragment) {
 		lines.get(lines.size()-1).add(fragment);
 		if (fragment.isNewline()) {
-			lines.add(new ArrayList<IFragment>());
+			lines.add(new ArrayList<Fragment>());
 		}
 	}
 
@@ -164,14 +164,14 @@ public class Template {
 	 * Trim the first line from the template if it contains only whitespace
 	 */
 	private void trimLeadingNewline() {
-		for (IFragment fragment: lines.get(0)) {
+		for (Fragment fragment: lines.get(0)) {
 			if (!fragment.isWhitespace()) {
 				return;
 			}
 		}
 		lines.remove(0);
 		if (lines.isEmpty()) {
-			lines.add(new ArrayList<IFragment>());
+			lines.add(new ArrayList<Fragment>());
 		}
 	}
 
@@ -183,7 +183,7 @@ public class Template {
 		for (int i = 0; i < lines.size(); ++i) {
 			boolean trimmable = true;
 			boolean hasCond = false;
-			for (IFragment fragment: lines.get(i)) {
+			for (Fragment fragment: lines.get(i)) {
 				if ((!fragment.isWhitespace() && !fragment.isConditional())
 						|| fragment.isConditional() && hasCond) {
 					trimmable = false;
@@ -191,14 +191,14 @@ public class Template {
 				}
 				hasCond |= fragment.isConditional();
 			}
-			List<IFragment> line = trimLine(lines.get(i), trimmable && hasCond);
+			List<Fragment> line = trimLine(lines.get(i), trimmable && hasCond);
 			lines.set(i, line);
 		}
 	}
 
-	private List<IFragment> trimLine(List<IFragment> line, boolean trimmable) {
-		List<IFragment> tmp = new ArrayList<IFragment>(lines.size());
-		for (IFragment frag: line) {
+	private List<Fragment> trimLine(List<Fragment> line, boolean trimmable) {
+		List<Fragment> tmp = new ArrayList<Fragment>(lines.size());
+		for (Fragment frag: line) {
 			if (!trimmable || !frag.isWhitespace()) {
 				tmp.add(frag);
 			}
@@ -211,8 +211,8 @@ public class Template {
 	 * @param out
 	 */
 	public void printITD(PrintStream out) {
-		for (List<IFragment> line: lines) {
-			for (IFragment fragment: line) {
+		for (List<Fragment> line: lines) {
+			for (Fragment fragment: line) {
 				fragment.printAspectCode(out);
 			}
 		}

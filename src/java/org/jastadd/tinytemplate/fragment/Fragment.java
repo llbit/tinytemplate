@@ -33,7 +33,7 @@ import org.jastadd.tinytemplate.TemplateContext;
  * Template fragment.
  * @author Jesper Öqvist <jesper@llbit.se>
  */
-public interface IFragment {
+public interface Fragment {
 
 	/**
 	 * Expand the fragment to a StringBuilder

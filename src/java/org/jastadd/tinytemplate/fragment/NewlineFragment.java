@@ -43,7 +43,7 @@ public class NewlineFragment extends AbstractFragment {
 	/**
 	 * Singleton instance
 	 */
-	public static IFragment INSTANCE = new NewlineFragment();
+	public static Fragment INSTANCE = new NewlineFragment();
 
 	private NewlineFragment() {}
 

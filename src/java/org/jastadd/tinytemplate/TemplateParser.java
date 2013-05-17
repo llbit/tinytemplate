@@ -35,7 +35,7 @@ import org.jastadd.io.LookaheadReader;
 import org.jastadd.tinytemplate.fragment.AttributeReference;
 import org.jastadd.tinytemplate.fragment.ConcatStmt;
 import org.jastadd.tinytemplate.fragment.EmptyFragment;
-import org.jastadd.tinytemplate.fragment.IFragment;
+import org.jastadd.tinytemplate.fragment.Fragment;
 import org.jastadd.tinytemplate.fragment.IfStmt;
 import org.jastadd.tinytemplate.fragment.IncludeStmt;
 import org.jastadd.tinytemplate.fragment.NewlineFragment;
@@ -230,7 +230,7 @@ public class TemplateParser {
 		Template template = new Template();
 		boolean newLine = true;
 		while (true) {
-			IFragment nextFragment = nextFragment(template, newLine);
+			Fragment nextFragment = nextFragment(template, newLine);
 			if (!nextFragment.isEmpty()) {
 				if (nextFragment.isKeyword("else"))
 					throw new SyntaxError(line, "stray $else");
@@ -250,7 +250,7 @@ public class TemplateParser {
 		return template;
 	}
 
-	private IFragment nextFragment(Template template, boolean newLine) throws IOException, SyntaxError {
+	private Fragment nextFragment(Template template, boolean newLine) throws IOException, SyntaxError {
 
 		while (true) {
 			if (isEOF()) {
@@ -334,7 +334,7 @@ public class TemplateParser {
 
 		boolean newLine = true;
 		while (true) {
-			IFragment nextFragment = nextFragment(part, newLine);
+			Fragment nextFragment = nextFragment(part, newLine);
 			if (!nextFragment.isEmpty()) {
 				if (nextFragment.isKeyword("else")) {
 					if (elsePart != null)

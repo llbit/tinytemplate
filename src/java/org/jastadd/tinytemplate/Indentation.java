@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jastadd.tinytemplate.fragment.AbstractFragment;
-import org.jastadd.tinytemplate.fragment.IFragment;
+import org.jastadd.tinytemplate.fragment.Fragment;
 
 /**
  * Indentation fragment factory and indentation scheme
@@ -72,8 +72,8 @@ public class Indentation {
 	private final String indentation;
 	private final List<String> ind = new ArrayList<String>(32);
 
-	private static final List<IFragment> fragments =
-		new ArrayList<IFragment>(32);
+	private static final List<Fragment> fragments =
+		new ArrayList<Fragment>(32);
 
 	/**
 	 * Create a new indentation scheme
@@ -88,7 +88,7 @@ public class Indentation {
 	 * @param level The level of indentation
 	 * @return An indentation fragment for the given indentation level
 	 */
-	public static IFragment getFragment(int level) {
+	public static Fragment getFragment(int level) {
 		while (fragments.size() < (level+1)) {
 			fragments.add(new IndentationFragment(fragments.size()));
 		}
