@@ -43,3 +43,7 @@ Examples
     
     # It is possible to include a subtemplate
     greeting4 = [[She said "$include(greeting3)"]]
+
+    # Lists can be concatenated
+    arguments = [[ $cat(#getArgumentList, ", ") ]]
+    concat = [[ $cat($Strings) ]]
