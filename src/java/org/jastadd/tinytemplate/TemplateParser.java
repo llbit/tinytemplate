@@ -370,7 +370,7 @@ public class TemplateParser {
 
 			skipWhitespace();
 
-			String sep = null;
+			String sep = "";
 			if (in.peek(0) == ',') {
 				in.pop();
 				skipWhitespace();

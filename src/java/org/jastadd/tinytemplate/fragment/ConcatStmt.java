@@ -50,10 +50,10 @@ public class ConcatStmt extends NestedIndentationFragment {
 
 	/**
 	 * @param iterable
-	 * @param sep
+	 * @param separator
 	 * @throws SyntaxError
 	 */
-	public ConcatStmt(String iterable, String sep) throws SyntaxError {
+	public ConcatStmt(String iterable, String separator) throws SyntaxError {
 		if (iterable.startsWith("#")) {
 			this.iterable = iterable.substring(1);
 			isAttribute = true;
@@ -61,7 +61,11 @@ public class ConcatStmt extends NestedIndentationFragment {
 			this.iterable = iterable.substring(1);
 			isAttribute = false;
 		}
-		this.sep = sep;
+		if (separator == null) {
+			// separator must be non-null!!!
+			throw new NullPointerException();
+		}
+		this.sep = separator;
 	}
 
 	@Override
@@ -115,7 +119,7 @@ public class ConcatStmt extends NestedIndentationFragment {
 			out.print("get" + iterable + "()");
 		}
 		out.println(") {");
-		if (sep != null) {
+		if (!sep.isEmpty()) {
 			out.println("        if (!first) {");
 			StringBuilder buf = new StringBuilder();
 			for (int i = 0; i < sep.length()-1; ++i) {
