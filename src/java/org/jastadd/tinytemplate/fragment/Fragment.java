@@ -27,6 +27,7 @@ package org.jastadd.tinytemplate.fragment;
 
 import java.io.PrintStream;
 
+import org.jastadd.tinytemplate.Indentation;
 import org.jastadd.tinytemplate.TemplateContext;
 
 /**
@@ -80,7 +81,9 @@ public interface Fragment {
 
 	/**
 	 * Print aspect code for this fragment to the given output stream
-	 * @param out
+	 * @param ind Indentation handler
+	 * @param lvl Indentation level
+	 * @param out Output stream
 	 */
-	void printAspectCode(PrintStream out);
+	void printAspectCode(Indentation ind, int lvl, PrintStream out);
 }

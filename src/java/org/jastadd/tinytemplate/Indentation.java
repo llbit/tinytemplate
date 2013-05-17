@@ -64,8 +64,8 @@ public class Indentation {
 		}
 
 		@Override
-		public void printAspectCode(PrintStream out) {
-			out.println("    out.indent(" + level + ");");
+		public void printAspectCode(Indentation ind, int lvl, PrintStream out) {
+			out.println(ind.get(lvl) + "out.indent(" + level + ");");
 		}
 	}
 
@@ -99,7 +99,7 @@ public class Indentation {
  	 * @param level The level of indentation
  	 * @return The indentation string for the given indentation level
  	 */
-	public String getIndentation(int level) {
+	public String get(int level) {
 		while (ind.size() < (level+1)) {
 			ind.add(ind.get(ind.size()-1) + indentation);
 		}

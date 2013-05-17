@@ -27,6 +27,7 @@ package org.jastadd.tinytemplate.fragment;
 
 import java.io.PrintStream;
 
+import org.jastadd.tinytemplate.Indentation;
 import org.jastadd.tinytemplate.TemplateContext;
 
 /**
@@ -60,7 +61,7 @@ public class VariableReference extends NestedIndentationFragment {
 	}
 
 	@Override
-	public void printAspectCode(PrintStream out) {
-		out.println("    out.print(get" + variable + "());");
+	public void printAspectCode(Indentation ind, int lvl, PrintStream out) {
+		out.println(ind.get(lvl) + "out.print(get" + variable + "());");
 	}
 }

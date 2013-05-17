@@ -27,6 +27,7 @@ package org.jastadd.tinytemplate.fragment;
 
 import java.io.PrintStream;
 
+import org.jastadd.tinytemplate.Indentation;
 import org.jastadd.tinytemplate.TemplateContext;
 
 /**
@@ -40,7 +41,8 @@ public class EmptyFragment extends AbstractFragment {
 	 */
 	public static final EmptyFragment INSTANCE = new EmptyFragment();
 
-	private EmptyFragment() {}
+	private EmptyFragment() {
+	}
 
 	@Override
 	public void expand(TemplateContext context, StringBuilder out) {
@@ -52,6 +54,6 @@ public class EmptyFragment extends AbstractFragment {
 	}
 
 	@Override
-	public void printAspectCode(PrintStream out) {
+	public void printAspectCode(Indentation ind, int lvl, PrintStream out) {
 	}
 }

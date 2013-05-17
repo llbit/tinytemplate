@@ -247,7 +247,7 @@ public class TinyTemplate extends TemplateContext {
 
 	@Override
 	public String evalIndentation(int levels) {
-		return indentation.getIndentation(levels);
+		return indentation.get(levels);
 	}
 
 	/**
@@ -262,13 +262,14 @@ public class TinyTemplate extends TemplateContext {
 	 * @param out
 	 */
 	public void printTemplateAspect(PrintStream out) {
+		Indentation ind = new Indentation("\t");
 		out.println("aspect TemplateAspect {");
 		for (Map.Entry<String, Template> entry: templates.entrySet()) {
 			String name = entry.getKey();
 			Template template = entry.getValue();
-			out.println("  public void " + name + ".prettyPrint(PrettyPrinter out) {");
-			template.printITD(out);
-			out.println("  }");
+			out.println(ind.get(1) + "public void " + name + ".prettyPrint(PrettyPrinter out) {");
+			template.printITD(ind, 2, out);
+			out.println(ind.get(1) + "}");
 		}
 		out.println("}");
 	}

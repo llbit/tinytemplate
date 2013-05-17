@@ -1,4 +1,5 @@
 /* Copyright (c) 2013, Niklas Fors <niklas.fors@cs.lth.se>
+ *               2013, Jesper Öqvist <jesper.oqvist@cs.lth.se>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,6 +28,7 @@ package org.jastadd.tinytemplate.fragment;
 
 import java.io.PrintStream;
 
+import org.jastadd.tinytemplate.Indentation;
 import org.jastadd.tinytemplate.TemplateContext;
 import org.jastadd.tinytemplate.TemplateExpansionWarning;
 import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
@@ -107,12 +109,12 @@ public class ConcatStmt extends NestedIndentationFragment {
 	}
 
 	@Override
-	public void printAspectCode(PrintStream out) {
-		out.println("    {");
-		if (sep != null) {
-			out.println("      boolean first = true;");
+	public void printAspectCode(Indentation ind, int lvl, PrintStream out) {
+		out.println(ind.get(lvl++) + "{");
+		if (!sep.isEmpty()) {
+			out.println(ind.get(lvl) + "boolean first = true;");
 		}
-		out.print("      for (PrettyPrintable p: ");
+		out.print(ind.get(lvl++) + "for (PrettyPrintable p: ");
 		if (isAttribute) {
 			out.print(iterable + "()");
 		} else {
@@ -120,29 +122,29 @@ public class ConcatStmt extends NestedIndentationFragment {
 		}
 		out.println(") {");
 		if (!sep.isEmpty()) {
-			out.println("        if (!first) {");
+			out.println(ind.get(lvl++) + "if (!first) {");
 			StringBuilder buf = new StringBuilder();
 			for (int i = 0; i < sep.length(); ++i) {
 				if ((i+1) < sep.length() && sep.charAt(i) == '\\' &&
 						sep.charAt(i+1) == 'n') {
 					i += 1;
 					if (buf.length() > 0) {
-						out.println("          out.print(\"" + buf.toString() + "\");");
+						out.println(ind.get(lvl) + "out.print(\"" + buf.toString() + "\");");
 					}
-					out.println("          out.println();");
+					out.println(ind.get(lvl) + "out.println();");
 					buf.setLength(0);
 				} else {
 					buf.append(sep.charAt(i));
 				}
 			}
 			if (buf.length() > 0) {
-				out.println("          out.print(\"" + buf.toString() + "\");");
+				out.println(ind.get(lvl) + "out.print(\"" + buf.toString() + "\");");
 			}
-			out.println("        }");
-			out.println("        first = false;");
+			out.println(ind.get(--lvl) + "}");
+			out.println(ind.get(lvl) + "first = false;");
 		}
-		out.println("        out.print(p);");
-		out.println("      }");
-		out.println("    }");
+		out.println(ind.get(lvl) + "out.print(p);");
+		out.println(ind.get(--lvl) + "}");
+		out.println(ind.get(--lvl) + "}");
 	}
 }

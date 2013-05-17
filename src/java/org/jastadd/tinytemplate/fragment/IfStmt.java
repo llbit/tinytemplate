@@ -2,6 +2,7 @@ package org.jastadd.tinytemplate.fragment;
 
 import java.io.PrintStream;
 
+import org.jastadd.tinytemplate.Indentation;
 import org.jastadd.tinytemplate.Template;
 import org.jastadd.tinytemplate.TemplateContext;
 import org.jastadd.tinytemplate.TemplateParser;
@@ -96,8 +97,8 @@ public class IfStmt extends AbstractFragment {
 	}
 
 	@Override
-	public void printAspectCode(PrintStream out) {
-		out.print("    if (");
+	public void printAspectCode(Indentation ind, int lvl, PrintStream out) {
+		out.print(ind.get(lvl) + "if (");
 		if (negated) {
 			out.print("!");
 		}
@@ -107,11 +108,11 @@ public class IfStmt extends AbstractFragment {
 			out.print("get" + condition + "()");
 		}
 		out.println(") {");
-		thenPart.printITD(out);
+		thenPart.printITD(ind, lvl+1, out);
 		if (elsePart != null) {
-			out.println("    } else {");
-			elsePart.printITD(out);
+			out.println(ind.get(lvl) + "} else {");
+			elsePart.printITD(ind, lvl+1, out);
 		}
-		out.println("    }");
+		out.println(ind.get(lvl) + "}");
 	}
 }

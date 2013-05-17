@@ -27,6 +27,7 @@ package org.jastadd.tinytemplate.fragment;
 
 import java.io.PrintStream;
 
+import org.jastadd.tinytemplate.Indentation;
 import org.jastadd.tinytemplate.TemplateContext;
 import org.jastadd.util.StringLiterals;
 
@@ -65,8 +66,8 @@ public class StringFragment extends AbstractFragment {
 	}
 
 	@Override
-	public void printAspectCode(PrintStream out) {
-		out.print("    out.print(\"");
+	public void printAspectCode(Indentation ind, int lvl, PrintStream out) {
+		out.print(ind.get(lvl) + "out.print(\"");
 		out.print(StringLiterals.buildStringLiteral(string));
 		out.println("\");");
 	}
