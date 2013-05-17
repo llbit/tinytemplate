@@ -131,7 +131,7 @@ public class ConcatStmt extends NestedIndentationFragment {
 				}
 			}
 			if (buf.length() > 0) {
-				out.print("          out.print(\"" + buf.toString() + "\");");
+				out.println("          out.print(\"" + buf.toString() + "\");");
 			}
 			out.println("        }");
 			out.println("        first = false;");
