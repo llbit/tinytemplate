@@ -72,7 +72,6 @@ public class PrettyPrinter {
 		return ind.get(level);
 	}
 
-
 	/**
 	 * @param str
 	 */
