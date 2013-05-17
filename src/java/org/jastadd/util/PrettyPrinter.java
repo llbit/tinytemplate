@@ -48,6 +48,7 @@ public class PrettyPrinter {
 	private boolean newline = false;
 
 	/**
+	 * Construct a new PrettyPrinter with the given indentation
 	 * @param ind
 	 */
 	public PrettyPrinter(String ind) {
@@ -55,6 +56,7 @@ public class PrettyPrinter {
 	}
 
 	/**
+	 * Set target print stream
 	 * @param target
 	 */
 	public void setTarget(PrintStream target) {
@@ -81,7 +83,7 @@ public class PrettyPrinter {
 	}
 
 	/**
-	 *
+	 * Print newline
 	 */
 	public void println() {
 		out.println();
@@ -89,6 +91,7 @@ public class PrettyPrinter {
 	}
 
 	/**
+	 * Pretty-print a node
 	 * @param node
 	 */
 	public void print(PrettyPrintable node) {
@@ -98,6 +101,7 @@ public class PrettyPrinter {
 	}
 
 	/**
+	 * Print indentation
 	 * @param level
 	 */
 	public void indent(int level) {
