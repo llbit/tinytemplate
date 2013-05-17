@@ -75,6 +75,18 @@ public class TestConcat {
 	}
 
 	/**
+	 * Tests concatenation with whitespace in separator
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testConcat_3() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"t = [[$cat(#list,\", \")]]");
+		TemplateContext tc = new SimpleContext(tt, new A());
+		assertEquals("1, 2, 3", tc.expand("t"));
+	}
+
+	/**
 	 * Tests indentation
 	 * @throws SyntaxError
 	 */
