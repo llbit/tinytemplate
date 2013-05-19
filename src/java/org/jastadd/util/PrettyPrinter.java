@@ -105,9 +105,7 @@ public class PrettyPrinter {
 	 * @param level
 	 */
 	public void indent(int level) {
-		indentNewline();
 		currentIndent = level;
-		out.print(getIndentation(level));
 	}
 
 	private void pushIndentation() {
