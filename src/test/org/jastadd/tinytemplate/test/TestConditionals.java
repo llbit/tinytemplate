@@ -11,7 +11,7 @@
  *     * Neither the name of the <organization> nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -37,7 +37,9 @@ import org.junit.Test;
  * @author Jesper Öqvist <jesper.oqvist@cs.lth.se>
  */
 public class TestConditionals {
-	
+
+	private static final String NL = System.getProperty("line.separator");
+
 	/**
 	 * Constructor
 	 */
@@ -45,7 +47,7 @@ public class TestConditionals {
 		TinyTemplate.printWarnings(false);
 		TinyTemplate.throwExceptions(false);
 	}
-	
+
 	/**
 	 * Test alternate form of if-then-else with hash sign instead of dollar sign
 	 * @throws SyntaxError
@@ -56,10 +58,10 @@ public class TestConditionals {
 		SimpleContext tc = new SimpleContext(tt, new Object());
 
 		tc.bind("cond", "");
-		
+
 		assertEquals("mjau", tc.expand("foo"));
 	}
-	
+
 	/**
 	 * Test an attribute condition
 	 * @throws SyntaxError
@@ -103,10 +105,10 @@ public class TestConditionals {
 		SimpleContext tc = new SimpleContext(tt, new Object());
 
 		tc.bind("cond", "true");
-		
+
 		assertEquals("boo!", tc.expand("foo"));
 	}
-	
+
 	/**
 	 * Test the if-then conditional
 	 * @throws SyntaxError
@@ -117,10 +119,10 @@ public class TestConditionals {
 		SimpleContext tc = new SimpleContext(tt, new Object());
 
 		tc.bind("cond", "not true");
-		
+
 		assertEquals("", tc.expand("foo"));
 	}
-	
+
 	/**
 	 * Case sensitive "true"
 	 * @throws SyntaxError
@@ -131,10 +133,10 @@ public class TestConditionals {
 		SimpleContext tc = new SimpleContext(tt, new Object());
 
 		tc.bind("cond", "True");
-		
+
 		assertEquals("", tc.expand("foo"));
 	}
-	
+
 	/**
 	 * Test the if-then-else conditional
 	 * @throws SyntaxError
@@ -145,10 +147,10 @@ public class TestConditionals {
 		SimpleContext tc = new SimpleContext(tt, new Object());
 
 		tc.bind("cond", "");
-		
+
 		assertEquals("mjau", tc.expand("foo"));
 	}
-	
+
 	/**
 	 * Test the if-then-else conditional with negated condition
 	 * @throws SyntaxError
@@ -159,7 +161,7 @@ public class TestConditionals {
 		SimpleContext tc = new SimpleContext(tt, new Object());
 
 		tc.bind("cond", "");
-		
+
 		assertEquals("boo!", tc.expand("foo"));
 	}
 
@@ -173,7 +175,7 @@ public class TestConditionals {
 		SimpleContext tc = new SimpleContext(tt, new Object());
 
 		tc.bind("x", true);
-		
+
 		assertEquals("Woof!", tc.expand("dog"));
 	}
 
@@ -187,7 +189,7 @@ public class TestConditionals {
 		SimpleContext tc = new SimpleContext(tt, new Object());
 
 		tc.bind("x", true);
-		
+
 		assertEquals("Woof!", tc.expand("dog"));
 	}
 
@@ -201,7 +203,7 @@ public class TestConditionals {
 		SimpleContext tc = new SimpleContext(tt, new Object());
 
 		tc.bind("x", true);
-		
+
 		assertEquals("silence", tc.expand("dog"));
 	}
 
@@ -287,7 +289,7 @@ public class TestConditionals {
 
 		tc.bind("x", "true");
 		tc.bind("y", "true");
-		
+
 		String nl = System.getProperty("line.separator");
 		assertEquals(" x" + nl + "Wednesday y", tc.expand("Father"));
 	}
@@ -380,7 +382,7 @@ public class TestConditionals {
 		SimpleContext tc = new SimpleContext(tt, new Object());
 
 		tc.bind("bark", "true");
-		
+
 		String nl = System.getProperty("line.separator");
 		assertEquals("Woof!" + nl, tc.expand("dog"));
 	}
@@ -397,7 +399,7 @@ public class TestConditionals {
 		SimpleContext tc = new SimpleContext(tt, new Object());
 
 		tc.bind("bark", "true");
-		
+
 		assertEquals("Woof!", tc.expand("dog"));
 	}
 
@@ -413,7 +415,7 @@ public class TestConditionals {
 		SimpleContext tc = new SimpleContext(tt, new Object());
 
 		tc.bind("bark", "true");
-		
+
 		String nl = System.getProperty("line.separator");
 		assertEquals("  Woof!   ;" + nl, tc.expand("dog"));
 	}
@@ -430,9 +432,48 @@ public class TestConditionals {
 		SimpleContext tc = new SimpleContext(tt, new Object());
 
 		tc.bind("bark", "true");
-		
+
 		String nl = System.getProperty("line.separator");
 		assertEquals("  Woof!   Woof!" + nl, tc.expand("dog"));
+	}
+
+	/**
+	 * Trim trailing empty line if there is nothing after the <code>endif</code>
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testTrimming_5() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"dog = [[  $if(bark)\n" +
+				" Woof!\n" +
+				"  $endif]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
+
+		tc.bind("bark", "true");
+
+		String nl = System.getProperty("line.separator");
+		assertEquals(" Woof!" + nl, tc.expand("dog"));
+	}
+
+	/**
+	 * Trim empty trailing line if the <code>else</code> is on it's own line
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testTrimming_6() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"dog = [[  $if(!bark)\n" +
+				" Notwoof  \n" +
+				" \t$else  \n" +
+				" Woof!\n" +
+				"  $endif   ]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
+
+		tc.bind("bark", true);
+		assertEquals(" Woof!", tc.expand("dog"));
+
+		tc.bind("bark", false);
+		assertEquals(" Notwoof  ", tc.expand("dog"));
 	}
 
 }
