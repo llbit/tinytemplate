@@ -1,4 +1,5 @@
 /* Copyright (c) 2013, Niklas Fors <niklas.fors@cs.lth.se>
+ *               2013, Jesper Öqvist <jesper.oqvist@cs.lth.se>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,14 +26,14 @@
  */
 package org.jastadd.tinytemplate.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 
 import org.jastadd.tinytemplate.SimpleContext;
 import org.jastadd.tinytemplate.TemplateContext;
-import org.jastadd.tinytemplate.TinyTemplate;
 import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
+import org.jastadd.tinytemplate.TinyTemplate;
 import org.junit.Test;
 
 /**
@@ -41,6 +42,8 @@ import org.junit.Test;
  */
 @SuppressWarnings("javadoc")
 public class TestConcat {
+
+	private static final String NL = System.getProperty("line.separator");
 
 	/**
 	 * Constructor
@@ -95,7 +98,11 @@ public class TestConcat {
 		TinyTemplate tt = new TinyTemplate(
 				"t = [[  $cat(#list, \"\n\")]]");
 		TemplateContext tc = new SimpleContext(tt, new A());
-		assertEquals("  1\n  2\n  3", tc.expand("t"));
+		assertEquals(
+				"  1" + NL +
+				"  2" + NL +
+				"  3",
+				tc.expand("t"));
 	}
 
 	public static class A {

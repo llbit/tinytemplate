@@ -11,7 +11,7 @@
  *     * Neither the name of the <organization> nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -25,12 +25,12 @@
  */
 package org.jastadd.tinytemplate.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.jastadd.tinytemplate.SimpleContext;
 import org.jastadd.tinytemplate.TemplateContext;
-import org.jastadd.tinytemplate.TinyTemplate;
 import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
+import org.jastadd.tinytemplate.TinyTemplate;
 import org.junit.Test;
 
 /**
@@ -38,7 +38,9 @@ import org.junit.Test;
  * @author Jesper Öqvist <jesper.oqvist@cs.lth.se>
  */
 public class TestInclude {
-	
+
+	private static final String NL = System.getProperty("line.separator");
+
 	/**
 	 * Constructor
 	 */
@@ -46,7 +48,7 @@ public class TestInclude {
 		TinyTemplate.printWarnings(false);
 		TinyTemplate.throwExceptions(false);
 	}
-	
+
 	/**
 	 * Tests expanding an included template
 	 * @throws SyntaxError
@@ -56,10 +58,10 @@ public class TestInclude {
 		TinyTemplate tt = new TinyTemplate(
 				"a = [[boop]]\n" +
 				"b = [[$include(a)]]");
-		
+
 		assertEquals("boop", tt.expand("b"));
 	}
-	
+
 	/**
 	 * Tests expanding a variable in an included template
 	 * @throws SyntaxError
@@ -73,7 +75,7 @@ public class TestInclude {
 		tc.bind("boop", "beep");
 		assertEquals("beep", tc.expand("b"));
 	}
-	
+
 	/**
 	 * Test the include keyword with a hash instead of dollar sign
 	 * @throws SyntaxError
@@ -98,6 +100,9 @@ public class TestInclude {
 				"a = [[a\nb]]\n" +
 				"b = [[  #include(a)]]");
 		TemplateContext tc = new SimpleContext(tt, this);
-		assertEquals("  a\n  b", tc.expand("b"));
+		assertEquals(
+				"  a" + NL +
+				"  b",
+				tc.expand("b"));
 	}
 }
