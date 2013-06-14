@@ -11,7 +11,7 @@
  *     * Neither the name of the <organization> nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -37,7 +37,7 @@ import org.junit.Test;
  * @author Jesper Öqvist <jesper.oqvist@cs.lth.se>
  */
 public class TestTinyTemplate {
-	
+
 	/**
 	 * Constructor
 	 */
@@ -45,7 +45,7 @@ public class TestTinyTemplate {
 		TinyTemplate.printWarnings(false);
 		TinyTemplate.throwExceptions(false);
 	}
-	
+
 	/**
 	 * Tests expanding an undefined template
 	 * @throws SyntaxError
@@ -53,10 +53,10 @@ public class TestTinyTemplate {
 	@Test
 	public void testUndefinedTemplate() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("");
-		
+
 		assertEquals("", tt.expand("test"));
 	}
-	
+
 	/**
 	 * Tests expanding a simple template
 	 * @throws SyntaxError
@@ -64,10 +64,10 @@ public class TestTinyTemplate {
 	@Test
 	public void testSimple_1() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("test [[hello]]");
-		
+
 		assertEquals("hello", tt.expand("test"));
 	}
-	
+
 	/**
 	 * Tests expanding an empty template
 	 * @throws SyntaxError
@@ -75,10 +75,10 @@ public class TestTinyTemplate {
 	@Test
 	public void testSimple_2() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("foo [[]]");
-		
+
 		assertEquals("", tt.expand("foo"));
 	}
-	
+
 	/**
 	 * Multiple templates in one "file"
 	 * @throws SyntaxError
@@ -87,11 +87,11 @@ public class TestTinyTemplate {
 	public void testSimple_3() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate(
 				"foo [[ baa ]] bar [[ faa ]]");
-		
+
 		assertEquals(" baa ", tt.expand("foo"));
 		assertEquals(" faa ", tt.expand("bar"));
 	}
-	
+
 	/**
 	 * Very many special characters can be used in template names
 	 * @throws SyntaxError
@@ -99,10 +99,10 @@ public class TestTinyTemplate {
 	@Test
 	public void testSimple_4() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("$(%)!}@{ [[=)]]");
-		
+
 		assertEquals("=)", tt.expand("$(%)!}@{"));
 	}
-	
+
 	/**
 	 * Newlines in template body
 	 * @throws SyntaxError
@@ -114,11 +114,11 @@ public class TestTinyTemplate {
 				"z\r" +
 				"\r\n" +
 				"]]");
-		
+
 		String nl = System.getProperty("line.separator");
 		assertEquals("z" + nl + nl, tt.expand("x"));
 	}
-	
+
 	/**
 	 * Newlines in template body
 	 * @throws SyntaxError
@@ -134,7 +134,7 @@ public class TestTinyTemplate {
 				"void b() {\n" +
 				"  boo(hoo);\n" +
 				"}]]");
-		
+
 		String nl = System.getProperty("line.separator");
 		assertEquals(
 				"void a() {" + nl +
@@ -145,61 +145,61 @@ public class TestTinyTemplate {
 				"  boo(hoo);" + nl +
 				"}", tt.expand("foo"));
 	}
-	
+
 	/**
 	 * Missing template name
-	 * @throws SyntaxError 
+	 * @throws SyntaxError
 	 */
 	@Test(expected=SyntaxError.class)
 	public void testSyntaxError_1() throws SyntaxError {
 		new TinyTemplate("[[]]");
 	}
-	
+
 	/**
 	 * Missing template name
-	 * @throws SyntaxError 
+	 * @throws SyntaxError
 	 */
 	@Test(expected=SyntaxError.class)
 	public void testSyntaxError_2() throws SyntaxError {
 		new TinyTemplate(" = [[]]");
 	}
-	
+
 	/**
 	 * Missing end of template body
-	 * @throws SyntaxError 
+	 * @throws SyntaxError
 	 */
 	@Test(expected=SyntaxError.class)
 	public void testSyntaxError_3() throws SyntaxError {
 		new TinyTemplate("x = [[  ");
 	}
-	
+
 	/**
 	 * Missing end of template body
-	 * @throws SyntaxError 
+	 * @throws SyntaxError
 	 */
 	@Test(expected=SyntaxError.class)
 	public void testSyntaxError_4() throws SyntaxError {
 		new TinyTemplate("x = [[  ]");
 	}
-	
+
 	/**
 	 * Missing start of template body
-	 * @throws SyntaxError 
+	 * @throws SyntaxError
 	 */
 	@Test(expected=SyntaxError.class)
 	public void testSyntaxError_5() throws SyntaxError {
 		new TinyTemplate("x = ]]");
 	}
-	
+
 	/**
 	 * Missing start of template body
-	 * @throws SyntaxError 
+	 * @throws SyntaxError
 	 */
 	@Test(expected=SyntaxError.class)
 	public void testSyntaxError_6() throws SyntaxError {
 		new TinyTemplate("x = [  ]]");
 	}
-	
+
 	/**
 	 * Double brackets not allowed inside template body
 	 * @throws SyntaxError
@@ -208,7 +208,7 @@ public class TestTinyTemplate {
 	public void testSyntaxError_7() throws SyntaxError {
 		new TinyTemplate("x = [[ [[ ]]");
 	}
-	
+
 	/**
 	 * Double brackets not allowed inside template body
 	 * @throws SyntaxError
@@ -217,7 +217,7 @@ public class TestTinyTemplate {
 	public void testSyntaxError_8() throws SyntaxError {
 		new TinyTemplate("x = [[ ]] ]]");
 	}
-	
+
 	/**
 	 * Missing template body
 	 * @throws SyntaxError
@@ -226,7 +226,7 @@ public class TestTinyTemplate {
 	public void testSyntaxError_9() throws SyntaxError {
 		new TinyTemplate("x = ");
 	}
-	
+
 	/**
 	 * Missing template body
 	 * @throws SyntaxError
@@ -235,7 +235,7 @@ public class TestTinyTemplate {
 	public void testSyntaxError_10() throws SyntaxError {
 		new TinyTemplate("x");
 	}
-	
+
 	/**
 	 * Multiple assign are allowed between template name and template body
 	 * @throws SyntaxError
@@ -246,11 +246,11 @@ public class TestTinyTemplate {
 				"test == \n" +
 				"== ==== = ===== [[$hello]]");
 		SimpleContext tc = new SimpleContext(tt, new Object());
-		
+
 		tc.bind("hello", "hej");
 		assertEquals("hej", tc.expand("test"));
 	}
-	
+
 	/**
 	 * Multiple template names are allowed for each template
 	 * @throws SyntaxError
@@ -260,13 +260,13 @@ public class TestTinyTemplate {
 		TinyTemplate tt = new TinyTemplate(
 				"test == foo = = = bar [[$hello]]");
 		SimpleContext tc = new SimpleContext(tt, new Object());
-		
+
 		tc.bind("hello", "hej");
 		assertEquals("hej", tc.expand("test"));
 		assertEquals("hej", tc.expand("foo"));
 		assertEquals("hej", tc.expand("bar"));
 	}
-	
+
 	/**
 	 * Multiple template names are allowed for each template
 	 * @throws SyntaxError
@@ -276,13 +276,13 @@ public class TestTinyTemplate {
 		TinyTemplate tt = new TinyTemplate(
 				"test foo bar [[$hello]]");
 		SimpleContext tc = new SimpleContext(tt, new Object());
-		
+
 		tc.bind("hello", "hej");
 		assertEquals("hej", tc.expand("test"));
 		assertEquals("hej", tc.expand("foo"));
 		assertEquals("hej", tc.expand("bar"));
 	}
-	
+
 	/**
 	 * Tests a template comment
 	 * @throws SyntaxError
@@ -293,11 +293,11 @@ public class TestTinyTemplate {
 				"# line comment\n" +
 				"test = [[$hello]]");
 		SimpleContext tc = new SimpleContext(tt, new Object());
-		
+
 		tc.bind("hello", "hej");
 		assertEquals("hej", tc.expand("test"));
 	}
-	
+
 	/**
 	 * Tests a template comment
 	 * @throws SyntaxError
@@ -307,11 +307,11 @@ public class TestTinyTemplate {
 		TinyTemplate tt = new TinyTemplate(
 				"foo=[[x]]# comment\n" +
 				"# test = [[y]]");
-		
+
 		assertEquals("", tt.expand("test"));
 		assertEquals("x", tt.expand("foo"));
 	}
-	
+
 	/**
 	 * Tests a template comment
 	 * @throws SyntaxError
@@ -320,11 +320,11 @@ public class TestTinyTemplate {
 	public void testComment_3() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate(
 				"foo=[[## not a comment]]");
-		
+
 		assertEquals("hash signs inside a template body are not comments",
 				"# not a comment", tt.expand("foo"));
 	}
-	
+
 	/**
 	 * Tests that indentation is replaced correctly
 	 * @throws SyntaxError
@@ -347,7 +347,7 @@ public class TestTinyTemplate {
 				"\t\t2  " + nl +
 				"\t\t\t\t", tt.expand("foo"));
 	}
-	
+
 	/**
 	 * Expansions can be correctly indented, but the indentation inside the
 	 * expansion is not touched.
@@ -365,9 +365,9 @@ public class TestTinyTemplate {
 				"  hello\n" +
 				"  you\n" +
 				"}");
-		
+
 		tt.setIndentation("    ");
-				
+
 		String nl = System.getProperty("line.separator");
 		assertEquals(
 				"        {" + nl +
@@ -375,7 +375,7 @@ public class TestTinyTemplate {
 				"          you" + nl +
 				"        }", tc.expand("foo"));
 	}
-	
+
 	/**
 	 * Line splicing is not enabled
 	 * @throws SyntaxError
@@ -394,9 +394,9 @@ public class TestTinyTemplate {
 				"  hello\\\n" +
 				"  you\n" +
 				"}");
-		
+
 		tt.setIndentation(" ");
-				
+
 		String nl = System.getProperty("line.separator");
 		assertEquals(
 				"  \\" + nl +
@@ -406,10 +406,14 @@ public class TestTinyTemplate {
 				"}\\" + nl + nl, tc.expand("foo"));
 	}
 
+	/**
+	 * Test trailing brackets inside template body
+	 * @throws SyntaxError
+	 */
 	@Test
 	public void testTrailingBrackets_1() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("test [[anArray[]]]");
-		
+
 		assertEquals("anArray[]", tt.expand("test"));
 	}
 }
