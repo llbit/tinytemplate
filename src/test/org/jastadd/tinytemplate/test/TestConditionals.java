@@ -25,7 +25,8 @@
  */
 package org.jastadd.tinytemplate.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.jastadd.tinytemplate.SimpleContext;
 import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
@@ -290,8 +291,7 @@ public class TestConditionals {
 		tc.bind("x", "true");
 		tc.bind("y", "true");
 
-		String nl = System.getProperty("line.separator");
-		assertEquals(" x" + nl + "Wednesday y", tc.expand("Father"));
+		assertEquals(" x" + NL + "Wednesday y", tc.expand("Father"));
 	}
 
 	/**
@@ -383,8 +383,7 @@ public class TestConditionals {
 
 		tc.bind("bark", "true");
 
-		String nl = System.getProperty("line.separator");
-		assertEquals("Woof!" + nl, tc.expand("dog"));
+		assertEquals("Woof!" + NL, tc.expand("dog"));
 	}
 
 	/**
@@ -416,8 +415,7 @@ public class TestConditionals {
 
 		tc.bind("bark", "true");
 
-		String nl = System.getProperty("line.separator");
-		assertEquals("  Woof!   ;" + nl, tc.expand("dog"));
+		assertEquals("  Woof!   ;" + NL, tc.expand("dog"));
 	}
 
 	/**
@@ -433,8 +431,7 @@ public class TestConditionals {
 
 		tc.bind("bark", "true");
 
-		String nl = System.getProperty("line.separator");
-		assertEquals("  Woof!   Woof!" + nl, tc.expand("dog"));
+		assertEquals("  Woof!   Woof!" + NL, tc.expand("dog"));
 	}
 
 	/**
@@ -451,8 +448,7 @@ public class TestConditionals {
 
 		tc.bind("bark", "true");
 
-		String nl = System.getProperty("line.separator");
-		assertEquals(" Woof!" + nl, tc.expand("dog"));
+		assertEquals(" Woof!" + NL, tc.expand("dog"));
 	}
 
 	/**
