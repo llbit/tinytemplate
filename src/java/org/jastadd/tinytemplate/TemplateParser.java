@@ -110,7 +110,7 @@ public class TemplateParser {
 				break;
 			} else if (isNewline()) {
 				skipNewline();
-			} else if (isLinecomment()) {
+			} else if (isLineComment()) {
 				skipLinecomment();
 			} else if (isAssign()) {
 				if (names.isEmpty()) {
@@ -129,6 +129,10 @@ public class TemplateParser {
 					templates.addTemplate(name, template);
 				}
 				names.clear();
+			} else if (in.peek(0) == '[' || in.peek(0) == ']') {
+				throw new SyntaxError(line,
+						"found bracket outside template body: '"
+						+ ((char) in.peek(0)) + "'");
 			} else {
 				names.add(nextName());
 			}
@@ -154,16 +158,7 @@ public class TemplateParser {
 	}
 
 	private boolean isTemplateStart() throws IOException, SyntaxError {
-		if (in.peek(0) == '[') {
-			if (in.peek(1) == '[') {
-				return true;
-			} else {
-				throw new SyntaxError(line, "misplaced '['");
-			}
-		} else if (in.peek(0) == ']') {
-			throw new SyntaxError(line, "misplaced ']'");
-		}
-		return false;
+		return in.peek(0) == '[' && in.peek(1) == '[';
 	}
 
 	private boolean isIndentation() throws IOException {
@@ -178,7 +173,7 @@ public class TemplateParser {
 		return in.peek(0) == '=';
 	}
 
-	private boolean isLinecomment() throws IOException {
+	private boolean isLineComment() throws IOException {
 		return in.peek(0) == '#';
 	}
 
@@ -440,10 +435,6 @@ public class TemplateParser {
 		StringBuilder buf = new StringBuilder(512);
 		while ( !(isEOF() || isVariable() || isAttribute() || isNewline() ||
 				isTemplateEnd()) ) {
-
-			if (in.peek(0) == '[' && in.peek(1) == '[')
-				// TODO: remove this error?
-				throw new SyntaxError(line, "double brackets are not allowed inside templates");
 
 			if (in.peek(0) == '#' || in.peek(0) == '$') {
 				// it's cool - the # or $ was escaped!

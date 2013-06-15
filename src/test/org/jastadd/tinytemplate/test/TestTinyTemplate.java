@@ -25,11 +25,12 @@
  */
 package org.jastadd.tinytemplate.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.jastadd.tinytemplate.SimpleContext;
-import org.jastadd.tinytemplate.TinyTemplate;
 import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
+import org.jastadd.tinytemplate.TinyTemplate;
 import org.junit.Test;
 
 /**
@@ -37,6 +38,87 @@ import org.junit.Test;
  * @author Jesper Öqvist <jesper.oqvist@cs.lth.se>
  */
 public class TestTinyTemplate {
+
+	private static final String NL = System.getProperty("line.separator");
+
+	/**
+	 * Missing end of template body
+	 * @throws SyntaxError
+	 */
+	@Test(expected=SyntaxError.class)
+	public void testBrackets_1() throws SyntaxError {
+		new TinyTemplate("x = [[  ");
+	}
+
+	/**
+	 * Missing end of template body
+	 * @throws SyntaxError
+	 */
+	@Test(expected=SyntaxError.class)
+	public void testBrackets_2() throws SyntaxError {
+		new TinyTemplate("x = [[  ]");
+	}
+
+	/**
+	 * Missing start of template body
+	 * @throws SyntaxError
+	 */
+	@Test(expected=SyntaxError.class)
+	public void testBrackets_3() throws SyntaxError {
+		new TinyTemplate("x = ]]");
+	}
+
+	/**
+	 * Missing start of template body
+	 */
+	@Test
+	public void testBrackets_4() {
+		try {
+			new TinyTemplate("x = [  ]]");
+			fail("Expected syntax error!");
+		} catch (SyntaxError e) {
+			assertEquals("Syntax error at line 1: found bracket outside template body: '['",
+					e.getMessage());
+		}
+	}
+
+	/**
+	 * Double brackets are allowed inside template body as long as they are not
+	 * closing brackets.
+	 */
+	@Test
+	public void testBrackets_5() {
+		try {
+			new TinyTemplate("x = [[ [[ [[[ ]]");
+		} catch (SyntaxError e) {
+			fail("template parsing failed: " + e.getMessage());
+		}
+	}
+
+	/**
+	 * Brackets are not allowed outside of template body. The template body
+	 * ends at the first pair of closing brackets.
+	 */
+	@Test
+	public void testBrackets_6() {
+		try {
+			new TinyTemplate("x = [[ ]] ]]");
+		} catch (SyntaxError e) {
+			assertEquals("Syntax error at line 1: found bracket outside template body: ']'",
+					e.getMessage());
+		}
+	}
+
+	/**
+	 * There can be extra closing brackets at the very end of the template body.
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testBrackets_7() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("test [[anArray[]]]");
+
+		assertEquals("anArray[]", tt.expand("test"));
+	}
 
 	/**
 	 * Constructor
@@ -115,8 +197,7 @@ public class TestTinyTemplate {
 				"\r\n" +
 				"]]");
 
-		String nl = System.getProperty("line.separator");
-		assertEquals("z" + nl + nl, tt.expand("x"));
+		assertEquals("z" + NL + NL, tt.expand("x"));
 	}
 
 	/**
@@ -135,14 +216,13 @@ public class TestTinyTemplate {
 				"  boo(hoo);\n" +
 				"}]]");
 
-		String nl = System.getProperty("line.separator");
 		assertEquals(
-				"void a() {" + nl +
-				"  baa;" + nl +
-				"}" + nl +
-				nl +
-				"void b() {" + nl +
-				"  boo(hoo);" + nl +
+				"void a() {" + NL +
+				"  baa;" + NL +
+				"}" + NL +
+				NL +
+				"void b() {" + NL +
+				"  boo(hoo);" + NL +
 				"}", tt.expand("foo"));
 	}
 
@@ -162,60 +242,6 @@ public class TestTinyTemplate {
 	@Test(expected=SyntaxError.class)
 	public void testSyntaxError_2() throws SyntaxError {
 		new TinyTemplate(" = [[]]");
-	}
-
-	/**
-	 * Missing end of template body
-	 * @throws SyntaxError
-	 */
-	@Test(expected=SyntaxError.class)
-	public void testSyntaxError_3() throws SyntaxError {
-		new TinyTemplate("x = [[  ");
-	}
-
-	/**
-	 * Missing end of template body
-	 * @throws SyntaxError
-	 */
-	@Test(expected=SyntaxError.class)
-	public void testSyntaxError_4() throws SyntaxError {
-		new TinyTemplate("x = [[  ]");
-	}
-
-	/**
-	 * Missing start of template body
-	 * @throws SyntaxError
-	 */
-	@Test(expected=SyntaxError.class)
-	public void testSyntaxError_5() throws SyntaxError {
-		new TinyTemplate("x = ]]");
-	}
-
-	/**
-	 * Missing start of template body
-	 * @throws SyntaxError
-	 */
-	@Test(expected=SyntaxError.class)
-	public void testSyntaxError_6() throws SyntaxError {
-		new TinyTemplate("x = [  ]]");
-	}
-
-	/**
-	 * Double brackets not allowed inside template body
-	 * @throws SyntaxError
-	 */
-	@Test(expected=SyntaxError.class)
-	public void testSyntaxError_7() throws SyntaxError {
-		new TinyTemplate("x = [[ [[ ]]");
-	}
-
-	/**
-	 * Double brackets not allowed inside template body
-	 * @throws SyntaxError
-	 */
-	@Test(expected=SyntaxError.class)
-	public void testSyntaxError_8() throws SyntaxError {
-		new TinyTemplate("x = [[ ]] ]]");
 	}
 
 	/**
@@ -340,11 +366,10 @@ public class TestTinyTemplate {
 
 		tt.setIndentation("\t");
 
-		String nl = System.getProperty("line.separator");
 		assertEquals(
-				"void m() {" + nl +
-				"\t" + nl +
-				"\t\t2  " + nl +
+				"void m() {" + NL +
+				"\t" + NL +
+				"\t\t2  " + NL +
 				"\t\t\t\t", tt.expand("foo"));
 	}
 
@@ -368,11 +393,10 @@ public class TestTinyTemplate {
 
 		tt.setIndentation("    ");
 
-		String nl = System.getProperty("line.separator");
 		assertEquals(
-				"        {" + nl +
-				"          hello" + nl +
-				"          you" + nl +
+				"        {" + NL +
+				"          hello" + NL +
+				"          you" + NL +
 				"        }", tc.expand("foo"));
 	}
 
@@ -397,23 +421,12 @@ public class TestTinyTemplate {
 
 		tt.setIndentation(" ");
 
-		String nl = System.getProperty("line.separator");
 		assertEquals(
-				"  \\" + nl +
+				"  \\" + NL +
 				"{\n" +
 				"  hello\\\n" +
 				"  you\n" +
-				"}\\" + nl + nl, tc.expand("foo"));
+				"}\\" + NL + NL, tc.expand("foo"));
 	}
 
-	/**
-	 * Test trailing brackets inside template body
-	 * @throws SyntaxError
-	 */
-	@Test
-	public void testTrailingBrackets_1() throws SyntaxError {
-		TinyTemplate tt = new TinyTemplate("test [[anArray[]]]");
-
-		assertEquals("anArray[]", tt.expand("test"));
-	}
 }
