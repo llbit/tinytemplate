@@ -37,7 +37,7 @@ import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
  * A concatenation statement
  * @author Niklas Fors <niklas.fors@cs.lth.se>
  */
-public class ConcatStmt extends NestedIndentationFragment {
+public class Concat extends NestedIndentationFragment {
 	private String iterable;
 	private final String sep;
 	private boolean isAttribute;
@@ -46,7 +46,7 @@ public class ConcatStmt extends NestedIndentationFragment {
 	 * @param iterable
 	 * @throws SyntaxError
 	 */
-	public ConcatStmt(String iterable) throws SyntaxError {
+	public Concat(String iterable) throws SyntaxError {
 		this(iterable, null);
 	}
 
@@ -55,7 +55,7 @@ public class ConcatStmt extends NestedIndentationFragment {
 	 * @param separator
 	 * @throws SyntaxError
 	 */
-	public ConcatStmt(String iterable, String separator) throws SyntaxError {
+	public Concat(String iterable, String separator) throws SyntaxError {
 		if (iterable.startsWith("#")) {
 			this.iterable = iterable.substring(1);
 			isAttribute = true;

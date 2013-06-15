@@ -47,17 +47,17 @@ public abstract class TemplateContext {
 
 	/**
 	 * Evaluate an attribute
-	 * @param attribute
+	 * @param attrName
 	 * @return The string value returned from the attribute
 	 */
-	abstract public Object evalAttribute(String attribute);
+	abstract public Object evalAttribute(String attrName);
 
 	/**
- 	 * @param levels Number of indentation levels
+ 	 * @param level Number of indentation levels
  	 * @return The cumulative indentation corresponding to the given
  	 * indentation level
  	 */
-	abstract public String evalIndentation(int levels);
+	abstract public String evalIndentation(int level);
 
 	/**
 	 * Expand a template

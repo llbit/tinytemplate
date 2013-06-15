@@ -41,10 +41,11 @@ import org.jastadd.tinytemplate.fragment.NestedIndentationFragment;
  */
 public class Template {
 
+	/**
+	 * NB lines should never be empty!
+	 */
 	private final List<List<Fragment>> lines = new ArrayList<List<Fragment>>();
-
 	{
-		// lines should never be empty
 		lines.add(new ArrayList<Fragment>());
 	}
 
@@ -165,21 +166,49 @@ public class Template {
 	 * are alone on their line.
 	 */
 	public void trim() {
-		trimLeadingNewline();
+		trimLeadingEmptyLine();
 		trimConditionalWhitespace();
 	}
 
 	/**
 	 * Trim the first line from the template if it contains only whitespace
 	 */
-	private void trimLeadingNewline() {
-		for (Fragment fragment: lines.get(0)) {
+	private void trimLeadingEmptyLine() {
+		trimLineIfEmpty(0);
+	}
+
+	/**
+	 * Trim the last line from the template if it contains only whitespace
+	 */
+	public void trimTrailingEmptyLine() {
+		trimLineIfEmpty(lines.size()-1);
+	}
+
+	/**
+	 * Remove the given line if it contains only whitespace
+	 * @param line Index of line to trim
+	 */
+	private void trimLineIfEmpty(int line) {
+		for (Fragment fragment: lines.get(line)) {
 			if (!fragment.isWhitespace()) {
 				return;
 			}
 		}
-		lines.remove(0);
+		lines.remove(line);
+		if (line > 0) {
+			// remove newline from previous line
+			List<Fragment> prevLine = lines.get(line-1);
+			int last = prevLine.size()-1;
+			if (last >= 0 && prevLine.get(last).isNewline()) {
+				prevLine.remove(last);
+				if (last == 0) {
+					lines.remove(line-1);
+				}
+			}
+		}
+
 		if (lines.isEmpty()) {
+			// lines must not be empty
 			lines.add(new ArrayList<Fragment>());
 		}
 	}
@@ -227,5 +256,19 @@ public class Template {
 				fragment.printAspectCode(ind, lvl, out);
 			}
 		}
+	}
+
+	/**
+	 * @return <code>true</code> if the template expands to an empty string
+	 */
+	public boolean isEmpty() {
+		return lines.size() == 1 && lines.get(0).size() == 0;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		expand(new DumbContext(), sb);
+		return sb.toString();
 	}
 }

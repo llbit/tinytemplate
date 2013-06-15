@@ -2,6 +2,7 @@ package org.jastadd.tinytemplate.fragment;
 
 import java.io.PrintStream;
 
+import org.jastadd.tinytemplate.EmptyTemplate;
 import org.jastadd.tinytemplate.Indentation;
 import org.jastadd.tinytemplate.Template;
 import org.jastadd.tinytemplate.TemplateContext;
@@ -12,11 +13,11 @@ import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
  * A conditional expansion
  * @author Jesper Öqvist <jesper.oqvist@cs.lth.se>
  */
-public class IfStmt extends AbstractFragment {
+public class Conditional extends AbstractFragment {
 
 	private String condition;
 	private final Template thenPart;
-	private Template elsePart = null;
+	private final Template elsePart;
 	private final boolean negated;
 	private final boolean isAttribute;
 
@@ -26,8 +27,8 @@ public class IfStmt extends AbstractFragment {
 	 * @param thenPart
 	 * @throws SyntaxError
 	 */
-	public IfStmt(String condition, Template thenPart) throws SyntaxError {
-		this(condition, thenPart, null);
+	public Conditional(String condition, Template thenPart) throws SyntaxError {
+		this(condition, thenPart, EmptyTemplate.INSTANCE);
 	}
 
 	/**
@@ -37,7 +38,7 @@ public class IfStmt extends AbstractFragment {
 	 * @param elsePart
 	 * @throws SyntaxError
 	 */
-	public IfStmt(String cond, Template thenPart, Template elsePart) throws SyntaxError {
+	public Conditional(String cond, Template thenPart, Template elsePart) throws SyntaxError {
 		if (cond.startsWith("!")) {
 			this.negated = true;
 			cond = cond.substring(1).trim();
@@ -63,7 +64,9 @@ public class IfStmt extends AbstractFragment {
 			TemplateParser.acceptVariableName(-1, this.condition);
 		}
 		this.thenPart = thenPart;
+		this.thenPart.trimTrailingEmptyLine();
 		this.elsePart = elsePart;
+		this.elsePart.trimTrailingEmptyLine();
 	}
 
 	private boolean evalCondition(TemplateContext context) {
@@ -81,7 +84,7 @@ public class IfStmt extends AbstractFragment {
 	public void expand(TemplateContext context, StringBuilder out) {
 		if (evalCondition(context)) {
 			thenPart.expand(context, out);
-		} else if (elsePart != null) {
+		} else {
 			elsePart.expand(context, out);
 		}
 	}
@@ -109,7 +112,7 @@ public class IfStmt extends AbstractFragment {
 		}
 		out.println(") {");
 		thenPart.printITD(ind, lvl+1, out);
-		if (elsePart != null) {
+		if (!elsePart.isEmpty()) {
 			out.println(ind.get(lvl) + "} else {");
 			elsePart.printITD(ind, lvl+1, out);
 		}

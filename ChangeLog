@@ -1,50 +1,33 @@
 1.2 - TBD
 
+    * Trailing empty line is removed from conditional blocks
     * Trailing closing brackets are now allowed in templates
-
     * Added concatenation statement ($cat)
-
     * Attributes and variables are now objects, no longer restricted to be
 	strings
 
 1.1 - 2013-05-14
 
     * Added Aspect Generator tool
-
     * Added conditional statements (if-then, if-then-else)
-
     * Conditionals surrounded by whitespace on a line by themself are stripped
 	of their surrounding whitespace including the newline
-
     * Keywords such as if, include, else can now be preceded by a hash sign in
 	addition to the dollar sign
-
     * Whitespace does not break a parenthesized variable name
-
     * Whitespace is stripped from if conditions
-
     * The condition of an if must be a valid variable (implicit or explicit
 	dollar sign) or attribute name
-
     * Added template inclusion using the 'include' keyword
-
     * Scan dollar and hash signs inside parenthesis
-
     * If condition can be an attribute
-
     * Non-parenthesized variable names can not contain a dollar sign
-
     * Trim leading empty line from if-statement body
-
     * Trim leading empty line from template body
-
     * Empty lines are removed after expansion if they contained a
 	non-whitespace fragment before expansion
-
     * Templates can now expand to a StringBuffer
-
     * Template expansion warnings are printed to stderr
-
     * Printing of warnings to stderr can be disabled
 
 

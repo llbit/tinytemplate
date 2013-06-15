@@ -376,14 +376,13 @@ public class TestConditionals {
 		TinyTemplate tt = new TinyTemplate(
 				"dog = [[" +
 				"$if(bark)  \t \n" +
-				"Woof!\n" +
-				"$endif" +
+				"Woof!$endif" +
 				"]]");
 		SimpleContext tc = new SimpleContext(tt, new Object());
 
 		tc.bind("bark", "true");
 
-		assertEquals("Woof!" + NL, tc.expand("dog"));
+		assertEquals("Woof!", tc.expand("dog"));
 	}
 
 	/**
@@ -435,7 +434,7 @@ public class TestConditionals {
 	}
 
 	/**
-	 * Trim trailing empty line if there is nothing after the <code>endif</code>
+	 * Trim last trailing empty line inside conditional
 	 * @throws SyntaxError
 	 */
 	@Test
@@ -448,11 +447,11 @@ public class TestConditionals {
 
 		tc.bind("bark", "true");
 
-		assertEquals(" Woof!" + NL, tc.expand("dog"));
+		assertEquals(" Woof!", tc.expand("dog"));
 	}
 
 	/**
-	 * Trim empty trailing line if the <code>else</code> is on it's own line
+	 * Trim last trailing empty line inside conditional
 	 * @throws SyntaxError
 	 */
 	@Test

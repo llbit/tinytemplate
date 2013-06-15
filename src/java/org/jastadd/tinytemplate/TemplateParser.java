@@ -33,10 +33,10 @@ import java.util.LinkedList;
 
 import org.jastadd.io.LookaheadReader;
 import org.jastadd.tinytemplate.fragment.AttributeReference;
-import org.jastadd.tinytemplate.fragment.ConcatStmt;
+import org.jastadd.tinytemplate.fragment.Concat;
+import org.jastadd.tinytemplate.fragment.Conditional;
 import org.jastadd.tinytemplate.fragment.EmptyFragment;
 import org.jastadd.tinytemplate.fragment.Fragment;
-import org.jastadd.tinytemplate.fragment.IfStmt;
 import org.jastadd.tinytemplate.fragment.IncludeStmt;
 import org.jastadd.tinytemplate.fragment.NewlineFragment;
 import org.jastadd.tinytemplate.fragment.StringFragment;
@@ -272,7 +272,7 @@ public class TemplateParser {
 				template.addIndentation(include);
 				return include;
 			} else if (isKeyword("cat")) {
-				ConcatStmt cat = parseConcatStmt();
+				Concat cat = parseConcatStmt();
 				template.addIndentation(cat);
 				return cat;
 			} else if (isVariable()) {
@@ -321,22 +321,24 @@ public class TemplateParser {
 		return true;
 	}
 
-	private IfStmt parseIfStmt() throws IOException, SyntaxError {
+	private Conditional parseIfStmt() throws IOException, SyntaxError {
 		// consume '$if'
 		in.consume(3);
 		String condition = parseCondition();
 		Template thenPart = new Template();
-		Template elsePart = null;
+		Template elsePart = new Template();
 		Template part = thenPart;
 
 		boolean newLine = true;
+		boolean haveElse = false;
 		while (true) {
 			Fragment nextFragment = nextFragment(part, newLine);
 			if (!nextFragment.isEmpty()) {
 				if (nextFragment.isKeyword("else")) {
-					if (elsePart != null)
+					if (haveElse) {
 						throw new SyntaxError(line, "too many $else");
-					elsePart = new Template();
+					}
+					haveElse = true;
 					part = elsePart;
 				} else if (nextFragment.isKeyword("endif")) {
 					break;
@@ -350,12 +352,12 @@ public class TemplateParser {
 		}
 
 		thenPart.trim();
-		if (elsePart != null) elsePart.trim();
+		elsePart.trim();
 
-		return new IfStmt(condition, thenPart, elsePart);
+		return new Conditional(condition, thenPart, elsePart);
 	}
 
-	private ConcatStmt parseConcatStmt() throws IOException, SyntaxError {
+	private Concat parseConcatStmt() throws IOException, SyntaxError {
 		in.consume(4);
 		skipWhitespace();
 		if (in.peek(0) != '(') {
@@ -375,7 +377,7 @@ public class TemplateParser {
 			}
 
 			accept(')');
-			return new ConcatStmt(iterable, sep);
+			return new Concat(iterable, sep);
 		}
 	}
 
