@@ -237,7 +237,7 @@ public class Template {
 	private List<Fragment> trimLine(List<Fragment> line, boolean trimmable) {
 		List<Fragment> tmp = new ArrayList<Fragment>(lines.size());
 		for (Fragment frag: line) {
-			if (!trimmable || !frag.isWhitespace()) {
+			if (!trimmable || !frag.isWhitespace() || frag.isNewline()) {
 				tmp.add(frag);
 			}
 		}

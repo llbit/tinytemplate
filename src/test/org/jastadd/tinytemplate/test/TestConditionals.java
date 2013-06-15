@@ -398,7 +398,7 @@ public class TestConditionals {
 
 		tc.bind("bark", "true");
 
-		assertEquals("Woof!", tc.expand("dog"));
+		assertEquals("Woof!" + NL, tc.expand("dog"));
 	}
 
 	/**
@@ -469,6 +469,26 @@ public class TestConditionals {
 
 		tc.bind("bark", false);
 		assertEquals(" Notwoof  ", tc.expand("dog"));
+	}
+
+	/**
+	 * Trim last trailing empty line inside conditional
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testTrimming_7() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"t = [[a\n" +
+				"$if(x)\n" +
+				" x\n" +
+				"  $endif\n" +
+				"b]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
+
+		tc.bind("x", true);
+		assertEquals("a" + NL +
+				" x" + NL +
+				"b", tc.expand("t"));
 	}
 
 }
