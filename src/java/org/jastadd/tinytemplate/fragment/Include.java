@@ -33,14 +33,14 @@ import org.jastadd.tinytemplate.TemplateContext;
 /**
  * @author Jesper Öqvist <jesper@llbit.se>
  */
-public class IncludeStmt extends NestedIndentationFragment {
+public class Include extends NestedIndentationFragment {
 
 	private final String template;
 
 	/**
 	 * @param templateName
 	 */
-	public IncludeStmt(String templateName) {
+	public Include(String templateName) {
 		this.template = templateName;
 	}
 

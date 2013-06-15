@@ -37,7 +37,7 @@ import org.jastadd.tinytemplate.fragment.Concat;
 import org.jastadd.tinytemplate.fragment.Conditional;
 import org.jastadd.tinytemplate.fragment.EmptyFragment;
 import org.jastadd.tinytemplate.fragment.Fragment;
-import org.jastadd.tinytemplate.fragment.IncludeStmt;
+import org.jastadd.tinytemplate.fragment.Include;
 import org.jastadd.tinytemplate.fragment.NewlineFragment;
 import org.jastadd.tinytemplate.fragment.StringFragment;
 import org.jastadd.tinytemplate.fragment.VariableReference;
@@ -268,7 +268,7 @@ public class TemplateParser {
 			if (isKeyword("if")) {
 				return parseIfStmt();
 			} else if (isKeyword("include")) {
-				IncludeStmt include = parseIncludeStmt();
+				Include include = parseIncludeStmt();
 				template.addIndentation(include);
 				return include;
 			} else if (isKeyword("cat")) {
@@ -395,7 +395,7 @@ public class TemplateParser {
 		throw new SyntaxError(line, "wanted: " + Arrays.toString(cs) + ", got: " + (char) in.peek(0));
 	}
 
-	private IncludeStmt parseIncludeStmt() throws IOException, SyntaxError {
+	private Include parseIncludeStmt() throws IOException, SyntaxError {
 		// consume '$include'
 		in.consume(8);
 		skipWhitespace();
@@ -403,7 +403,7 @@ public class TemplateParser {
 			throw new SyntaxError(line, "missing template name");
 		} else {
 			String template = parseParenthesizedReference().trim();
-			return new IncludeStmt(template);
+			return new Include(template);
 		}
 	}
 
