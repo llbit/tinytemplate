@@ -506,12 +506,16 @@ public class TemplateParser {
 
 	private boolean isVariable() throws IOException {
 		// double dollar sign is an escape for single dollar sign
-		return in.peek(0) == '$' && in.peek(1) != '$';
+		return in.peek(0) == '$' && !isEscapable(in.peek(1));
 	}
 
 	private boolean isAttribute() throws IOException {
 		// double hash is an escape for single hash
 		return in.peek(0) == '#' && in.peek(1) != '#';
+	}
+
+	private boolean isEscapable(int chr) {
+		return chr == '$' || chr == ']';
 	}
 
 	/**

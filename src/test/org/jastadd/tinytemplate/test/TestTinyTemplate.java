@@ -103,6 +103,7 @@ public class TestTinyTemplate {
 	public void testBrackets_6() {
 		try {
 			new TinyTemplate("x = [[ ]] ]]");
+			fail("Expected syntax error!");
 		} catch (SyntaxError e) {
 			assertEquals("Syntax error at line 1: found bracket outside template body: ']'",
 					e.getMessage());
@@ -110,11 +111,22 @@ public class TestTinyTemplate {
 	}
 
 	/**
-	 * There can be extra closing brackets at the very end of the template body.
+	 * A dollar sign can be used to escape a closing bracket inside
+	 * the template body.
 	 * @throws SyntaxError
 	 */
 	@Test
 	public void testBrackets_7() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("x = [[ $] ]$] ]]");
+		assertEquals(" ] ]] ", tt.expand("x"));
+	}
+
+	/**
+	 * There can be extra closing brackets at the very end of the template body.
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testBrackets_8() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("test [[anArray[]]]");
 
 		assertEquals("anArray[]", tt.expand("test"));
