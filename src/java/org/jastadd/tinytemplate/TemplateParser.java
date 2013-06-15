@@ -245,11 +245,13 @@ public class TemplateParser {
 		return template;
 	}
 
-	private Fragment nextFragment(Template template, boolean newLine) throws IOException, SyntaxError {
+	private Fragment nextFragment(Template template, boolean newLine)
+			throws IOException, SyntaxError {
 
 		while (true) {
 			if (isEOF()) {
-				throw new SyntaxError(line, "unexpected end of file while parsing template body");
+				throw new SyntaxError(line,
+						"unexpected end of file while parsing template body");
 			}
 
 			if (newLine) {
