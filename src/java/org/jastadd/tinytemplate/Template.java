@@ -100,13 +100,22 @@ public class Template {
 		}
 	}
 
-	private void expandLine(TemplateContext context, List<Fragment> line, StringBuilder buf) {
+	/**
+	 * Expand a single template line
+	 * @param context
+	 * @param line
+	 * @param buf
+	 */
+	private void expandLine(TemplateContext context, List<Fragment> line,
+			StringBuilder buf) {
+
 		buf.setLength(0);
 		boolean expanded = false;
 		for (Fragment fragment : line) {
 			expanded |= fragment.isExpansion();
 			fragment.expand(context, buf);
 		}
+		// non-empty lines that become empty after expansion are deleted
 		if (expanded && isEmptyLine(buf)) {
 			buf.setLength(0);
 		}
