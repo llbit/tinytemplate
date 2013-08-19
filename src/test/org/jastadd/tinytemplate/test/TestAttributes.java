@@ -11,7 +11,7 @@
  *     * Neither the name of the <organization> nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -37,7 +37,7 @@ import org.junit.Test;
  * @author Jesper Öqvist <jesper.oqvist@cs.lth.se>
  */
 public class TestAttributes {
-	
+
 	/**
 	 * Set up the tests
 	 */
@@ -45,7 +45,7 @@ public class TestAttributes {
 		TinyTemplate.printWarnings(false);
 		TinyTemplate.throwExceptions(false);
 	}
-	
+
 	/**
 	 * Attribute evaluation calls the attribute method on the context object
 	 * @throws SyntaxError
@@ -54,10 +54,10 @@ public class TestAttributes {
 	public void testEvaluation_1() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("foo = [[#toString]]");
 		SimpleContext tc = new SimpleContext(tt, "the string");
-		
+
 		assertEquals("the string", tc.expand("foo"));
 	}
-	
+
 	/**
 	 * Attempting to evaluate an attribute on an object with no such method
 	 * @throws SyntaxError
@@ -66,10 +66,10 @@ public class TestAttributes {
 	public void testEvaluation_2() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("foo = [[#imaginaryMethod]]");
 		SimpleContext tc = new SimpleContext(tt, "the string");
-		
+
 		assertEquals("<failed to eval attribute 'imaginaryMethod'; reason: no such method>", tc.expand("foo"));
 	}
-	
+
 	/**
 	 * Attempting to evaluate attribute without context
 	 * @throws SyntaxError
@@ -77,10 +77,10 @@ public class TestAttributes {
 	@Test
 	public void testEvaluation_3() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("foo = [[#imaginaryMethod]]");
-		
+
 		assertEquals("<failed to eval imaginaryMethod; reason: no context>", tt.expand("foo"));
 	}
-	
+
 	/**
 	 * Empty attribute names are not allowed
 	 * @throws SyntaxError
@@ -94,7 +94,7 @@ public class TestAttributes {
 			assertEquals("Syntax error at line 1: empty attribute name", e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Attribute names must be valid Java identifiers
 	 * @throws SyntaxError
@@ -108,5 +108,19 @@ public class TestAttributes {
 			assertEquals("Syntax error at line 1: the attribute name '0x' is not a valid Java identifier", e.getMessage());
 		}
 	}
-	
+
+	/**
+	 * Test trimming empty lines with an expanded empty attribute
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testTrimming_1() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate("t[[\n" +
+				"  #toString\n" +
+				"  #toString  " +
+				"]]");
+		SimpleContext tc = new SimpleContext(tt, "");
+
+		assertEquals("", tc.expand("t"));
+	}
 }
