@@ -17,7 +17,7 @@
 \usepackage[scaled]{helvet}
 \usepackage[scaled]{beramono}
 
-\title[tinytemplate]{A tiny template engine}
+\title[tinytemplate]{tinytemplate}
 \author{Jesper Öqvist}
 \institute{Department of Computer Science\\
 Lund University}
@@ -33,93 +33,47 @@ Lund University}
 %\end{frame}
 
 \begin{frame}
-    \frametitle{Why Tiny Templates?}
+    \frametitle{Goals}
     \begin{itemize}
 
-        \item A template system should be as simple as possible
+        \item Simple syntax
 
-        \item Control statements make templates harder to read, edit, and test
+        \item A minimal feature set
 
-        \item If the template syntax is kept simple, the template
-            system will be easy to use
-
-    \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \frametitle{What we Need}
-    \begin{itemize}
-
-        \item Simple templates
-
-            \pause
-
-            \begin{itemize}
-                \item Only allow variable (and attribute) expansion in templates
-            \end{itemize}
-
-        \pause
+        \item Thorough test suite
 
         \item Intelligent indentation
 
             \pause
             \begin{itemize}
+
                 \item Customizable output indentation
-                \item Variable expansions are indented per line
+
+                \item Each line of an expanded string should be properly
+                    indented
+
             \end{itemize}
-
-        \pause
-
-        \item Multiple templates per template file (convenient)
 
     \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
-    \frametitle{Variable Expansion}
-
+\begin{frame}
+    \frametitle{Features}
     \begin{itemize}
-        \item Variable references have two forms:
-            \begin{itemize}
-                \item \verb'$varname'
-                \item \verb'$(varname)'
-            \end{itemize}
-        \item Variable names can include periods, but remember to use
-            parenthesis: \verb'$(var.name)'
-        \item Parenthesis are also needed when the reference
-            is in the middle of a word: \verb'$(var)_name'
+
+        \item Multiple templates per template file
+
+        \item Variable expansion
+
+        \item Attribute expansion
+
+        \item List concatenation
+
+        \item Conditional expansion
+
+        \item Subtemplate expansion
+
     \end{itemize}
-    
-\end{frame}
-
-\begin{frame}[fragile]
-    \frametitle{Context}
-
-    \begin{itemize}
-        \item All template expansions happen with a given \emph{context}
-        \item The context is an ordinary Java \verb'Object'
-        \item Use \verb'pushContext' and \verb'popContext' in the template
-            expanding Java code
-    \end{itemize}
-    
-\end{frame}
-
-\begin{frame}[fragile]
-    \frametitle{Attribute Expansion}
-
-    \begin{itemize}
-        \item A hash sign is used to reference an attribute:
-            \begin{itemize}
-                \item \verb'#name'
-                \item \verb'#(name)'
-            \end{itemize}
-        \item Attributes are Java methods invoked on the context object
-        \item The attribute method must take no arguments and have non-void
-            return type
-        \item The expansion of an attribute is equal to the return value
-            of the attribute method converted to a string
-    \end{itemize}
-    
 \end{frame}
 
 \begin{frame}[fragile]
@@ -143,21 +97,118 @@ Lund University}
 \end{frame}
 
 \begin{frame}[fragile]
+    \frametitle{Context}
+
+    \begin{itemize}
+        \item All template expansions happen with a \emph{context} object
+        \item The context is used to lookup variables and attributes
+        \item \verb'SimpleContext' is the standard context - it stores variables
+            in a map and evaluates attributes by invoking methods on an object
+    \end{itemize}
+    
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Variable Expansion}
+
+    \begin{itemize}
+        \item Variable references have two forms:
+            \begin{itemize}
+                \item \verb'$varname'
+                \item \verb'$(varname)'
+            \end{itemize}
+        \item Variable names can include periods, but remember to use
+            parenthesis: \verb'$(var.name)'
+        \item Parenthesis are also needed when the reference
+            is in the middle of a word: \verb'$(var)_name'
+        \item {\bf A Java identifier is parsed if no parenthesis are present.}
+    \end{itemize}
+    
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Attribute Expansion}
+
+    \begin{itemize}
+        \item A hash sign is used to reference an attribute:
+            \begin{itemize}
+                \item \verb'#name'
+                \item \verb'#(name)'
+            \end{itemize}
+        \item Attributes are Java methods invoked on the context object
+            (SimpleContext)
+        \item The attribute method must take no arguments and have non-void
+            return type
+        \item The expansion of an attribute is the return value of the
+            attribute method converted to a string
+    \end{itemize}
+    
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{List Concatenation}
+    \begin{itemize}
+        \item Concatenates a \verb'Iterable' list of objects using an optional
+            separator string
+        \item Examples (without \& with separator):
+            \begin{itemize}
+                \item \verb'$cat(#list)' \\
+                    Expands to ``123''
+                \item \verb'$cat(#list, ", ")' \\
+                    Expands to ``1, 2, 3''
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conditional Expansion}
+    \begin{itemize}
+        \item Examples (without \& with separator):
+            \begin{itemize}
+                \item \verb'$if(a) hello $endif' \\
+                    Expands to ``hello'' if
+                    the variable a expands to ``true''
+                \item \verb'$if(a) hello $else goodbye $endif' \\
+                    Expands to
+                    ``hello if a is ''true``, otherwise ''goodbye``
+                \item \verb'$if(#a) hello $endif' \\
+                    If the {\bf attribute} a
+                    evaluates to ''true`` the statement expands to ''hello``
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Subtemplate Expansion}
+    \begin{itemize}
+        \item Templates can be expanded inside each other (recursion will
+            result in a stack overflow!):
+            \begin{itemize}
+                \item \verb'$include(a)' \\
+                    Expands the template named ``a'' in the current template.
+                    Indentation works as expected -- if the statement is
+                    indented the expansion will be indented the same additional
+                    amount.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
     \frametitle{JastAdd Integration}
 
     \begin{verbatim}
-        // Test.jrag
+        // Test.jrag:
         syn String A.name() = "myName";
 
-        // Test.java
-        tt.pushContext(new A());
-        tt.expand("my.template", out);
-        tt.popContext();
+        // Test.java:
+        tt = templateFromFile("Test.tt");
+        context = new SimpleContext(tt, new A());
+        context.expand("my.template", out);
 
-        // Test.tt
+        // Test.tt:
         my.template = [[public String #name;]]
 
-        // out
+        // output:
         public String myName;
     \end{verbatim}
 \end{frame}
