@@ -78,6 +78,7 @@ public abstract class TemplateContext {
 	final public void expand(String templateName, OutputStream out) {
 		PrintStream ps = new PrintStream(new BufferedOutputStream(out));
 		expand(templateName, ps);
+		ps.close();
 	}
 
 	/**
