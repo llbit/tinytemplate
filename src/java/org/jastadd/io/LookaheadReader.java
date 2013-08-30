@@ -41,7 +41,7 @@ public class LookaheadReader extends FilterReader {
 	 */
 	private final int lookahead;
 
-	private char[] buffer = new char[BUFF_SIZE];
+	private final char[] buffer = new char[BUFF_SIZE];
 
 	/**
 	 * Current position in the read buffer
@@ -87,6 +87,19 @@ public class LookaheadReader extends FilterReader {
 	public long skip(long num) {
 		pos += num;
 		return num;
+	}
+
+	/**
+	 * @return The next character, or -1 if the next character
+	 * is past the end of the input stream
+	 * @throws IOException
+	 */
+	public int peek() throws IOException {
+		refill();
+		if (pos < length)
+			return buffer[pos];
+		else
+			return -1;
 	}
 
 	/**

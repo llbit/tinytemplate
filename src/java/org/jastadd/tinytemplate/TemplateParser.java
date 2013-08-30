@@ -87,7 +87,7 @@ public class TemplateParser {
 	 */
 	public void parse() throws SyntaxError {
 		try {
-			while (in.peek(0) != -1) {
+			while (in.peek() != -1) {
 				parseTemplates();
 			}
 		} catch (IOException e) {
@@ -129,10 +129,10 @@ public class TemplateParser {
 					templates.addTemplate(name, template);
 				}
 				names.clear();
-			} else if (in.peek(0) == '[' || in.peek(0) == ']') {
+			} else if (in.peek() == '[' || in.peek() == ']') {
 				throw new SyntaxError(line,
 						"found bracket outside template body: '"
-						+ ((char) in.peek(0)) + "'");
+						+ ((char) in.peek()) + "'");
 			} else {
 				names.add(nextName());
 			}
@@ -158,31 +158,31 @@ public class TemplateParser {
 	}
 
 	private boolean isTemplateStart() throws IOException, SyntaxError {
-		return in.peek(0) == '[' && in.peek(1) == '[';
+		return in.peek() == '[' && in.peek(1) == '[';
 	}
 
 	private boolean isIndentation() throws IOException {
-		return in.peek(0) == ' ' && in.peek(1) == ' ';
+		return in.peek() == ' ' && in.peek(1) == ' ';
 	}
 
 	private boolean isTemplateEnd() throws IOException {
-		return in.peek(0) == ']' && in.peek(1) == ']' && in.peek(2) != ']';
+		return in.peek() == ']' && in.peek(1) == ']' && in.peek(2) != ']';
 	}
 
 	private boolean isAssign() throws IOException {
-		return in.peek(0) == '=';
+		return in.peek() == '=';
 	}
 
 	private boolean isLineComment() throws IOException {
-		return in.peek(0) == '#';
+		return in.peek() == '#';
 	}
 
 	private boolean isWhitespace() throws IOException {
-		return Character.isWhitespace(in.peek(0)) && !isNewline();
+		return Character.isWhitespace(in.peek()) && !isNewline();
 	}
 
 	private boolean isNewline() throws IOException {
-		return isNewline(in.peek(0));
+		return isNewline(in.peek());
 	}
 
 	private boolean isNewline(int ch) throws IOException {
@@ -190,14 +190,14 @@ public class TemplateParser {
 	}
 
 	private boolean isEOF() throws IOException {
-		return in.peek(0) == -1;
+		return in.peek() == -1;
 	}
 
 	private void skipNewline() throws IOException {
-		if (in.peek(0) == '\\') {
+		if (in.peek() == '\\') {
 			in.pop();
 		}
-		if (in.peek(0) == '\r') {
+		if (in.peek() == '\r') {
 			if (in.peek(1) == '\n') {
 				in.pop();
 			}
@@ -310,7 +310,7 @@ public class TemplateParser {
 	 * @throws IOException
 	 */
 	private boolean isKeyword(String keyword) throws IOException {
-		if (in.peek(0) != '$' && in.peek(0) != '#') {
+		if (in.peek() != '$' && in.peek() != '#') {
 			return false;
 		}
 		for (int i = 0; i < keyword.length(); ++i) {
@@ -360,7 +360,7 @@ public class TemplateParser {
 	private Concat parseConcatStmt() throws IOException, SyntaxError {
 		in.consume(4);
 		skipWhitespace();
-		if (in.peek(0) != '(') {
+		if (in.peek() != '(') {
 			throw new SyntaxError(line, "missing cat parameters");
 		} else {
 			in.pop();
@@ -370,7 +370,7 @@ public class TemplateParser {
 			skipWhitespace();
 
 			String sep = "";
-			if (in.peek(0) == ',') {
+			if (in.peek() == ',') {
 				in.pop();
 				skipWhitespace();
 				sep = parseStringLiteral();
@@ -387,19 +387,19 @@ public class TemplateParser {
 
 	private char acceptAlternatives(char ...cs) throws IOException, SyntaxError {
 		for (char c: cs) {
-			if (in.peek(0) == c) {
+			if (in.peek() == c) {
 				in.pop();
 				return c;
 			}
 		}
-		throw new SyntaxError(line, "wanted: " + Arrays.toString(cs) + ", got: " + (char) in.peek(0));
+		throw new SyntaxError(line, "wanted: " + Arrays.toString(cs) + ", got: " + (char) in.peek());
 	}
 
 	private Include parseIncludeStmt() throws IOException, SyntaxError {
 		// consume '$include'
 		in.consume(8);
 		skipWhitespace();
-		if (in.peek(0) != '(') {
+		if (in.peek() != '(') {
 			throw new SyntaxError(line, "missing template name");
 		} else {
 			String template = parseParenthesizedReference().trim();
@@ -410,7 +410,7 @@ public class TemplateParser {
 	private String parseCondition() throws IOException, SyntaxError {
 		skipWhitespace();
 
-		if (in.peek(0) != '(') {
+		if (in.peek() != '(') {
 			throw new SyntaxError(line, "missing if condition");
 		} else {
 			return parseParenthesizedReference().trim();
@@ -423,7 +423,7 @@ public class TemplateParser {
 
 		boolean escaped = false;
 		while (!isStringLiteralEnd(escaped)) {
-			escaped = in.peek(0) == '\\' && in.peek(1) == '"';
+			escaped = in.peek() == '\\' && in.peek(1) == '"';
 			sb.append((char) in.pop());
 		}
 
@@ -432,7 +432,7 @@ public class TemplateParser {
 	}
 
 	private boolean isStringLiteralEnd(boolean escaped) throws IOException {
-		return isEOF() || (in.peek(0) == '\"' && !escaped);
+		return isEOF() || (in.peek() == '\"' && !escaped);
 	}
 
 	private String nextString() throws IOException, SyntaxError {
@@ -440,7 +440,7 @@ public class TemplateParser {
 		while ( !(isEOF() || isVariable() || isAttribute() || isNewline() ||
 				isTemplateEnd()) ) {
 
-			if (in.peek(0) == '#' || in.peek(0) == '$') {
+			if (in.peek() == '#' || in.peek() == '$') {
 				// it's cool - the # or $ was escaped!
 				// isAttribute() or isVariable() would have been true if not
 				in.pop();
@@ -455,7 +455,7 @@ public class TemplateParser {
 		// skip the # or $
 		in.pop();
 
-		if (in.peek(0) == '(') {
+		if (in.peek() == '(') {
 			return parseParenthesizedReference();
 		} else {
 			return parseSimpleReference();
@@ -472,13 +472,13 @@ public class TemplateParser {
 
 	private boolean isSimpleReferenceEnd() throws IOException {
 		return isEOF()
-				|| in.peek(0) == '$'
-				|| !Character.isJavaIdentifierPart(in.peek(0));
+				|| in.peek() == '$'
+				|| !Character.isJavaIdentifierPart(in.peek());
 	}
 
 	private boolean isParenthesizedReferenceEnd() throws IOException {
 		return isEOF() || isNewline() ||
-				in.peek(0) == '[' || in.peek(0) == ']';
+				in.peek() == '[' || in.peek() == ']';
 	}
 
 	private String parseParenthesizedReference() throws IOException, SyntaxError {
@@ -510,12 +510,12 @@ public class TemplateParser {
 
 	private boolean isVariable() throws IOException {
 		// double dollar sign is an escape for single dollar sign
-		return in.peek(0) == '$' && !isEscapable(in.peek(1));
+		return in.peek() == '$' && !isEscapable(in.peek(1));
 	}
 
 	private boolean isAttribute() throws IOException {
 		// double hash is an escape for single hash
-		return in.peek(0) == '#' && in.peek(1) != '#';
+		return in.peek() == '#' && in.peek(1) != '#';
 	}
 
 	private boolean isEscapable(int chr) {
