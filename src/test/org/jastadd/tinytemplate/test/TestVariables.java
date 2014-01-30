@@ -11,7 +11,7 @@
  *     * Neither the name of the <organization> nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -37,7 +37,7 @@ import org.junit.Test;
  * @author Jesper Öqvist <jesper.oqvist@cs.lth.se>
  */
 public class TestVariables {
-	
+
 	/**
 	 * Set up the tests
 	 */
@@ -45,7 +45,7 @@ public class TestVariables {
 		TinyTemplate.printWarnings(false);
 		TinyTemplate.throwExceptions(false);
 	}
-	
+
 	/**
 	 * Can not bind variable on root context
 	 */
@@ -54,7 +54,7 @@ public class TestVariables {
 		TinyTemplate tt = new TinyTemplate();
 		tt.bind("x", "");
 	}
-	
+
 	/**
 	 * Can not bind variable on root context
 	 */
@@ -63,7 +63,7 @@ public class TestVariables {
 		TinyTemplate tt = new TinyTemplate();
 		tt.bind("x", true);
 	}
-	
+
 	/**
 	 * Tests variable shadowing in subcontext
 	 * @throws SyntaxError
@@ -73,14 +73,14 @@ public class TestVariables {
 		TinyTemplate tt = new TinyTemplate("a[[$x]]");
 		SimpleContext c0 = new SimpleContext(tt, new Object());
 		SimpleContext c1 = new SimpleContext(c0, new Object());
-		
+
 		c0.bind("x", "123");
 		c1.bind("x", "UIO");
-		
+
 		assertEquals("UIO", c1.expand("a"));
 		assertEquals("123", c0.expand("a"));
 	}
-	
+
 	/**
 	 * Line endings in variable expansions are preserved as-is if the
 	 * expansion is not indented
@@ -96,14 +96,14 @@ public class TestVariables {
 				"  hello\r" +
 				"  you\r\n" +
 				"}");
-				
+
 		assertEquals(
 				"{\n" +
 				"  hello\r" +
 				"  you\r\n" +
 				"}", tc.expand("foo"));
 	}
-	
+
 	/**
 	 * Line endings in variable expansions are replaced by the current
 	 * system's default line ending when the expansion is indented
@@ -119,7 +119,7 @@ public class TestVariables {
 				"  hello\r" +
 				"  you\r\n" +
 				"}");
-				
+
 		String nl = System.getProperty("line.separator");
 		assertEquals(
 				"  x{" + nl +
@@ -127,7 +127,7 @@ public class TestVariables {
 				"    you" + nl +
 				"  }", tc.expand("foo"));
 	}
-	
+
 	/**
 	 * Simple variable names can contain any valid Java identifier character
 	 * except the dollar sign.
@@ -137,11 +137,11 @@ public class TestVariables {
 	public void testName_1() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("foo = [[$8_wat]]");
 		SimpleContext tc = new SimpleContext(tt, new Object());
-		
+
 		tc.bind("8_wat", "batman");
 		assertEquals("batman", tc.expand("foo"));
 	}
-	
+
 	/**
 	 * Non-parenthesized variable names can not contain a dollar sign
 	 * @throws SyntaxError
@@ -150,13 +150,13 @@ public class TestVariables {
 	public void testName_2() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("test = [[$hello$you]]");
 		SimpleContext tc = new SimpleContext(tt, new Object());
-		
+
 		tc.bind("hello", "hej");
 		tc.bind("you", " du");
 		assertEquals("Non-parenthesized variable names can not contain a dollar sign",
 				"hej du", tc.expand("test"));
 	}
-	
+
 	/**
 	 * Parenthesized variable names can contain many different special characters
 	 * @throws SyntaxError
@@ -170,7 +170,7 @@ public class TestVariables {
 			assertEquals("Syntax error at line 1: illegal characters in variable name ':;^(xyz)'", e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Parenthesized variable names can contain many different special characters
 	 * @throws SyntaxError
@@ -185,7 +185,7 @@ public class TestVariables {
 			assertEquals("Syntax error at line 1: illegal characters in variable name '%!&*$#'", e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Parenthesis are not allowed in a variable name
 	 * @throws SyntaxError
@@ -199,7 +199,7 @@ public class TestVariables {
 			assertEquals("Syntax error at line 1: illegal characters in variable name 'abc(xyz)'", e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Parenthesis after the start of a variable name are not part of
 	 * the variable name
@@ -212,7 +212,7 @@ public class TestVariables {
 		tc.bind("abc", "moo");
 		assertEquals("moo()", tc.expand("foo"));
 	}
-	
+
 	/**
 	 * Empty variable names are not allowed
 	 * @throws SyntaxError
@@ -226,7 +226,7 @@ public class TestVariables {
 			assertEquals("Syntax error at line 1: empty variable name", e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * All left parenthesis in variable names must be matched
 	 * @throws SyntaxError
@@ -240,7 +240,7 @@ public class TestVariables {
 			assertEquals("Syntax error at line 1: missing right parenthesis", e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Whitespace is not allowed in a variable name
 	 * @throws SyntaxError
@@ -254,7 +254,7 @@ public class TestVariables {
 			assertEquals("Syntax error at line 1: illegal characters in variable name 'abc\txyz'", e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Whitespace is not allowed in a variable name
 	 * @throws SyntaxError
@@ -268,7 +268,7 @@ public class TestVariables {
 			assertEquals("Syntax error at line 1: illegal characters in variable name 'abc xyz'", e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Remove empty lines after expansion if they contained a non-whitespace
 	 * fragment before expansion
@@ -282,13 +282,13 @@ public class TestVariables {
 				" again\n" +
 				"\t$name]]");
 		SimpleContext tc = new SimpleContext(tt, new Object());
-		
+
 		tc.bind("hello", "");
 		tc.bind("name", "  ");
 		String nl = System.getProperty("line.separator");
 		assertEquals(" again" + nl, tc.expand("message"));
 	}
-	
+
 	/**
 	 * Tests a template variable
 	 * @throws SyntaxError
@@ -297,11 +297,11 @@ public class TestVariables {
 	public void testVariable_1() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("test = [[$hello]]");
 		SimpleContext tc = new SimpleContext(tt, new Object());
-		
+
 		tc.bind("hello", "hej");
 		assertEquals("hej", tc.expand("test"));
 	}
-	
+
 	/**
 	 * Tests an unbound variable
 	 * @throws SyntaxError
@@ -309,10 +309,10 @@ public class TestVariables {
 	@Test
 	public void testVariable_2() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("test = [[x $hello y]]");
-		
-		assertEquals("x <unbound variable hello> y", tt.expand("test"));
+
+		assertEquals("x <unbound variable 'hello'> y", tt.expand("test"));
 	}
-	
+
 	/**
 	 * Double dollar signs escape to a single dollar sign
 	 * @throws SyntaxError
@@ -320,8 +320,8 @@ public class TestVariables {
 	@Test
 	public void testVariable_3() throws SyntaxError {
 		TinyTemplate tt = new TinyTemplate("test = [[ $$ not a variable ]]");
-		
+
 		assertEquals(" $ not a variable ", tt.expand("test"));
 	}
-	
+
 }

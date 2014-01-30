@@ -1,4 +1,4 @@
-/* Copyright (c) 2013, Jesper Öqvist <jesper@cs.lth.se>
+/* Copyright (c) 2013-2014, Jesper Öqvist <jesper@cs.lth.se>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -11,7 +11,7 @@
  *     * Neither the name of the <organization> nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -37,7 +37,7 @@ import org.junit.Test;
  * @author Jesper Öqvist <jesper.oqvist@cs.lth.se>
  */
 public class TestWarnings {
-	
+
 	/**
 	 * Constructor
 	 */
@@ -45,7 +45,7 @@ public class TestWarnings {
 		TinyTemplate.printWarnings(false);
 		TinyTemplate.throwExceptions(true);
 	}
-	
+
 	/**
 	 * Tests expanding an undefined template
 	 * @throws SyntaxError
@@ -59,5 +59,19 @@ public class TestWarnings {
 			assertEquals("Template expansion warning: unknown template 'test'", e.getMessage());
 		}
 	}
-	
+
+	/**
+	 * Tests expanding an unbound variable
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testUnboundVariable() throws SyntaxError {
+		try {
+			new TinyTemplate("test[[$a]]").expand("test");
+			fail("Expected template expansion warning!");
+		} catch (TemplateExpansionWarning e) {
+			assertEquals("Template expansion warning: unbound variable 'a'", e.getMessage());
+		}
+	}
+
 }

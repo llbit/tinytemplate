@@ -159,7 +159,7 @@ public class TinyTemplate extends TemplateContext {
 
 	@Override
 	public Object evalVariable(String varName) {
-		String msg = "unbound variable " + varName;
+		String msg = "unbound variable '" + varName + "'";
 		return expansionWarning(msg);
 	}
 
