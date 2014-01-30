@@ -65,12 +65,33 @@ public class TestWarnings {
 	 * @throws SyntaxError
 	 */
 	@Test
-	public void testUnboundVariable() throws SyntaxError {
+	public void testUnboundVariable_1() throws SyntaxError {
 		try {
 			new TinyTemplate("test[[$a]]").expand("test");
 			fail("Expected template expansion warning!");
 		} catch (TemplateExpansionWarning e) {
-			assertEquals("Template expansion warning: unbound variable 'a'", e.getMessage());
+			assertEquals("Template expansion warning: " +
+				"while expanding template 'test': " +
+				"unbound variable 'a'",
+				e.getMessage());
+		}
+	}
+
+	/**
+	 * Tests expanding an unbound variable
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testUnboundVariable_2() throws SyntaxError {
+		try {
+			new TinyTemplate("test1[[$include(test2)]]test2[[$a]]").expand("test1");
+			fail("Expected template expansion warning!");
+		} catch (TemplateExpansionWarning e) {
+			assertEquals("Template expansion warning: " +
+				"while expanding template 'test1': " +
+				"while expanding template 'test2': " +
+				"unbound variable 'a'",
+				e.getMessage());
 		}
 	}
 

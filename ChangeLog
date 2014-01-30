@@ -1,5 +1,6 @@
 1.2 - TBD
 
+    * Template expansion warnings now include a trace of nested templates
     * Trailing empty line is removed from conditional blocks
     * Trailing closing brackets are now allowed in templates
     * Added concatenation statement ($cat)

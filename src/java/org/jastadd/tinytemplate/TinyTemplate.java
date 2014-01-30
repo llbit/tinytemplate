@@ -101,7 +101,11 @@ public class TinyTemplate extends TemplateContext {
 	public void expand(TemplateContext tc, String templateName, PrintStream out) {
 		Template temp = lookupTemplate(templateName);
 		if (temp != null) {
-			temp.expand(tc, out);
+			try {
+				temp.expand(tc, out);
+			} catch (TemplateExpansionWarning e) {
+				templateExpansionProblem(templateName, e);
+			}
 		}
 	}
 
@@ -109,7 +113,11 @@ public class TinyTemplate extends TemplateContext {
 	public void expand(TemplateContext tc, String templateName, PrintWriter out) {
 		Template temp = lookupTemplate(templateName);
 		if (temp != null) {
-			temp.expand(tc, out);
+			try {
+				temp.expand(tc, out);
+			} catch (TemplateExpansionWarning e) {
+				templateExpansionProblem(templateName, e);
+			}
 		}
 	}
 
@@ -117,7 +125,11 @@ public class TinyTemplate extends TemplateContext {
 	public void expand(TemplateContext tc, String templateName, StringBuffer out) {
 		Template temp = lookupTemplate(templateName);
 		if (temp != null) {
-			temp.expand(tc, out);
+			try {
+				temp.expand(tc, out);
+			} catch (TemplateExpansionWarning e) {
+				templateExpansionProblem(templateName, e);
+			}
 		}
 	}
 
@@ -125,8 +137,18 @@ public class TinyTemplate extends TemplateContext {
 	public void expand(TemplateContext tc, String templateName, StringBuilder out) {
 		Template temp = lookupTemplate(templateName);
 		if (temp != null) {
-			temp.expand(tc, out);
+			try {
+				temp.expand(tc, out);
+			} catch (TemplateExpansionWarning e) {
+				templateExpansionProblem(templateName, e);
+			}
 		}
+	}
+
+	private static void templateExpansionProblem(String template,
+			TemplateExpansionWarning e) {
+		throw new TemplateExpansionWarning("while expanding template '"
+			+ template + "': " + e.getProblem());
 	}
 
 	/**
