@@ -27,9 +27,11 @@ package org.jastadd.tinytemplate.test;
 
 import static org.junit.Assert.*;
 
+import org.jastadd.tinytemplate.SimpleContext;
 import org.jastadd.tinytemplate.TemplateExpansionWarning;
 import org.jastadd.tinytemplate.TinyTemplate;
 import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
+import org.jastadd.tinytemplate.test.mock.MThrowsRuntimeException;
 import org.junit.Test;
 
 /**
@@ -95,4 +97,23 @@ public class TestWarnings {
 		}
 	}
 
+	/**
+	 * Tests expanding an unbound variable
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testInvocationTargetException_1() throws SyntaxError {
+		try {
+			TinyTemplate tt = new TinyTemplate("test[[#m]]");
+			SimpleContext tc = new SimpleContext(tt, new MThrowsRuntimeException());
+			tc.expand("test");
+			fail("Expected template expansion warning!");
+		} catch (TemplateExpansionWarning e) {
+			assertEquals("Template expansion warning: " +
+				"while expanding template 'test': " +
+				"failed to eval attribute 'm'; reason: " +
+				"invocation target exception (org.jastadd.tinytemplate.test.mock.MThrowsRuntimeException.m())",
+				e.getMessage());
+		}
+	}
 }
