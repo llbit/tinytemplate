@@ -59,8 +59,10 @@ public class Concat extends NestedIndentationFragment {
 		if (iterable.startsWith("#")) {
 			this.iterable = iterable.substring(1);
 			isAttribute = true;
-		} else if (iterable.startsWith("$")) {
-			this.iterable = iterable.substring(1);
+		} else {
+			if (iterable.startsWith("$")) {
+				this.iterable = iterable.substring(1);
+			}
 			isAttribute = false;
 		}
 		if (separator == null) {

@@ -2,6 +2,7 @@
 
     * The concatenation statement now allows variables (of iterable type) as
     first parameter
+    * The first argument in a cat statement is implicitly a variable
 
 1.2 - 2014-01-31
 

@@ -146,6 +146,10 @@ public class TemplateParser {
 		}
 	}
 
+	/**
+	 * Skips non-newline whitespace
+	 * @throws IOException
+	 */
 	private void skipWhitespace() throws IOException {
 		while (isWhitespace()) {
 			in.pop();
@@ -365,8 +369,17 @@ public class TemplateParser {
 		} else {
 			in.pop();
 			skipWhitespace();
-			char c = acceptAlternatives('$', '#');
-			String iterable = c + parseSimpleReference().trim();
+			String iterable;
+			if (in.peek() == '#') {
+				in.pop();
+				iterable = "#";
+			} else {
+				if (in.peek() == '$') {
+					in.pop();
+				}
+				iterable = "$";
+			}
+			iterable += parseSimpleReference();
 
 			skipWhitespace();
 

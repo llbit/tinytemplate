@@ -160,13 +160,22 @@ public class TestConcat {
 	 * The parser rejects a newline in the cat statement
 	 * @throws SyntaxError
 	 */
-	@Test
+	@Test(expected=SyntaxError.class)
 	public void testConcat_9() throws SyntaxError {
-		try {
-			new TinyTemplate("t = [[$cat($list\n)]]");
-			fail("Expected SyntaxError");
-		} catch (SyntaxError err) {
-		}
+		new TinyTemplate("t = [[$cat($list\n)]]");
+	}
+
+	/**
+	 * First argument is implicitly a variable
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testConcat_10() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"t = [[$cat(list)]]");
+		TemplateContext tc = new SimpleContext(tt, new A());
+		tc.bind("list", Arrays.asList(new String[] {"x", "   ", "y"}));
+		assertEquals("x   y", tc.expand("t"));
 	}
 
 	/**
@@ -198,11 +207,6 @@ public class TestConcat {
 	@Test(expected=SyntaxError.class)
 	public void testSyntaxError1_() throws SyntaxError {
 		new TinyTemplate("t = [[$cat(#list, )]]");
-	}
-
-	@Test(expected=SyntaxError.class)
-	public void testSyntaxError_2() throws SyntaxError {
-		new TinyTemplate("t = [[$cat(list)]]");
 	}
 
 	@Test(expected=SyntaxError.class)
