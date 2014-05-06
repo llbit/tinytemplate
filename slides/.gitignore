@@ -1,0 +1,12 @@
+# LaTeX garbage
+*.log
+*.aux
+*.nav
+*.out
+*.vrb
+*.snm
+*.toc
+*.d
+*.fls
+*.make
+*.temp

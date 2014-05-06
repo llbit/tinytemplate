@@ -2,17 +2,3 @@
 *.swp
 /test-reports
 /aspectgen.jar
-
-# LaTeX
-/slides/*.pdf
-/slides/*.log
-/slides/*.aux
-/slides/*.nav
-/slides/*.out
-/slides/*.vrb
-/slides/*.snm
-/slides/*.toc
-/slides/*.d
-/slides/*.fls
-/slides/*.make
-/slides/*.temp
