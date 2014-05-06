@@ -491,4 +491,22 @@ public class TestConditionals {
 				"b", tc.expand("t"));
 	}
 
+	/**
+	 * Tests trimming of last empty line in conditional
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testTrimming_8() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"dog = [[  $if(bark)\n" +
+				" Woof!\n" +
+				"\n" +
+				"$endif]]");
+		SimpleContext tc = new SimpleContext(tt, new Object());
+
+		tc.bind("bark", "true");
+
+		assertEquals(" Woof!" + NL, tc.expand("dog"));
+	}
+
 }

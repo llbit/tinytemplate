@@ -125,41 +125,33 @@ public class Concat extends NestedIndentationFragment {
 
 	@Override
 	public void printAspectCode(Indentation ind, int lvl, PrintStream out) {
-		out.println(ind.get(lvl++) + "{");
-		if (!sep.isEmpty()) {
-			out.println(ind.get(lvl) + "boolean first = true;");
-		}
-		out.print(ind.get(lvl++) + "for (PrettyPrintable p: ");
+		out.print(ind.get(lvl));
+		out.print("out.cat(");
 		if (isAttribute) {
 			out.print(iterable + "()");
 		} else {
 			out.print("get" + iterable + "()");
 		}
-		out.println(") {");
-		if (!sep.isEmpty()) {
-			out.println(ind.get(lvl++) + "if (!first) {");
-			StringBuilder buf = new StringBuilder();
-			for (int i = 0; i < sep.length(); ++i) {
-				if ((i+1) < sep.length() && sep.charAt(i) == '\\' &&
-						sep.charAt(i+1) == 'n') {
+		out.print(", \"");
+
+		StringBuilder buf = new StringBuilder();
+		for (int i = 0; i < sep.length(); ++i) {
+			if ((i+1) < sep.length() && sep.charAt(i) == '\\') {
+				if (sep.charAt(i+1) == 'n') {
 					i += 1;
-					if (buf.length() > 0) {
-						out.println(ind.get(lvl) + "out.print(\"" + buf.toString() + "\");");
-					}
-					out.println(ind.get(lvl) + "out.println();");
-					buf.setLength(0);
+					buf.append("\", \"");
+				} else if (sep.charAt(i+1) == 't') {
+					i += 1;
+					buf.append("\\t");
 				} else {
 					buf.append(sep.charAt(i));
 				}
+			} else {
+				buf.append(sep.charAt(i));
 			}
-			if (buf.length() > 0) {
-				out.println(ind.get(lvl) + "out.print(\"" + buf.toString() + "\");");
-			}
-			out.println(ind.get(--lvl) + "}");
-			out.println(ind.get(lvl) + "first = false;");
 		}
-		out.println(ind.get(lvl) + "out.print(p);");
-		out.println(ind.get(--lvl) + "}");
-		out.println(ind.get(--lvl) + "}");
+
+		out.print(buf.toString());
+		out.println("\");");
 	}
 }
