@@ -27,6 +27,7 @@
 package org.jastadd.tinytemplate.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -101,6 +102,71 @@ public class TestConcat {
 		TemplateContext tc = new SimpleContext(tt, new A());
 		tc.bind("list", Arrays.asList(new String[] {"A", "b", "C"}));
 		assertEquals("AbC", tc.expand("t"));
+	}
+
+	/**
+	 * Tests whitespace before first argument
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testConcat_5() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"t = [[$cat( $list)]]");
+		TemplateContext tc = new SimpleContext(tt, new A());
+		tc.bind("list", Arrays.asList(new String[] {"A", "b", "C"}));
+		assertEquals("AbC", tc.expand("t"));
+	}
+
+	/**
+	 * Tests whitespace after first argument
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testConcat_6() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"t = [[$cat($list )]]");
+		TemplateContext tc = new SimpleContext(tt, new A());
+		tc.bind("list", Arrays.asList(new String[] {"A", "b", "C"}));
+		assertEquals("AbC", tc.expand("t"));
+	}
+
+	/**
+	 * Tests whitespace before and after first argument
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testConcat_7() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"t = [[$cat(\t$list )]]");
+		TemplateContext tc = new SimpleContext(tt, new A());
+		tc.bind("list", Arrays.asList(new String[] {"A", "b", "C"}));
+		assertEquals("AbC", tc.expand("t"));
+	}
+
+	/**
+	 * The parser rejects a newline in the cat statement
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testConcat_8() throws SyntaxError {
+		try {
+			new TinyTemplate("t = [[$cat(\n$list)]]");
+			fail("Expected SyntaxError");
+		} catch (SyntaxError err) {
+		}
+	}
+
+	/**
+	 * The parser rejects a newline in the cat statement
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testConcat_9() throws SyntaxError {
+		try {
+			new TinyTemplate("t = [[$cat($list\n)]]");
+			fail("Expected SyntaxError");
+		} catch (SyntaxError err) {
+		}
 	}
 
 	/**

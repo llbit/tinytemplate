@@ -364,6 +364,7 @@ public class TemplateParser {
 			throw new SyntaxError(line, "missing cat parameters");
 		} else {
 			in.pop();
+			skipWhitespace();
 			char c = acceptAlternatives('$', '#');
 			String iterable = c + parseSimpleReference().trim();
 
