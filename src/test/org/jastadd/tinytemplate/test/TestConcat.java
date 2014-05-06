@@ -29,6 +29,7 @@ package org.jastadd.tinytemplate.test;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.jastadd.tinytemplate.SimpleContext;
 import org.jastadd.tinytemplate.TemplateContext;
@@ -87,6 +88,19 @@ public class TestConcat {
 				"t = [[$cat(#list,\", \")]]");
 		TemplateContext tc = new SimpleContext(tt, new A());
 		assertEquals("1, 2, 3", tc.expand("t"));
+	}
+
+	/**
+	 * Tests concatenation with variable instead of attribute
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testConcat_4() throws SyntaxError {
+		TinyTemplate tt = new TinyTemplate(
+				"t = [[$cat($list)]]");
+		TemplateContext tc = new SimpleContext(tt, new A());
+		tc.bind("list", Arrays.asList(new String[] {"A", "b", "C"}));
+		assertEquals("AbC", tc.expand("t"));
 	}
 
 	/**

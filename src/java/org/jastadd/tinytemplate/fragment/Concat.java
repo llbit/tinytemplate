@@ -75,27 +75,40 @@ public class Concat extends NestedIndentationFragment {
 		if (isAttribute) {
 			expandAttribute(context, out);
 		} else {
-			throw new TemplateExpansionWarning("Variable " + iterable + " is not iterable");
+			expandVariable(context, out);
 		}
 	}
 
 	private void expandAttribute(TemplateContext context, StringBuilder out) {
 		Object value = context.evalAttribute(iterable);
 		if (value instanceof Iterable) {
-			Iterable<?> itr = (Iterable<?>) value;
-			StringBuilder sb = new StringBuilder();
-			boolean first = true;
-			for (Object o: itr) {
-				if (sep != null && !first) {
-					sb.append(sep);
-				}
-				first = false;
-				sb.append(String.valueOf(o));
-			}
-			expandWithIndentation(sb.toString(), context, out);
+			expandIterable(context, out, value);
 		} else {
-			throw new TemplateExpansionWarning("Attribute " + iterable + " is not iterable");
+			throw new TemplateExpansionWarning("Attribute '" + iterable + "' is not iterable");
 		}
+	}
+
+	private void expandVariable(TemplateContext context, StringBuilder out) {
+		Object value = context.evalVariable(iterable);
+		if (value instanceof Iterable) {
+			expandIterable(context, out, value);
+		} else {
+			throw new TemplateExpansionWarning("Variable '" + iterable + "' is not iterable");
+		}
+	}
+
+	private void expandIterable(TemplateContext context, StringBuilder out, Object value) {
+		Iterable<?> itr = (Iterable<?>) value;
+		StringBuilder sb = new StringBuilder();
+		boolean first = true;
+		for (Object o : itr) {
+			if (sep != null && !first) {
+				sb.append(sep);
+			}
+			first = false;
+			sb.append(String.valueOf(o));
+		}
+		expandWithIndentation(sb.toString(), context, out);
 	}
 
 	@Override
