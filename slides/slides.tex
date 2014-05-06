@@ -199,19 +199,19 @@ Lund University}
     \frametitle{JastAdd Integration}
 
     \begin{verbatim}
-        // Test.jrag:
-        syn String A.name() = "myName";
+// Test.jrag:
+syn String A.name() = "myName";
 
-        // Test.java:
-        tt = templateFromFile("Test.tt");
-        context = new SimpleContext(tt, new A());
-        context.expand("my.template", out);
+// Test.java:
+tt = templateFromFile("Test.tt");
+context = new SimpleContext(tt, new A());
+context.expand("my.template", out);
 
-        // Test.tt:
-        my.template = [[public String #name;]]
+// Test.tt:
+my.template = [[public String #name;]]
 
-        // output:
-        public String myName;
+// output:
+public String myName;
     \end{verbatim}
 \end{frame}
 
