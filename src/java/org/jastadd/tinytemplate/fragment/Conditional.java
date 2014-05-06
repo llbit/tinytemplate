@@ -105,11 +105,7 @@ public class Conditional extends AbstractFragment {
 		if (negated) {
 			out.print("!");
 		}
-		if (isAttribute) {
-			out.print(condition + "()");
-		} else {
-			out.print("get" + condition + "()");
-		}
+		out.print(condition + "()");
 		out.println(") {");
 		thenPart.printITD(ind, lvl+1, out);
 		if (!elsePart.isEmpty()) {
