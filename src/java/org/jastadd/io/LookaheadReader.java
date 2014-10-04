@@ -1,4 +1,4 @@
-/* Copyright (c) 2010-2013, Jesper Öqvist <jesper@cs.lth.se>
+/* Copyright (c) 2010-2013, Jesper Öqvist <jesper.oqvist@cs.lth.se>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -52,6 +52,8 @@ public class LookaheadReader extends FilterReader {
 	 * Number of valid characters in the read buffer
 	 */
 	private int length = 0;
+
+	private boolean streamAtEOF = false;
 
 	/**
 	 * Create a new lookahead reader
@@ -135,7 +137,7 @@ public class LookaheadReader extends FilterReader {
 	 * lookahead.
 	 */
 	private void refill() throws IOException {
-		if (length - pos <= lookahead) {
+		if (length - pos <= lookahead && !streamAtEOF) {
 			if (length-pos > 0) {
 				System.arraycopy(buffer, pos, buffer, 0, length-pos);
 				length = length-pos;
@@ -145,7 +147,11 @@ public class LookaheadReader extends FilterReader {
 				pos = 0;
 			}
 			int i = super.read(buffer, length, BUFF_SIZE-length);
-			length += (i != -1) ? i : 0;
+			if (i != -1) {
+				length += i;
+			} else {
+				streamAtEOF = true;
+			}
 		}
 	}
 
