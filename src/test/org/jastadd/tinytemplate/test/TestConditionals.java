@@ -368,6 +368,34 @@ public class TestConditionals {
 	}
 
 	/**
+	 * Premature end of template while parsing if statement
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testSyntaxError_6() throws SyntaxError {
+		try {
+			new TinyTemplate("dog = [[$if(x)");
+			fail("Expected syntax error!");
+		} catch (SyntaxError e) {
+			assertEquals("Syntax error at line 1: unexpected end of file while parsing template body", e.getMessage());
+		}
+	}
+
+	/**
+	 * Premature end of template while parsing if statement
+	 * @throws SyntaxError
+	 */
+	@Test
+	public void testSyntaxError_7() throws SyntaxError {
+		try {
+			new TinyTemplate("dog = [[$if(x)$else");
+			fail("Expected syntax error!");
+		} catch (SyntaxError e) {
+			assertEquals("Syntax error at line 1: unexpected end of file while parsing template body", e.getMessage());
+		}
+	}
+
+	/**
 	 * Test trimming leading newline in conditional body
 	 * @throws SyntaxError
 	 */
