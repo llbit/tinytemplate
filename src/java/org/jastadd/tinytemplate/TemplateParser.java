@@ -229,6 +229,11 @@ public class TemplateParser {
 		Template template = new Template();
 		boolean newLine = true;
 		while (true) {
+			if (isEOF()) {
+				throw new SyntaxError(line,
+						"unexpected end of input while parsing template body");
+			}
+
 			Fragment nextFragment = nextFragment(template, newLine);
 			if (!nextFragment.isEmpty()) {
 				if (nextFragment.isKeyword("else"))
@@ -253,11 +258,6 @@ public class TemplateParser {
 			throws IOException, SyntaxError {
 
 		while (true) {
-			if (isEOF()) {
-				throw new SyntaxError(line,
-						"unexpected end of file while parsing template body");
-			}
-
 			if (newLine) {
 				int levels = 0;
 				while (isIndentation()) {
@@ -336,6 +336,11 @@ public class TemplateParser {
 		boolean newLine = true;
 		boolean haveElse = false;
 		while (true) {
+			if (isEOF()) {
+				throw new SyntaxError(line,
+						"unexpected end of input while parsing if statement");
+			}
+
 			Fragment nextFragment = nextFragment(part, newLine);
 			if (!nextFragment.isEmpty()) {
 				if (nextFragment.isKeyword("else")) {

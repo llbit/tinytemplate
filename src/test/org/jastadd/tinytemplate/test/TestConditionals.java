@@ -296,10 +296,9 @@ public class TestConditionals {
 
 	/**
 	 * Stray else
-	 * @throws SyntaxError
 	 */
 	@Test
-	public void testSyntaxError_1() throws SyntaxError {
+	public void testSyntaxError_1() {
 		try {
 			new TinyTemplate("dog = [[$else]]");
 			fail("Expected syntax error!");
@@ -310,10 +309,9 @@ public class TestConditionals {
 
 	/**
 	 * Stray endif
-	 * @throws SyntaxError
 	 */
 	@Test
-	public void testSyntaxError_2() throws SyntaxError {
+	public void testSyntaxError_2() {
 		try {
 			new TinyTemplate("dog = [[$endif]]");
 			fail("Expected syntax error!");
@@ -324,10 +322,9 @@ public class TestConditionals {
 
 	/**
 	 * Missing endif
-	 * @throws SyntaxError
 	 */
 	@Test
-	public void testSyntaxError_3() throws SyntaxError {
+	public void testSyntaxError_3() {
 		try {
 			new TinyTemplate("dog = [[$if(x)]]");
 			fail("Expected syntax error!");
@@ -338,10 +335,9 @@ public class TestConditionals {
 
 	/**
 	 * Missing endif
-	 * @throws SyntaxError
 	 */
 	@Test
-	public void testSyntaxError_4() throws SyntaxError {
+	public void testSyntaxError_4() {
 		try {
 			new TinyTemplate("dog = [[$if(x)$else]]");
 			fail("Expected syntax error!");
@@ -352,10 +348,9 @@ public class TestConditionals {
 
 	/**
 	 * Extra else inside if-else
-	 * @throws SyntaxError
 	 */
 	@Test
-	public void testSyntaxError_5() throws SyntaxError {
+	public void testSyntaxError_5() {
 		try {
 			new TinyTemplate("dog = [[\n" +
 					"$if(x)\n" +
@@ -369,29 +364,27 @@ public class TestConditionals {
 
 	/**
 	 * Premature end of template while parsing if statement
-	 * @throws SyntaxError
 	 */
 	@Test
-	public void testSyntaxError_6() throws SyntaxError {
+	public void testSyntaxError_6() {
 		try {
 			new TinyTemplate("dog = [[$if(x)");
 			fail("Expected syntax error!");
 		} catch (SyntaxError e) {
-			assertEquals("Syntax error at line 1: unexpected end of file while parsing template body", e.getMessage());
+			assertEquals("Syntax error at line 1: unexpected end of input while parsing if statement", e.getMessage());
 		}
 	}
 
 	/**
 	 * Premature end of template while parsing if statement
-	 * @throws SyntaxError
 	 */
 	@Test
-	public void testSyntaxError_7() throws SyntaxError {
+	public void testSyntaxError_7() {
 		try {
 			new TinyTemplate("dog = [[$if(x)$else");
 			fail("Expected syntax error!");
 		} catch (SyntaxError e) {
-			assertEquals("Syntax error at line 1: unexpected end of file while parsing template body", e.getMessage());
+			assertEquals("Syntax error at line 1: unexpected end of input while parsing if statement", e.getMessage());
 		}
 	}
 

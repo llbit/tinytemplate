@@ -43,29 +43,41 @@ public class TestTinyTemplate {
 
 	/**
 	 * Missing end of template body
-	 * @throws SyntaxError
 	 */
-	@Test(expected=SyntaxError.class)
-	public void testBrackets_1() throws SyntaxError {
-		new TinyTemplate("x = [[  ");
+	@Test
+	public void testBrackets_1() {
+		try {
+			new TinyTemplate("x = [[  ");
+			fail("Expected syntax error!");
+		} catch (SyntaxError e) {
+			assertEquals("Syntax error at line 1: unexpected end of input while parsing template body", e.getMessage());
+		}
 	}
 
 	/**
 	 * Missing end of template body
-	 * @throws SyntaxError
 	 */
-	@Test(expected=SyntaxError.class)
-	public void testBrackets_2() throws SyntaxError {
-		new TinyTemplate("x = [[  ]");
+	@Test
+	public void testBrackets_2() {
+		try {
+			new TinyTemplate("x = [[  ]");
+			fail("Expected syntax error!");
+		} catch (SyntaxError e) {
+			assertEquals("Syntax error at line 1: unexpected end of input while parsing template body", e.getMessage());
+		}
 	}
 
 	/**
 	 * Missing start of template body
-	 * @throws SyntaxError
 	 */
-	@Test(expected=SyntaxError.class)
-	public void testBrackets_3() throws SyntaxError {
-		new TinyTemplate("x = ]]");
+	@Test
+	public void testBrackets_3() {
+		try {
+			new TinyTemplate("x = ]]");
+			fail("Expected syntax error!");
+		} catch (SyntaxError e) {
+			assertEquals("Syntax error at line 1: found bracket outside template body: ']'", e.getMessage());
+		}
 	}
 
 	/**
