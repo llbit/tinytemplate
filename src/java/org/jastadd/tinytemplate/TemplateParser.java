@@ -221,6 +221,34 @@ public class TemplateParser {
 		return name.toString();
 	}
 
+	/**
+	 * Parse a single template declaration.
+	 * @return parsed template
+	 * @throws IOException
+	 * @throws SyntaxError
+	 */
+	public Template parseSingleTemplate() throws IOException, SyntaxError {
+
+		Template template = new Template();
+		boolean newLine = true;
+		while (!isEOF()) {
+			Fragment nextFragment = nextFragment(template, newLine);
+			if (!nextFragment.isEmpty()) {
+				if (nextFragment.isKeyword("else"))
+					throw new SyntaxError(line, "stray $else");
+				else if (nextFragment.isKeyword("endif"))
+					throw new SyntaxError(line, "stray $endif");
+				newLine = nextFragment.isNewline();
+				template.addFragment(nextFragment);
+			} else {
+				throw new SyntaxError(line, "unexpected end of template marker");
+			}
+		}
+
+		template.trim();
+		return template;
+	}
+
 	private Template parseTemplate() throws IOException, SyntaxError {
 
 		// skip [[
