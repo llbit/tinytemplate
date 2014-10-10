@@ -2,3 +2,4 @@
 *.swp
 /test-reports
 /aspectgen.jar
+/tinytemplate-*.jar

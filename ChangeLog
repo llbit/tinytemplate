@@ -1,4 +1,4 @@
-1.3 - TBD
+1.3 - 2014-10-10
 
     * The concatenation statement now allows variables (of iterable type) as
     first parameter
