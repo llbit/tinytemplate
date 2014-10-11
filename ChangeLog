@@ -1,3 +1,8 @@
+1.4 - TBD
+
+    * When parsing single template declarations the leading and trailing
+    whitespace is not trimmed.
+
 1.3 - 2014-10-10
 
     * The concatenation statement now allows variables (of iterable type) as
@@ -11,20 +16,20 @@
     * Trailing closing brackets are now allowed in templates
     * Added concatenation statement ($cat)
     * Attributes and variables are now objects, no longer restricted to be
-	strings
+    strings
 
 1.1 - 2013-05-14
 
     * Added Aspect Generator tool
     * Added conditional statements (if-then, if-then-else)
     * Conditionals surrounded by whitespace on a line by themself are stripped
-	of their surrounding whitespace including the newline
+    of their surrounding whitespace including the newline
     * Keywords such as if, include, else can now be preceded by a hash sign in
-	addition to the dollar sign
+    addition to the dollar sign
     * Whitespace does not break a parenthesized variable name
     * Whitespace is stripped from if conditions
     * The condition of an if must be a valid variable (implicit or explicit
-	dollar sign) or attribute name
+    dollar sign) or attribute name
     * Added template inclusion using the 'include' keyword
     * Scan dollar and hash signs inside parenthesis
     * If condition can be an attribute
@@ -32,7 +37,7 @@
     * Trim leading empty line from if-statement body
     * Trim leading empty line from template body
     * Empty lines are removed after expansion if they contained a
-	non-whitespace fragment before expansion
+    non-whitespace fragment before expansion
     * Templates can now expand to a StringBuffer
     * Template expansion warnings are printed to stderr
     * Printing of warnings to stderr can be disabled

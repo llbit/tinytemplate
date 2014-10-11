@@ -245,7 +245,6 @@ public class TemplateParser {
 			}
 		}
 
-		template.trim();
 		return template;
 	}
 
