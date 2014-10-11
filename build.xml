@@ -32,6 +32,9 @@
 
 	<target name="jar" depends="build">
 		<jar destfile="tinytemplate-1.3.jar">
+			<manifest>
+				<attribute name="Main-Class" value="org.jastadd.tinytemplate.SingleTemplateProcessor" />
+			</manifest>
 			<fileset dir="bin">
 				<include name="**/*" />
 			</fileset>
