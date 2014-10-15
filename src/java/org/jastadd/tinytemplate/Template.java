@@ -1,4 +1,4 @@
-/* Copyright (c) 2013, Jesper Öqvist <jesper@cs.lth.se>
+/* Copyright (c) 2013, Jesper Öqvist <jesper.oqvist@cs.lth.se>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -44,7 +44,7 @@ public class Template {
 	/**
 	 * NB lines should never be empty!
 	 */
-	private final List<List<Fragment>> lines = new ArrayList<List<Fragment>>();
+	protected final List<List<Fragment>> lines = new ArrayList<List<Fragment>>();
 	{
 		lines.add(new ArrayList<Fragment>());
 	}

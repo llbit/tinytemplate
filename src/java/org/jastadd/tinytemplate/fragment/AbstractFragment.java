@@ -1,4 +1,4 @@
-/* Copyright (c) 2013, Jesper Öqvist <jesper@cs.lth.se>
+/* Copyright (c) 2013, Jesper Öqvist <jesper.oqvist@cs.lth.se>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -11,7 +11,7 @@
  *     * Neither the name of the <organization> nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -34,32 +34,32 @@ abstract public class AbstractFragment implements Fragment {
 	public boolean isEmpty() {
 		return false;
 	}
-	
+
 	@Override
 	public boolean isNewline() {
 		return false;
 	}
-	
+
 	@Override
 	public boolean isKeyword(String var) {
 		return false;
 	}
-	
+
 	@Override
 	public boolean isWhitespace() {
 		return false;
 	}
-	
+
 	@Override
 	public boolean isConditional() {
 		return false;
 	}
-	
+
 	@Override
 	public boolean isExpansion() {
 		return false;
 	}
-	
+
 	@Override
 	public boolean isIndentation() {
 		return false;
