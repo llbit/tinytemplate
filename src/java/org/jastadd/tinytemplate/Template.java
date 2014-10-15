@@ -245,20 +245,6 @@ public class Template {
 	}
 
 	/**
-	 * Print inter-type declaration for this template
-	 * @param ind Indentation handler
-	 * @param lvl Indentation level
-	 * @param out Output stream
-	 */
-	public void printITD(Indentation ind, int lvl, PrintStream out) {
-		for (List<Fragment> line: lines) {
-			for (Fragment fragment: line) {
-				fragment.printAspectCode(ind, lvl, out);
-			}
-		}
-	}
-
-	/**
 	 * @return <code>true</code> if the template expands to an empty string
 	 */
 	public boolean isEmpty() {

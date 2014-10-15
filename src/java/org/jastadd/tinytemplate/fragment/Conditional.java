@@ -1,9 +1,6 @@
 package org.jastadd.tinytemplate.fragment;
 
-import java.io.PrintStream;
-
 import org.jastadd.tinytemplate.EmptyTemplate;
-import org.jastadd.tinytemplate.Indentation;
 import org.jastadd.tinytemplate.Template;
 import org.jastadd.tinytemplate.TemplateContext;
 import org.jastadd.tinytemplate.TemplateParser;
@@ -15,11 +12,11 @@ import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
  */
 public class Conditional extends AbstractFragment {
 
-	private String condition;
-	private final Template thenPart;
-	private final Template elsePart;
-	private final boolean negated;
-	private final boolean isAttribute;
+	protected String condition;
+	protected final Template thenPart;
+	protected final Template elsePart;
+	protected final boolean negated;
+	protected final boolean isAttribute;
 
 	/**
 	 * Create a if-then conditional
@@ -99,19 +96,4 @@ public class Conditional extends AbstractFragment {
 		return true;
 	}
 
-	@Override
-	public void printAspectCode(Indentation ind, int lvl, PrintStream out) {
-		out.print(ind.get(lvl) + "if (");
-		if (negated) {
-			out.print("!");
-		}
-		out.print(condition + "()");
-		out.println(") {");
-		thenPart.printITD(ind, lvl+1, out);
-		if (!elsePart.isEmpty()) {
-			out.println(ind.get(lvl) + "} else {");
-			elsePart.printITD(ind, lvl+1, out);
-		}
-		out.println(ind.get(lvl) + "}");
-	}
 }

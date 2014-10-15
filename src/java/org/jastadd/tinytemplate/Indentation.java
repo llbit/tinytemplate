@@ -25,7 +25,6 @@
  */
 package org.jastadd.tinytemplate;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +41,7 @@ public class Indentation {
 	 * Indentation fragment
 	 */
 	public static class IndentationFragment extends AbstractFragment {
-		private final int level;
+		protected final int level;
 
 		protected IndentationFragment(int indentLevel) {
 			level = indentLevel;
@@ -61,11 +60,6 @@ public class Indentation {
 		@Override
 		public boolean isIndentation() {
 			return true;
-		}
-
-		@Override
-		public void printAspectCode(Indentation ind, int lvl, PrintStream out) {
-			out.println(ind.get(lvl) + "out.indent(" + level + ");");
 		}
 	}
 

@@ -1,4 +1,4 @@
-/* Copyright (c) 2013, Jesper Öqvist <jesper@cs.lth.se>
+/* Copyright (c) 2013, Jesper Öqvist <jesper.oqvist@cs.lth.se>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,9 +25,6 @@
  */
 package org.jastadd.tinytemplate.fragment;
 
-import java.io.PrintStream;
-
-import org.jastadd.tinytemplate.Indentation;
 import org.jastadd.tinytemplate.TemplateContext;
 
 /**
@@ -79,11 +76,4 @@ public interface Fragment {
 	 */
 	boolean isIndentation();
 
-	/**
-	 * Print aspect code for this fragment to the given output stream
-	 * @param ind Indentation handler
-	 * @param lvl Indentation level
-	 * @param out Output stream
-	 */
-	void printAspectCode(Indentation ind, int lvl, PrintStream out);
 }

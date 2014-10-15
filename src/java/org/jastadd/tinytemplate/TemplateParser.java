@@ -39,7 +39,6 @@ import org.jastadd.tinytemplate.fragment.EmptyFragment;
 import org.jastadd.tinytemplate.fragment.Fragment;
 import org.jastadd.tinytemplate.fragment.Include;
 import org.jastadd.tinytemplate.fragment.NewlineFragment;
-import org.jastadd.tinytemplate.fragment.StringFragment;
 import org.jastadd.tinytemplate.fragment.VariableReference;
 
 /**
@@ -47,6 +46,8 @@ import org.jastadd.tinytemplate.fragment.VariableReference;
  * @author Jesper Öqvist <jesper@llbit.se>
  */
 public class TemplateParser {
+
+	private final FragmentBuilder builder;
 
 	/**
 	 * Thrown when there is a syntax error a parsed template file
@@ -77,6 +78,11 @@ public class TemplateParser {
 	 * @param is
 	 */
 	public TemplateParser(TinyTemplate tt, InputStream is) {
+		this(tt, is, FragmentBuilder.DEFAULT_BUILDER);
+	}
+
+	public TemplateParser(TinyTemplate tt, InputStream is, FragmentBuilder builder) {
+		this.builder = builder;
 		templates = tt;
 		in = new LookaheadReader(is, 8);
 	}
@@ -229,7 +235,7 @@ public class TemplateParser {
 	 */
 	public Template parseSingleTemplate() throws IOException, SyntaxError {
 
-		Template template = new Template();
+		Template template = builder.newTemplate();
 		boolean newLine = true;
 		while (!isEOF()) {
 			Fragment nextFragment = nextFragment(template, newLine);
@@ -253,7 +259,7 @@ public class TemplateParser {
 		// skip [[
 		in.consume(2);
 
-		Template template = new Template();
+		Template template = builder.newTemplate();
 		boolean newLine = true;
 		while (true) {
 			if (isEOF()) {
@@ -312,7 +318,7 @@ public class TemplateParser {
 					throw new SyntaxError(line, "empty variable name");
 				}
 				acceptVariableName(line, var);
-				VariableReference ref = new VariableReference(var);
+				VariableReference ref = builder.newVariableReference(var);
 				template.addIndentation(ref);
 				return ref;
 			} else if (isAttribute()) {
@@ -321,7 +327,7 @@ public class TemplateParser {
 					throw new SyntaxError(line, "empty attribute name");
 				}
 				acceptAttributeName(line, attr);
-				AttributeReference ref = new AttributeReference(attr);
+				AttributeReference ref = builder.newAttributeReference(attr);
 				template.addIndentation(ref);
 				return ref;
 			} else if (isNewline()) {
@@ -330,7 +336,7 @@ public class TemplateParser {
 			} else if (isTemplateEnd()) {
 				return EmptyFragment.INSTANCE;
 			} else {
-				return new StringFragment(nextString());
+				return builder.newStringFragment(nextString());
 			}
 		}
 	}
@@ -356,8 +362,8 @@ public class TemplateParser {
 		// consume '$if'
 		in.consume(3);
 		String condition = parseCondition();
-		Template thenPart = new Template();
-		Template elsePart = new Template();
+		Template thenPart = builder.newTemplate();
+		Template elsePart = builder.newTemplate();
 		Template part = thenPart;
 
 		boolean newLine = true;
@@ -390,7 +396,7 @@ public class TemplateParser {
 		thenPart.trim();
 		elsePart.trim();
 
-		return new Conditional(condition, thenPart, elsePart);
+		return builder.newIf(condition, thenPart, elsePart);
 	}
 
 	private Concat parseConcatStmt() throws IOException, SyntaxError {
@@ -423,7 +429,7 @@ public class TemplateParser {
 			}
 
 			accept(')');
-			return new Concat(iterable, sep);
+			return builder.newConcat(iterable, sep);
 		}
 	}
 
@@ -449,7 +455,7 @@ public class TemplateParser {
 			throw new SyntaxError(line, "missing template name");
 		} else {
 			String template = parseParenthesizedReference().trim();
-			return new Include(template);
+			return builder.newInclude(template);
 		}
 	}
 

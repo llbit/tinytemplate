@@ -39,13 +39,5 @@
 				<include name="**/*" />
 			</fileset>
 		</jar>
-		<jar destfile="aspectgen.jar">
-			<manifest>
-				<attribute name="Main-Class" value="org.jastadd.tinytemplate.AspectGenerator" />
-			</manifest>
-			<fileset dir="bin">
-				<include name="**/*" />
-			</fileset>
-		</jar>
 	</target>
 </project>

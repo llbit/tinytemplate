@@ -1,4 +1,4 @@
-/* Copyright (c) 2013, Jesper Öqvist <jesper@cs.lth.se>
+/* Copyright (c) 2013, Jesper Öqvist <jesper.oqvist@cs.lth.se>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,18 +25,14 @@
  */
 package org.jastadd.tinytemplate.fragment;
 
-import java.io.PrintStream;
-
-import org.jastadd.tinytemplate.Indentation;
 import org.jastadd.tinytemplate.TemplateContext;
-import org.jastadd.util.StringLiterals;
 
 /**
  * @author Jesper Öqvist <jesper@llbit.se>
  */
 public class StringFragment extends AbstractFragment {
 
-	private final String string;
+	protected final String string;
 
 	/**
 	 * @param theString
@@ -65,10 +61,4 @@ public class StringFragment extends AbstractFragment {
 		return true;
 	}
 
-	@Override
-	public void printAspectCode(Indentation ind, int lvl, PrintStream out) {
-		out.print(ind.get(lvl) + "out.print(\"");
-		out.print(StringLiterals.buildStringLiteral(string));
-		out.println("\");");
-	}
 }

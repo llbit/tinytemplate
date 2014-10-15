@@ -33,6 +33,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
 
@@ -287,18 +288,9 @@ public class TinyTemplate extends TemplateContext {
 	}
 
 	/**
-	 * @param out
+	 * @return set of template names available
 	 */
-	public void printTemplateAspect(PrintStream out) {
-		Indentation ind = new Indentation("\t");
-		out.println("aspect TemplateAspect {");
-		for (Map.Entry<String, Template> entry: templates.entrySet()) {
-			String name = entry.getKey();
-			Template template = entry.getValue();
-			out.println(ind.get(1) + "public void " + name + ".prettyPrint(PrettyPrinter out) {");
-			template.printITD(ind, 2, out);
-			out.println(ind.get(1) + "}");
-		}
-		out.println("}");
+	public Set<String> templates() {
+		return templates.keySet();
 	}
 }

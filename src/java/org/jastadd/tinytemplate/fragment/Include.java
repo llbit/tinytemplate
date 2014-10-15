@@ -25,9 +25,6 @@
  */
 package org.jastadd.tinytemplate.fragment;
 
-import java.io.PrintStream;
-
-import org.jastadd.tinytemplate.Indentation;
 import org.jastadd.tinytemplate.TemplateContext;
 
 /**
@@ -35,7 +32,7 @@ import org.jastadd.tinytemplate.TemplateContext;
  */
 public class Include extends NestedIndentationFragment {
 
-	private final String template;
+	protected final String template;
 
 	/**
 	 * @param templateName
@@ -54,8 +51,4 @@ public class Include extends NestedIndentationFragment {
 		return true;
 	}
 
-	@Override
-	public void printAspectCode(Indentation ind, int lvl, PrintStream out) {
-		out.println(ind.get(lvl) + template + "(out);");
-	}
 }

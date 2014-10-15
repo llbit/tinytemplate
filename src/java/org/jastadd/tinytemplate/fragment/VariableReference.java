@@ -1,4 +1,4 @@
-/* Copyright (c) 2013, Jesper Öqvist <jesper@cs.lth.se>
+/* Copyright (c) 2013, Jesper Öqvist <jesper.oqvist@cs.lth.se>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,9 +25,6 @@
  */
 package org.jastadd.tinytemplate.fragment;
 
-import java.io.PrintStream;
-
-import org.jastadd.tinytemplate.Indentation;
 import org.jastadd.tinytemplate.TemplateContext;
 
 /**
@@ -35,7 +32,7 @@ import org.jastadd.tinytemplate.TemplateContext;
  */
 public class VariableReference extends NestedIndentationFragment {
 
-	private final String variable;
+	protected final String variable;
 
 	/**
 	 * @param variableName
@@ -60,8 +57,4 @@ public class VariableReference extends NestedIndentationFragment {
 		return variable.equals(varName);
 	}
 
-	@Override
-	public void printAspectCode(Indentation ind, int lvl, PrintStream out) {
-		out.println(ind.get(lvl) + "out.print(get" + variable + "());");
-	}
 }
