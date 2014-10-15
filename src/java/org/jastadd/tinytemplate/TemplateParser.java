@@ -38,7 +38,6 @@ import org.jastadd.tinytemplate.fragment.Conditional;
 import org.jastadd.tinytemplate.fragment.EmptyFragment;
 import org.jastadd.tinytemplate.fragment.Fragment;
 import org.jastadd.tinytemplate.fragment.Include;
-import org.jastadd.tinytemplate.fragment.NewlineFragment;
 import org.jastadd.tinytemplate.fragment.VariableReference;
 
 /**
@@ -81,6 +80,11 @@ public class TemplateParser {
 		this(tt, is, FragmentBuilder.DEFAULT_BUILDER);
 	}
 
+	/**
+	 * @param tt
+	 * @param is
+	 * @param builder fragment builder to construct the AST
+	 */
 	public TemplateParser(TinyTemplate tt, InputStream is, FragmentBuilder builder) {
 		this.builder = builder;
 		templates = tt;
@@ -235,7 +239,7 @@ public class TemplateParser {
 	 */
 	public Template parseSingleTemplate() throws IOException, SyntaxError {
 
-		Template template = builder.newTemplate();
+		Template template = builder.template();
 		boolean newLine = true;
 		while (!isEOF()) {
 			Fragment nextFragment = nextFragment(template, newLine);
@@ -259,7 +263,7 @@ public class TemplateParser {
 		// skip [[
 		in.consume(2);
 
-		Template template = builder.newTemplate();
+		Template template = builder.template();
 		boolean newLine = true;
 		while (true) {
 			if (isEOF()) {
@@ -298,7 +302,7 @@ public class TemplateParser {
 					levels += 1;
 				}
 				if (levels > 0) {
-					return Indentation.getFragment(levels);
+					return builder.indentation(levels);
 				}
 			}
 
@@ -318,7 +322,7 @@ public class TemplateParser {
 					throw new SyntaxError(line, "empty variable name");
 				}
 				acceptVariableName(line, var);
-				VariableReference ref = builder.newVariableReference(var);
+				VariableReference ref = builder.variable(var);
 				template.addIndentation(ref);
 				return ref;
 			} else if (isAttribute()) {
@@ -327,16 +331,16 @@ public class TemplateParser {
 					throw new SyntaxError(line, "empty attribute name");
 				}
 				acceptAttributeName(line, attr);
-				AttributeReference ref = builder.newAttributeReference(attr);
+				AttributeReference ref = builder.attribute(attr);
 				template.addIndentation(ref);
 				return ref;
 			} else if (isNewline()) {
 				skipNewline();
-				return NewlineFragment.INSTANCE;
+				return builder.newline();
 			} else if (isTemplateEnd()) {
 				return EmptyFragment.INSTANCE;
 			} else {
-				return builder.newStringFragment(nextString());
+				return builder.string(nextString());
 			}
 		}
 	}
@@ -362,8 +366,8 @@ public class TemplateParser {
 		// consume '$if'
 		in.consume(3);
 		String condition = parseCondition();
-		Template thenPart = builder.newTemplate();
-		Template elsePart = builder.newTemplate();
+		Template thenPart = builder.template();
+		Template elsePart = builder.template();
 		Template part = thenPart;
 
 		boolean newLine = true;
@@ -396,7 +400,7 @@ public class TemplateParser {
 		thenPart.trim();
 		elsePart.trim();
 
-		return builder.newIf(condition, thenPart, elsePart);
+		return builder.conditional(condition, thenPart, elsePart);
 	}
 
 	private Concat parseConcatStmt() throws IOException, SyntaxError {
@@ -429,7 +433,7 @@ public class TemplateParser {
 			}
 
 			accept(')');
-			return builder.newConcat(iterable, sep);
+			return builder.cat(iterable, sep);
 		}
 	}
 
@@ -455,7 +459,7 @@ public class TemplateParser {
 			throw new SyntaxError(line, "missing template name");
 		} else {
 			String template = parseParenthesizedReference().trim();
-			return builder.newInclude(template);
+			return builder.include(template);
 		}
 	}
 

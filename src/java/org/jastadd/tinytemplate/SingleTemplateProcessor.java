@@ -11,7 +11,7 @@
  *     * Neither the name of the <organization> nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -28,14 +28,18 @@ package org.jastadd.tinytemplate;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
+/**
+ * Process a file as a single template declaration.
+ * @author Jesper Öqvist <jesper.oqvist@cs.lth.se>
+ */
 public class SingleTemplateProcessor {
 	static class SystemPropertyContext extends TemplateContext {
-		
+
 		private final TemplateContext parentContext;
-		
+
 		/**
 	 	 * Create a new simple context
-	 	 * @parent parent context
+		 * @param parent parent context
 	 	 */
 		public SystemPropertyContext(TemplateContext parent) {
 			parentContext = parent;
@@ -79,7 +83,7 @@ public class SingleTemplateProcessor {
 		@Override
 		public void flushVariables() {
 		}
-		
+
 		@Override
 		public void bind(String varName, Object value) {
 		}
@@ -89,6 +93,11 @@ public class SingleTemplateProcessor {
 		}
 
 	}
+
+	/**
+	 * Entry point
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		for (String arg: args) {
 			if (arg.equals("-h") || arg.equals("-help")) {
