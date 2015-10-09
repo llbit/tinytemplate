@@ -1,0 +1,17 @@
+apply plugin: 'java'
+
+project.version = '1.3'
+
+sourceSets.main.java.srcDir 'src/java'
+sourceSets.test.java.srcDir 'src/test'
+
+jar.manifest.attributes 'Main-Class': 'org.jastadd.tinytemplate.SingleTemplateProcessor'
+jar.destinationDir = projectDir
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	testCompile group: 'junit', name: 'junit', version: '4.+'
+}

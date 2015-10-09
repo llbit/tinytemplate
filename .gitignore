@@ -1,5 +1,12 @@
-/bin
+# Gradle build directory.
+/build/
+/.gradle/
+
+# Eclipse binaries.
+/bin/
+
+# Editor files.
 *.swp
-/test-reports
-/aspectgen.jar
+
+# Generated Jar files.
 /tinytemplate-*.jar
