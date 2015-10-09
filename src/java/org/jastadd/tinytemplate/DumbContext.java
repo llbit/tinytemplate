@@ -74,11 +74,6 @@ public class DumbContext extends TemplateContext {
 	}
 
 	@Override
-	public void bind(String varName, boolean value) {
-	}
-
-	@Override
 	public void flushVariables() {
 	}
-
 }

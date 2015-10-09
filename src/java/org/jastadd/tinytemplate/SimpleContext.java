@@ -102,10 +102,4 @@ public class SimpleContext extends TemplateContext {
 	public void bind(String varName, Object value) {
 		variables.put(varName, value);
 	}
-
-	@Override
-	public void bind(String varName, boolean value) {
-		variables.put(varName, "" + value);
-	}
-
 }

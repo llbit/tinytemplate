@@ -125,7 +125,7 @@ public abstract class TemplateContext {
 	abstract public void expand(TemplateContext tc, String templateName, PrintWriter out);
 
 	/**
-	 * Expand a template
+	 * Expand a template.
 	 * @param tc Context to expand the template in
 	 * @param templateName
 	 * @param out
@@ -133,7 +133,7 @@ public abstract class TemplateContext {
 	abstract public void expand(TemplateContext tc, String templateName, StringBuffer out);
 
 	/**
-	 * Expand a template
+	 * Expand a template.
 	 * @param tc Context to expand the template in
 	 * @param templateName
 	 * @param out
@@ -141,18 +141,11 @@ public abstract class TemplateContext {
 	abstract public void expand(TemplateContext tc, String templateName, StringBuilder out);
 
 	/**
-	 * Bind a string value to a variable
+	 * Bind a value to a variable.
 	 * @param varName Variable to bind
 	 * @param value Value to bind
 	 */
 	abstract public void bind(String varName, Object value);
-
-	/**
-	 * Bind a boolean value to a variable
-	 * @param varName Variable to bind
-	 * @param value Value to bind
-	 */
-	abstract public void bind(String varName, boolean value);
 
 	/**
 	 * Bind a template expansion to a variable.

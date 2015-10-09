@@ -87,11 +87,6 @@ public class SingleTemplateProcessor {
 		@Override
 		public void bind(String varName, Object value) {
 		}
-
-		@Override
-		public void bind(String varName, boolean value) {
-		}
-
 	}
 
 	/**
