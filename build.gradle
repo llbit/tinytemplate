@@ -8,6 +8,9 @@ sourceSets.test.java.srcDir 'src/test'
 jar.manifest.attributes 'Main-Class': 'org.jastadd.tinytemplate.SingleTemplateProcessor'
 jar.destinationDir = projectDir
 
+sourceCompatibility = '1.7'
+targetCompatibility = '1.7'
+
 repositories {
 	mavenCentral()
 }
