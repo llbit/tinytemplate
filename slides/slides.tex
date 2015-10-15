@@ -123,7 +123,7 @@ Lund University}
             is in the middle of a word: \verb'$(var)_name'
         \item {\bf A Java identifier is parsed if no parenthesis are present.}
         \item There are a couple reserved keywords that can not be used for variables -
-            \bf if, else, endif, cat, include
+            \bf if, else, endif, join, include
     \end{itemize}
     
 \end{frame}
@@ -154,9 +154,9 @@ Lund University}
             separator string
         \item Examples (without \& with separator):
             \begin{itemize}
-                \item \verb'$cat(#list)' \\
+                \item \verb'$join(#list)' \\
                     Expands to ``123''
-                \item \verb'$cat(#list, ", ")' \\
+                \item \verb'$join(#list, ", ")' \\
                     Expands to ``1, 2, 3''
             \end{itemize}
     \end{itemize}

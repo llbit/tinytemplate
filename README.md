@@ -14,7 +14,7 @@ Features:
 Copyright & License
 -------------------
 
-tinytemplate is copyright (c) 2013 Jesper Öqvist, <jesper@cs.lth.se>.
+tinytemplate is copyright (c) 2013-2015 Jesper Öqvist, <jesper.oqvist@cs.lth.se>.
 All rights reserved.
 
 tinytemplate is provided under the terms of the modified BSD license, which
@@ -45,5 +45,5 @@ Examples
     greeting4 = [[She said "$include(greeting3)"]]
 
     # Lists can be concatenated
-    arguments = [[ $cat(#getArgumentList, ", ") ]]
-    concat = [[ $cat($Strings) ]]
+    arguments = [[ $join(#getArgumentList, ", ") ]]
+    join = [[ $join($Strings) ]]
