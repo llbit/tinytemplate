@@ -47,14 +47,14 @@ import org.junit.Test;
  * @author Niklas Fors <niklas.fors@cs.lth.se>
  */
 @SuppressWarnings("javadoc")
-public class TestConcat {
+public class TestJoin {
 
   private static final String NL = System.getProperty("line.separator");
 
   /**
    * Constructor
    */
-  public TestConcat() {
+  public TestJoin() {
     TinyTemplate.printWarnings(false);
     TinyTemplate.throwExceptions(true);
   }
@@ -64,9 +64,8 @@ public class TestConcat {
    * @throws SyntaxError
    */
   @Test
-  public void testConcat_1() throws SyntaxError {
-    TinyTemplate tt = new TinyTemplate(
-        "t = [[$cat(#list)]]");
+  public void testJoin_1() throws SyntaxError {
+    TinyTemplate tt = new TinyTemplate("t = [[$join(#list)]]");
     TemplateContext tc = new SimpleContext(tt, new A());
     assertEquals("123", tc.expand("t"));
   }
@@ -76,9 +75,8 @@ public class TestConcat {
    * @throws SyntaxError
    */
   @Test
-  public void testConcat_2() throws SyntaxError {
-    TinyTemplate tt = new TinyTemplate(
-        "t = [[$cat(#list, \",\")]]");
+  public void testJoin_2() throws SyntaxError {
+    TinyTemplate tt = new TinyTemplate("t = [[$join(#list, \",\")]]");
     TemplateContext tc = new SimpleContext(tt, new A());
     assertEquals("1,2,3", tc.expand("t"));
   }
@@ -88,9 +86,8 @@ public class TestConcat {
    * @throws SyntaxError
    */
   @Test
-  public void testConcat_3() throws SyntaxError {
-    TinyTemplate tt = new TinyTemplate(
-        "t = [[$cat(#list,\", \")]]");
+  public void testJoin_3() throws SyntaxError {
+    TinyTemplate tt = new TinyTemplate("t = [[$join(#list,\", \")]]");
     TemplateContext tc = new SimpleContext(tt, new A());
     assertEquals("1, 2, 3", tc.expand("t"));
   }
@@ -100,9 +97,8 @@ public class TestConcat {
    * @throws SyntaxError
    */
   @Test
-  public void testConcat_4() throws SyntaxError {
-    TinyTemplate tt = new TinyTemplate(
-        "t = [[$cat($list)]]");
+  public void testJoin_4() throws SyntaxError {
+    TinyTemplate tt = new TinyTemplate("t = [[$join($list)]]");
     TemplateContext tc = new SimpleContext(tt, new A());
     tc.bind("list", Arrays.asList(new String[] {"A", "b", "C"}));
     assertEquals("AbC", tc.expand("t"));
@@ -113,9 +109,8 @@ public class TestConcat {
    * @throws SyntaxError
    */
   @Test
-  public void testConcat_5() throws SyntaxError {
-    TinyTemplate tt = new TinyTemplate(
-        "t = [[$cat( $list)]]");
+  public void testJoin_5() throws SyntaxError {
+    TinyTemplate tt = new TinyTemplate("t = [[$join( $list)]]");
     TemplateContext tc = new SimpleContext(tt, new A());
     tc.bind("list", Arrays.asList(new String[] {"A", "b", "C"}));
     assertEquals("AbC", tc.expand("t"));
@@ -126,9 +121,8 @@ public class TestConcat {
    * @throws SyntaxError
    */
   @Test
-  public void testConcat_6() throws SyntaxError {
-    TinyTemplate tt = new TinyTemplate(
-        "t = [[$cat($list )]]");
+  public void testJoin_6() throws SyntaxError {
+    TinyTemplate tt = new TinyTemplate("t = [[$join($list )]]");
     TemplateContext tc = new SimpleContext(tt, new A());
     tc.bind("list", Arrays.asList(new String[] {"A", "b", "C"}));
     assertEquals("AbC", tc.expand("t"));
@@ -139,34 +133,33 @@ public class TestConcat {
    * @throws SyntaxError
    */
   @Test
-  public void testConcat_7() throws SyntaxError {
-    TinyTemplate tt = new TinyTemplate(
-        "t = [[$cat(\t$list )]]");
+  public void testJoin_7() throws SyntaxError {
+    TinyTemplate tt = new TinyTemplate("t = [[$join(\t$list )]]");
     TemplateContext tc = new SimpleContext(tt, new A());
     tc.bind("list", Arrays.asList(new String[] {"A", "b", "C"}));
     assertEquals("AbC", tc.expand("t"));
   }
 
   /**
-   * The parser rejects a newline in the cat statement
+   * The parser rejects a newline in the join statement.
    * @throws SyntaxError
    */
   @Test
-  public void testConcat_8() throws SyntaxError {
+  public void testJoin_8() throws SyntaxError {
     try {
-      new TinyTemplate("t = [[$cat(\n$list)]]");
+      new TinyTemplate("t = [[$join(\n$list)]]");
       fail("Expected SyntaxError");
     } catch (SyntaxError err) {
     }
   }
 
   /**
-   * The parser rejects a newline in the cat statement
+   * The parser rejects a newline in the join statement.
    * @throws SyntaxError
    */
   @Test(expected=SyntaxError.class)
-  public void testConcat_9() throws SyntaxError {
-    new TinyTemplate("t = [[$cat($list\n)]]");
+  public void testJoin_9() throws SyntaxError {
+    new TinyTemplate("t = [[$join($list\n)]]");
   }
 
   /**
@@ -174,9 +167,8 @@ public class TestConcat {
    * @throws SyntaxError
    */
   @Test
-  public void testConcat_10() throws SyntaxError {
-    TinyTemplate tt = new TinyTemplate(
-        "t = [[$cat(list)]]");
+  public void testJoin_10() throws SyntaxError {
+    TinyTemplate tt = new TinyTemplate("t = [[$join(list)]]");
     TemplateContext tc = new SimpleContext(tt, new A());
     tc.bind("list", Arrays.asList(new String[] {"x", "   ", "y"}));
     assertEquals("x   y", tc.expand("t"));
@@ -188,8 +180,7 @@ public class TestConcat {
    */
   @Test
   public void testIndentation_1() throws SyntaxError {
-    TinyTemplate tt = new TinyTemplate(
-        "t = [[  $cat(#list, \"\n\")]]");
+    TinyTemplate tt = new TinyTemplate("t = [[  $join(#list, \"\n\")]]");
     TemplateContext tc = new SimpleContext(tt, new A());
     assertEquals(
         "  1" + NL +
@@ -210,26 +201,26 @@ public class TestConcat {
 
   @Test(expected=SyntaxError.class)
   public void testSyntaxError1_() throws SyntaxError {
-    new TinyTemplate("t = [[$cat(#list, )]]");
+    new TinyTemplate("t = [[$join(#list, )]]");
   }
 
   @Test(expected=SyntaxError.class)
   public void testSyntaxError_3() throws SyntaxError {
-    new TinyTemplate("t = [[$cat(#list, \")]]");
+    new TinyTemplate("t = [[$join(#list, \")]]");
   }
 
   @Test(expected=SyntaxError.class)
   public void testSyntaxError_4() throws SyntaxError {
-    new TinyTemplate("t = [[$cat(#list, \"\"\")]]");
+    new TinyTemplate("t = [[$join(#list, \"\"\")]]");
   }
 
   @Test(expected=SyntaxError.class)
   public void testSyntaxError_5() throws SyntaxError {
-    new TinyTemplate("t = [[$cat]]");
+    new TinyTemplate("t = [[$join]]");
   }
 
   @Test(expected=SyntaxError.class)
   public void testSyntaxError_6() throws SyntaxError {
-    new TinyTemplate("t = [[$cat($a]]");
+    new TinyTemplate("t = [[$join($a]]");
   }
 }

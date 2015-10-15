@@ -1,5 +1,6 @@
 1.4 - TBD
 
+    * Renamed concatenation statement ($cat) to $join.
     * Removed aspect generation code from tinytemplate. This has moved
     to a separate project.
     * Template parsing can now use a builder to create the template AST.

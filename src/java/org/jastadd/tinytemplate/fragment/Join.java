@@ -35,10 +35,12 @@ import org.jastadd.tinytemplate.TemplateExpansionWarning;
 import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
 
 /**
- * A concatenation statement
+ * A string joining template fragment. Joins an iterable list of objects with
+ * an optional separator string.
+ *
  * @author Niklas Fors <niklas.fors@cs.lth.se>
  */
-public class Concat extends NestedIndentationFragment {
+public class Join extends NestedIndentationFragment {
   protected String iterable;
   protected final String sep;
   protected boolean isAttribute;
@@ -47,7 +49,7 @@ public class Concat extends NestedIndentationFragment {
    * @param iterable
    * @throws SyntaxError
    */
-  public Concat(String iterable) throws SyntaxError {
+  public Join(String iterable) throws SyntaxError {
     this(iterable, null);
   }
 
@@ -56,7 +58,7 @@ public class Concat extends NestedIndentationFragment {
    * @param separator
    * @throws SyntaxError
    */
-  public Concat(String iterable, String separator) throws SyntaxError {
+  public Join(String iterable, String separator) throws SyntaxError {
     if (iterable.startsWith("#")) {
       this.iterable = iterable.substring(1);
       isAttribute = true;
@@ -67,8 +69,7 @@ public class Concat extends NestedIndentationFragment {
       isAttribute = false;
     }
     if (separator == null) {
-      // separator must be non-null!!!
-      throw new NullPointerException();
+      throw new NullPointerException("Separator must be non-null.");
     }
     this.sep = separator;
   }
@@ -123,5 +124,4 @@ public class Concat extends NestedIndentationFragment {
   public boolean isExpansion() {
     return true;
   }
-
 }

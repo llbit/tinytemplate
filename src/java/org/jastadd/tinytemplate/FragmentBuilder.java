@@ -31,10 +31,10 @@ package org.jastadd.tinytemplate;
 
 import org.jastadd.tinytemplate.TemplateParser.SyntaxError;
 import org.jastadd.tinytemplate.fragment.AttributeReference;
-import org.jastadd.tinytemplate.fragment.Concat;
 import org.jastadd.tinytemplate.fragment.Conditional;
 import org.jastadd.tinytemplate.fragment.Fragment;
 import org.jastadd.tinytemplate.fragment.Include;
+import org.jastadd.tinytemplate.fragment.Join;
 import org.jastadd.tinytemplate.fragment.NewlineFragment;
 import org.jastadd.tinytemplate.fragment.StringFragment;
 import org.jastadd.tinytemplate.fragment.VariableReference;
@@ -98,7 +98,7 @@ public interface FragmentBuilder {
    * @return the concatenation fragment
    * @throws SyntaxError
    */
-  Concat cat(String iterable, String sep) throws SyntaxError;
+  Join join(String iterable, String sep) throws SyntaxError;
 
   /**
    * Get indentation fragment corresponding to the given
@@ -123,7 +123,8 @@ public interface FragmentBuilder {
     }
 
     @Override
-    public Conditional conditional(String condition, Template thenPart, Template elsePart) throws SyntaxError {
+    public Conditional conditional(String condition, Template thenPart, Template elsePart)
+        throws SyntaxError {
       return new Conditional(condition, thenPart, elsePart);
     }
 
@@ -153,8 +154,8 @@ public interface FragmentBuilder {
     }
 
     @Override
-    public Concat cat(String iterable, String sep) throws SyntaxError {
-      return new Concat(iterable, sep);
+    public Join join(String iterable, String sep) throws SyntaxError {
+      return new Join(iterable, sep);
     }
 
     @Override

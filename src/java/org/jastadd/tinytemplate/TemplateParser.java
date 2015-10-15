@@ -37,11 +37,11 @@ import java.util.LinkedList;
 
 import org.jastadd.io.LookaheadReader;
 import org.jastadd.tinytemplate.fragment.AttributeReference;
-import org.jastadd.tinytemplate.fragment.Concat;
 import org.jastadd.tinytemplate.fragment.Conditional;
 import org.jastadd.tinytemplate.fragment.EmptyFragment;
 import org.jastadd.tinytemplate.fragment.Fragment;
 import org.jastadd.tinytemplate.fragment.Include;
+import org.jastadd.tinytemplate.fragment.Join;
 import org.jastadd.tinytemplate.fragment.VariableReference;
 
 /**
@@ -62,7 +62,7 @@ public class TemplateParser {
      * @param msg Error message
      */
     public SyntaxError(int line, String msg) {
-      super("Syntax error at line " + line + ": " + msg);
+      super(String.format("Syntax error at line %d: %s", line, msg));
     }
     /**
      * @param msg Error message
@@ -263,8 +263,7 @@ public class TemplateParser {
 
   private Template parseTemplate() throws IOException, SyntaxError {
 
-    // skip [[
-    in.consume(2);
+    in.consume(2); // Skip '[['.
 
     Template template = builder.template();
     boolean newLine = true;
@@ -288,8 +287,7 @@ public class TemplateParser {
       }
     }
 
-    // skip ]]
-    in.consume(2);
+    in.consume(2); // Skip ']]'.
 
     template.trim();
     return template;
@@ -316,10 +314,10 @@ public class TemplateParser {
         Include include = parseIncludeStmt();
         template.addIndentation(include);
         return include;
-      } else if (isKeyword("cat")) {
-        Concat cat = parseConcatStmt();
-        template.addIndentation(cat);
-        return cat;
+      } else if (isKeyword("join")) {
+        Join join = parseJoinStmt();
+        template.addIndentation(join);
+        return join;
       } else if (isVariable()) {
         String var = nextReference();
         if (var.isEmpty()) {
@@ -367,8 +365,7 @@ public class TemplateParser {
   }
 
   private Conditional parseIfStmt() throws IOException, SyntaxError {
-    // consume '$if'
-    in.consume(3);
+    in.consume(3); // Skip '$if'.
     String condition = parseCondition();
     Template thenPart = builder.template();
     Template elsePart = builder.template();
@@ -407,11 +404,11 @@ public class TemplateParser {
     return builder.conditional(condition, thenPart, elsePart);
   }
 
-  private Concat parseConcatStmt() throws IOException, SyntaxError {
-    in.consume(4);
+  private Join parseJoinStmt() throws IOException, SyntaxError {
+    in.consume(5); // Skip 'join'.
     skipWhitespace();
     if (in.peek() != '(') {
-      throw new SyntaxError(line, "missing cat parameters");
+      throw new SyntaxError(line, "missing join parameters");
     } else {
       in.pop();
       skipWhitespace();
@@ -437,7 +434,7 @@ public class TemplateParser {
       }
 
       accept(')');
-      return builder.cat(iterable, sep);
+      return builder.join(iterable, sep);
     }
   }
 
@@ -456,8 +453,7 @@ public class TemplateParser {
   }
 
   private Include parseIncludeStmt() throws IOException, SyntaxError {
-    // consume '$include'
-    in.consume(8);
+    in.consume(8); // Skip '$include'.
     skipWhitespace();
     if (in.peek() != '(') {
       throw new SyntaxError(line, "missing template name");
